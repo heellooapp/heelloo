@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "1009318564245",
+    "firebase_url": "https://teamon-68ca0.firebaseio.com",
+    "project_id": "teamon-68ca0",
+    "storage_bucket": "teamon-68ca0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009318564245:android:ec633f4fc0fc46f4",
+        "android_client_info": {
+          "package_name": "com.newmediamarketingagency.teamon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1009318564245-61ci6i9vkb5utufseki0tda4ql5aaa9h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.newmediamarketingagency.teamon",
+            "certificate_hash": "6f53ab3a51da11892072037da6f0f71d795b8e74"
+          }
+        },
+        {
+          "client_id": "1009318564245-dk02t32uuvvbh9pkth6ujdv2vad48aa4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBPwLqwRq-SUVYKtoIZ8QDiGUBKqYG1JHg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1009318564245-dk02t32uuvvbh9pkth6ujdv2vad48aa4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1009318564245-6k6u3jiqc9tkl7oo48tns80fvf9e65m9.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.newmediamarketingagency.teamon"
+              }
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
