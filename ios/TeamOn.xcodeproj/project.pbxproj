@@ -1005,6 +1005,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.newmediamarketingagency.teamon;
 				PRODUCT_NAME = TeamOn;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1022,6 +1023,7 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.newmediamarketingagency.teamon;
 				PRODUCT_NAME = TeamOn;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
