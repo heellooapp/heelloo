@@ -17,7 +17,7 @@ const TabIcon = ({ selected, title, Iconname }) => {
   );
 }
 
-class TeamOn extends Component {
+class Root extends Component {
   render() {
     return (
       <Router>
@@ -27,15 +27,16 @@ class TeamOn extends Component {
             tabs={true}
             tabBarStyle={{ backgroundColor: '#6fa8dc', height: 60 }}
           >
-            <Scene key="anniversary" title="Anniversary" Iconname="ios-notifications-outline" icon={TabIcon}>
+            <Scene key="anniversary" title="Anniversary" Iconname="ios-notifications-outline" icon={TabIcon} hideNavBar={true}>
               <Scene
                 key="scarlet"
                 component={Anniversary}
                 title="Scarlet"
+                tintColor='#6fa8dc'
               />
             </Scene>
 
-            <Scene key="contact" title="Contact" Iconname="ios-people" icon={TabIcon} initial>
+            <Scene key="contact" title="Contact" Iconname="ios-people" icon={TabIcon} hideNavBar={true} initial>
               <Scene
                 key="blue"
                 component={Contact}
@@ -49,5 +50,11 @@ class TeamOn extends Component {
   }
 };
 
+const styles = {
+  text: {
+    color: '#fff'
+  }
+};
 
-export default TeamOn;
+
+export default Root;

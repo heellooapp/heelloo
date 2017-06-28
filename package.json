@@ -11,7 +11,8 @@
     "react-native": "0.45.1",
     "react-native-firebase": "^2.0.0",
     "react-native-router-flux": "^3.40.1",
-    "react-native-vector-icons": "^4.2.0"
+    "react-native-vector-icons": "^4.2.0",
+    "react-redux": "^5.0.5"
   },
   "devDependencies": {
     "babel-jest": "20.0.3",

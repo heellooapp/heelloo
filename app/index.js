@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { Text, View, Image, Dimensions } from 'react-native';
 import firebase from './utils/firebase';
 import { Card, CardSection, Input, Button, Spinner } from './components/common';
-import Login from './routes/Login'
+import Login from './routes/Login';
+import Root from './routes/index'
 
 class TeamOn extends Component {
 
@@ -22,7 +23,7 @@ class TeamOn extends Component {
 
   renderContent() {
     if (this.state.loggedIn) {
-      return ;
+      return (<Root />);
     }
     return (<Login />);
   }
