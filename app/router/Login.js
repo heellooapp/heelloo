@@ -94,10 +94,10 @@ const styles = {
     marginBottom: 5,
   },
   errorText: {
-    alignItems: 'center',
+    textAlign: 'center',
     color: 'red',
     fontSize: 22,
-  }
+  },
   logo: {
     alignItems: 'center',
     justifyContent: 'center',
