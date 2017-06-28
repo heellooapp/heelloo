@@ -1,15 +1,37 @@
 import React, { Component } from 'react';
 import { Text, View, Image } from 'react-native';
 import images from './config/images';
+import firebase from './utils/firebase';
+import { Card, CardSection, Input, Button, Spinner } from './components/common';
+import Login from './router/Login'
 
-export default class TeamOn extends Component {
+class TeamOn extends Component {
+
+  state = {
+    loggedIn: false
+  }
+
+  componentWillMount() {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ loggedIn: true });
+      } else {
+        this.setState({ loggedIn: false });
+      }
+    });
+  }
+
+  renderContent() {
+    if (this.state.loggedIn) {
+      // 
+    }
+    return (<Login />);
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Image source={images.logo} style={styles.logoOne} />
-        <Text style={styles.welcome}>
-          Welcome to React Native!
-        </Text>
+        {this.renderContent()}
       </View>
     );
   }
@@ -19,16 +41,7 @@ const styles = {
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
   },
 };
+
+export default TeamOn;
