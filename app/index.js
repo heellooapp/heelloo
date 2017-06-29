@@ -8,7 +8,7 @@ import Root from './routes/index'
 class TeamOn extends Component {
 
   state = {
-    loggedIn: false
+    loggedIn: null
   }
 
   componentWillMount() {
@@ -22,10 +22,14 @@ class TeamOn extends Component {
   }
 
   renderContent() {
-    if (this.state.loggedIn) {
-      return (<Root />);
+    switch (this.state.loggedIn) {
+      case true:
+        return <Root />;
+      case false:
+        return <Login />;
+      default:
+        return <Spinner />;
     }
-    return (<Login />);
   }
 
   render() {
