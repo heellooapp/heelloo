@@ -1,1 +1,0 @@
-../../../../FirebaseInvites/Frameworks/FirebaseInvites.framework/Headers/FIRInvitesError.h
