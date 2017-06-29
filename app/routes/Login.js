@@ -49,15 +49,15 @@ class Login extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <View  style={styles.logo}>
           <Image source={images.logo} />
         </View>
         <Card>
           <CardSection>
             <Input
-              label="Email"
-              placeholder="mail@mail.com"
+              icon="ios-person"
+              placeholder="E-mail address"
               value={this.state.email}
               autoCapitalize={'none'}
               onChangeText={email => this.setState({ email })}
@@ -65,17 +65,17 @@ class Login extends Component {
           </CardSection>
           <CardSection>
             <Input
-              label="Password"
-              placeholder="password"
+              icon="md-lock"
+              placeholder="Password"
               value={this.state.password}
               onChangeText={password => this.setState({ password })}
               secureTextEntry
             />
           </CardSection>
           <Text style={styles.errorText}>{this.state.error}</Text>
-          <CardSection>
+          <View style={styles.btn}>
             {this.renderButton()}
-          </CardSection>
+          </View>
         </Card>
       </View>
     );
@@ -83,24 +83,23 @@ class Login extends Component {
 }
 
 const styles = {
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
+  container: {
+    flex: 1,
+    flexDirection: 'column'
   },
   errorText: {
     textAlign: 'center',
     color: 'red',
-    fontSize: 22,
+    fontSize: 16,
+    marginBottom: 6
   },
   logo: {
     alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 70,
+    marginBottom: 110
+  },
+  btn: {
+    flexDirection: 'row',
   }
 };
 

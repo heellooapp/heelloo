@@ -1,12 +1,13 @@
 import React from 'react';
 import { TextInput, View, Text } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-const Input = ({ label, value, onChangeText, placeholder, secureTextEntry, autoCapitalize }) => {
+const Input = ({ icon, value, onChangeText, placeholder, secureTextEntry, autoCapitalize }) => {
   const { inputStyle, labelStyle, containerStyle } = styles;
 
   return (
     <View style={containerStyle}>
-      <Text style={labelStyle}>{label}</Text>
+      <Icon style={styles.iconStyle} name={icon} size={30} color="#98bce1"/>
       <TextInput
         secureTextEntry={secureTextEntry}
         placeholder={placeholder}
@@ -23,17 +24,16 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry, autoC
 
 const styles = {
   inputStyle: {
-    color: '#000',
+    color: '#555',
     paddingRight: 5,
     paddingLeft: 5,
-    fontSize: 18,
+    fontSize: 16,
     lineHeight: 23,
-    flex: 2
+    flex: 2,  
   },
-  labelStyle: {
-    fontSize: 18,
-    paddingLeft: 20,
-    flex: 1
+  iconStyle: {
+    paddingLeft: 10,
+    paddingRight: 23
   },
   containerStyle: {
     height: 40,

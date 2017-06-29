@@ -2,29 +2,37 @@ import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
-  View
+  View, Dimensions
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
+import { Header } from '../components/common'
+
+const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
 const Contact = () => {
   return (
-    <View style={styles.container}>
-      <Text
-        style={styles.welcome}
-        onPress={() => Actions.gold()}
-      >
-        Black Screen
-      </Text>
+    <View >
+      <Header />
+      <View style={styles.container}>
+        <Text
+          style={styles.welcome}
+          onPress={() => Actions.gold()}
+        >
+          Black Screen
+        </Text>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: 'green',
+    width: windowWidth,
+    height: windowHeight,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   welcome: {
     fontSize: 20,
