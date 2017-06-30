@@ -12,6 +12,7 @@ const Header = (props) => {
         type="text"
         style={styles.textInput}
         placeholder='Search'
+        underlineColorAndroid='transparent'
       />
       <View style={styles.search}>
         <Image
