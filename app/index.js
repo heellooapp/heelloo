@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Image, Dimensions } from 'react-native';
+import { Text, View, Image, Dimensions, StatusBar } from 'react-native';
 import firebase from './utils/firebase';
 import { Card, CardSection, Input, Button, Spinner } from './components/common';
 import Login from './routes/Login';
@@ -35,6 +35,10 @@ class TeamOn extends Component {
   render() {
     return (
       <View style={styles.container}>
+        <StatusBar
+          backgroundColor="#2266ad"
+          barStyle="light-content"
+        />
         {this.renderContent()}
       </View>
     );

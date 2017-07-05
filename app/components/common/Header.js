@@ -1,28 +1,51 @@
-import React from 'react';
-import { Text, View, TextInput, Image } from 'react-native';
+import React, { Component } from 'react';
+import { Text, View, TextInput, TouchableOpacity, Platform } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../../config/images';
 
-const Header = (props) => {
+class Header extends Component {
 
-  return (
-    <View style={styles.viewStyle}>
-      <Icon name="ios-home" size={30} color="#fff" style={styles.iconLeft} />
-      <TextInput 
-        type="text"
-        style={styles.textInput}
-        placeholder='Search'
-        underlineColorAndroid='transparent'
-      />
-      <View style={styles.search}>
-        <Image
-          style={styles.searchIcon}
-          source={images.search}
-        />
+  constructor(props) {
+    super(props);
+    this.state = {
+      listIconName: "ios-apps",
+      isList: false,
+    }
+    this.ListIconPressed = this.ListIconPressed.bind(this);
+  }
+
+  ListIconPressed() {
+    this.setState({
+      listIconName: this.state.isList === true ? "ios-apps" : "ios-menu",
+      isList: this.state.isList ? false : true,
+    });
+
+    this.props.onListPress(this.state.isList);
+  }
+
+  render() {
+    const { searchValue, onChangeText } = this.props;
+    const { viewStyle, searchSection, iconLeft, iconList, textInput } = styles;
+    return (
+      <View style={viewStyle}>
+        <Icon name="ios-home" size={30} color="#fff" style={iconLeft} />
+        <View style={searchSection}>
+          <TextInput 
+            type="text"
+            style={textInput}
+            autoCorrect={false}
+            placeholder='Search'
+            underlineColorAndroid='transparent'
+            value={searchValue}
+            onChangeText={onChangeText}
+            autoCapitalize='words'
+          />
+          <Icon name="ios-search" size={30} color="#cecece" />
+        </View>
+        <Icon name={this.state.listIconName} size={30} color="#fff" style={iconList} onPress={this.ListIconPressed} />
       </View>
-      <Icon name="ios-apps" size={30} color="#fff" style={styles.iconRight} />
-    </View>
-  );
+    );
+  }
 };
 
 const styles = {
@@ -32,48 +55,34 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 75,
-    paddingTop: 10
+    paddingTop: (Platform.OS === 'ios') ? 20 : 0,
   },
-  textStyle: {
-    fontSize: 20
+  searchSection: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: '#FFF',
+    alignItems: 'center',
+    marginLeft: 20,
+    marginRight: 20,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 5,
   },
   iconLeft: {
-    paddingTop: 10,
-    marginLeft: 15
+    marginLeft: 20
   },
-  iconRight: {
-    paddingTop: 10,
-    marginRight: 15
+  iconList: {
+    marginRight: 20,
+    width: 30,
+    height: 30,
   },
   textInput: {
     flex: 1,
     height: 35,
-    borderColor: '#cecece',
-    marginBottom: 20,
-    marginLeft: 28,
-    marginTop: 20,
-    paddingLeft: 10,
-    paddingRight: 5,
+    paddingVertical: 0,
     justifyContent: 'flex-start',
-    backgroundColor: '#fff',
-    borderTopLeftRadius: 4,
-    borderBottomLeftRadius: 4,
-    fontSize: 14,
-    borderWidth: 1
+    fontSize: 14
   },
-  search: {
-    backgroundColor: 'white',
-    marginTop: 10,
-    marginRight: 20,
-    padding: 8,
-    borderTopRightRadius: 4,
-    borderBottomRightRadius: 4,
-  },
-   searchIcon: {
-    flex: 0,
-    height: 18,
-    width: 18
-   },
 };
 
 // Make the component available to other parts of the app

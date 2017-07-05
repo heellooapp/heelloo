@@ -13,7 +13,6 @@ const windowHeight = Dimensions.get('window').height;
 const Anniversary = () => {
   return (
     <View >
-      <Header />
       <View style={styles.container}>
         <Text
           style={styles.welcome}

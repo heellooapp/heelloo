@@ -4,7 +4,8 @@ import {
   View,
   Image,
   Dimensions,
-  ListView
+  ListView,
+  StyleSheet
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -23,23 +24,28 @@ class Contact extends Component {
     this.state = {
       contactList: listView.cloneWithRows([]),
       loading: true,
-      isList: false,
+      isList: true,
+      searchValue: '',
+      db : [],
+
     }
     this.handleQuery = this.handleQuery.bind(this);
     this._renderRow = this._renderRow.bind(this);
+    this.changeLayout = this.changeLayout.bind(this);
+    this.onSearch = this.onSearch.bind(this);
   }
 
   componentDidMount() {
-    ref = firebase.database().ref('users');
-    ref.on('value', this.handleQuery)
+    ref = firebase.database().ref('users').orderByChild('name');
+    ref.on('child_added', this.handleQuery);
   }
   
   handleQuery = (snapshot) => {
+    console.log(snapshot);
     val = snapshot.val() || {};
-
-    console.log(this.state);
+    this.setState({ db: [...this.state.db, val] });
     this.setState({
-      contactList: this.state.contactList.cloneWithRows(val),
+      contactList: this.state.contactList.cloneWithRows(this.state.db),
       loading: false
     });
   }
@@ -104,9 +110,17 @@ class Contact extends Component {
         </View>
       );
     }
+    const { listView, gridView } = styles;
+    listViewStyle = null;
+    if (!this.state.isList) {
+      listViewStyle = StyleSheet.flatten([listView, gridView]);
+    } else {
+      listViewStyle = listView;
+    }
     return (
       <ListView
-        contentContainerStyle = {styles.gridView}
+        key={this.state.isList}
+        contentContainerStyle = {listViewStyle}
         dataSource           = {this.state.contactList}
         renderRow            = {(rowData) => this._renderRow(rowData)}
         enableEmptySections  = {true}
@@ -114,17 +128,47 @@ class Contact extends Component {
     );
   }
 
+  changeLayout(isList) {
+    if (isList) {
+      this.setState({
+        isList: isList
+      });
+    } else {
+      this.setState({
+        isList: isList
+      });
+    }
+  }
+
+  filterNotes(searchValue, notes) {
+    let text = searchValue.toString().toLowerCase();;
+    return notes.filter((n, i) => {
+      let note = n.name.toString().toLowerCase();
+      return note >= text;
+    });
+  }
+
+  onSearch(searchValue) {
+    this.setState({ searchValue });
+    let filteredData = this.filterNotes(searchValue, this.state.db);
+
+    this.setState({ contactList: this.state.contactList.cloneWithRows(filteredData) });
+  }
+
   render() {
     return (
-      <View style={{}}>
-        <Header />
+      <View style={{paddingBottom: 135}}>
+        <Header
+          onListPress = {(isList) => this.changeLayout(isList)}
+          searchValue = {this.state.searchValue}
+          onChangeText = {searchValue => this.onSearch(searchValue)} />
         {this.renderContent()}
       </View>
     );
   }
 }
 
-const styles = {
+const styles = StyleSheet.create({
   listView: {
   },
   gridView: {
@@ -180,6 +224,6 @@ const styles = {
   iconStyle: {
     padding: 3,
   }
-};
+});
 
 export default Contact;
