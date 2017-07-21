@@ -9,16 +9,17 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Header, Spinner } from '../components/common'
+import { Header, Spinner, FloatButton } from '../components/common'
 import firebase from '../utils/firebase';
+import ActionButton from 'react-native-action-button';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 class Contact extends Component {
 
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     listView = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
@@ -29,26 +30,47 @@ class Contact extends Component {
       db : [],
 
     }
-    this.handleQuery = this.handleQuery.bind(this);
+    // this.handleQuery = this.handleQuery.bind(this);
     this._renderRow = this._renderRow.bind(this);
     this.changeLayout = this.changeLayout.bind(this);
     this.onSearch = this.onSearch.bind(this);
   }
 
   componentDidMount() {
-    ref = firebase.database().ref('users').orderByChild('name');
-    ref.on('child_added', this.handleQuery);
-  }
-  
-  handleQuery = (snapshot) => {
-    console.log(snapshot);
-    val = snapshot.val() || {};
-    this.setState({ db: [...this.state.db, val] });
+    console.log('Contact componentDidMount');
+    // ref = firebase.database().ref('users');
+    // ref.on('value', this.handleQuery);
+
+    val = this.sortContactsByName(this.props.users);
+    this.setState({ db: val });
     this.setState({
-      contactList: this.state.contactList.cloneWithRows(this.state.db),
+      contactList: this.state.contactList.cloneWithRows(val),
       loading: false
     });
+
   }
+
+  // componentWillMount() {
+  //   console.log('Contact componentWillMount');
+  // }
+
+  sortContactsByName(val) {
+    return array.sort(function (a, b) {
+      return b.firstName > a.firstName ? -1
+           : b.firstName < a.firstName ? 1 : 0
+    });
+  }
+  
+  // handleQuery = (snapshot) => {
+  //   this.setState({ loading: true });
+  //   val = snapshot.val() || {};
+  //   val = this.sortContactsByName(val);
+  //   this.setState({ db: val });
+  //   this.setState({
+  //     contactList: this.state.contactList.cloneWithRows(val),
+  //     loading: false
+  //   });
+  // }
 
   renderListView(rowData) {
     const {listContainer, listProfileImage, middleSectionStyle, nameStyle, listIconStyle } = styles;
@@ -59,7 +81,7 @@ class Contact extends Component {
           source={{uri: rowData.profile_img}} />
         <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
           <View style={middleSectionStyle}>
-            <Text style={nameStyle}>{rowData.name}</Text>
+            <Text style={nameStyle}>{rowData.firstName}</Text>
             <Text style={{}}>{rowData.position}</Text>
           </View>
           {
@@ -82,7 +104,7 @@ class Contact extends Component {
         <Image
           style={gridProfileImage}
           source={{uri: rowData.profile_img}} />
-        <Text style={nameStyle}>{rowData.name}</Text>
+        <Text style={nameStyle}>{rowData.firstName}</Text>
         <Text style={{}}>{rowData.position}</Text>
         {
           rowData.phone &&
@@ -143,7 +165,7 @@ class Contact extends Component {
   filterNotes(searchValue, notes) {
     let text = searchValue.toString().toLowerCase();;
     return notes.filter((n, i) => {
-      let note = n.name.toString().toLowerCase();
+      let note = n.firstName.toString().toLowerCase();
       return note >= text;
     });
   }
@@ -155,14 +177,38 @@ class Contact extends Component {
     this.setState({ contactList: this.state.contactList.cloneWithRows(filteredData) });
   }
 
+  addContact() {
+    console.log('addContact');
+  }
+
+  addStructure() {
+    console.log('addStructure')
+  }
+
   render() {
     return (
-      <View style={{paddingBottom: 135}}>
+      <View style={{flex: 1, paddingBottom: 135}}>
         <Header
           onListPress = {(isList) => this.changeLayout(isList)}
           searchValue = {this.state.searchValue}
           onChangeText = {searchValue => this.onSearch(searchValue)} />
         {this.renderContent()}
+        {/*<ActionButton buttonColor="#E74C3C"/>*/}
+
+        {/*<View style={{marginBottom: 30}}>
+          <ActionButton buttonColor="#E74C3C">
+            <ActionButton.Item buttonColor='#E74C3C' title="Structure" onPress={props.onStructurePress}>
+              <Icon name="flow-tree" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+            <ActionButton.Item buttonColor='#E74C3C' title="Contact" onPress={props.onContactPress}>
+              <Icon name="user" style={styles.actionButtonIcon} />
+            </ActionButton.Item>
+          </ActionButton>
+        </View>*/}
+        <FloatButton
+          style={styles.floatButton}
+          onContactPress={this.addContact}
+          onStructurePress={this.addStructure}/>
       </View>
     );
   }
@@ -223,6 +269,9 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     padding: 3,
+  },
+  floatButton: {
+    position: 'absolute',
   }
 });
 

@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../config/images';
 import Anniversary from './Anniversary';
 import Contact from './Contact';
+import { Spinner } from '../components/common'
+import firebase from '../utils/firebase';
 
 var width = Dimensions.get('window').width;
 
@@ -18,7 +20,37 @@ const TabIcon = ({ selected, title, Iconname }) => {
 }
 
 class Root extends Component {
+
+  constructor() {
+    super();
+
+    this.state = {
+      loading: true,
+      users: null
+    }
+  }
+
+  componentDidMount() {
+    ref = firebase.database().ref('users');
+    ref.on('value', this.handleQuery);
+  }
+
+  handleQuery = (snapshot) => {
+    this.setState({ loading: true });
+    val = snapshot.val() || {};
+    array = Object.keys(val).map(function (key) {
+      return val[key];
+    });
+    this.setState({
+      loading: false,
+      users: array
+    });
+  }
+
   render() {
+    if (this.state.loading) {
+      return <Spinner />;
+    }
     return (
       <Router>
         <Scene key="root">
@@ -33,6 +65,7 @@ class Root extends Component {
                 component={Anniversary}
                 title="Scarlet"
                 tintColor='#6fa8dc'
+                users={this.state.users}
               />
             </Scene>
 
@@ -41,12 +74,13 @@ class Root extends Component {
                 key="blue"
                 component={Contact}
                 title="Blue"
+                users={this.state.users}
               />
             </Scene>
           </Scene>
         </Scene>
       </Router>
-    )
+    );
   }
 };
 
