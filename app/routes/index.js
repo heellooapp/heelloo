@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View, Image, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StatusBar, Dimensions } from 'react-native';
+import Sidemenu from '../components/Sidemenu';
+import Drawer from 'react-native-drawer';
 import { Router, Scene } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../config/images';
 import Anniversary from './Anniversary';
 import Contact from './Contact';
+import Profile from '../components/Profile';
 import { Spinner } from '../components/common'
 import firebase from '../utils/firebase';
 
@@ -21,6 +24,14 @@ const TabIcon = ({ selected, title, Iconname }) => {
 
 class Root extends Component {
 
+  closeDrawer = () => {
+    this._drawer.close()
+  };
+
+  openDrawer = () => {
+    this._drawer.open()
+  };
+  
   constructor() {
     super();
 
@@ -52,34 +63,61 @@ class Root extends Component {
       return <Spinner />;
     }
     return (
-      <Router>
-        <Scene key="root">
-          <Scene
-            key="tabbar"
-            tabs={true}
-            tabBarStyle={{ backgroundColor: '#6fa8dc', height: 60 }}
-          >
-            <Scene key="anniversary" title="Anniversary" Iconname="ios-notifications-outline" icon={TabIcon} hideNavBar={true}>
+      <Drawer
+        onPress={() => {this._drawer.open()}}
+        ref={(ref) => this._drawer = ref}
+        content={<Sidemenu closeDrawer={this.closeDrawer} />}
+        tweenHandler={Drawer.tweenPresets.parallax}
+        openDrawerOffset={(viewport) => {
+          return 110
+        }}
+        tapToClose={true}
+        panOpenMask={0.2}
+        negotiatePan
+        tweenHandler={(ratio) => ({
+          main: {
+            opacity: 1,
+          },
+          mainOverlay: {
+            opacity: ratio / 1.7,
+            backgroundColor: 'black',
+          },
+        })}
+        styles={{main: {shadowColor: '#000000', shadowOpacity: 0.3, shadowRadius: 5}}}
+        >
+          <Router>
+            <Scene key="root">
               <Scene
-                key="scarlet"
-                component={Anniversary}
-                title="Scarlet"
-                tintColor='#6fa8dc'
-                users={this.state.users}
-              />
-            </Scene>
+                key="tabbar"
+                tabs={true}
+                tabBarStyle={{ backgroundColor: '#6fa8dc', height: 60 }}
+              >
+                <Scene key="anniversary" title="Anniversary" Iconname="ios-notifications-outline" icon={TabIcon} {...this.props} hideNavBar={true}>
+                  <Scene
+                    key="Anniversary"
+                    component={Anniversary}
+                    tintColor='#6fa8dc'
+                    users={this.state.users}
+                  />
+                </Scene>
 
-            <Scene key="contact" title="Contact" Iconname="ios-people" icon={TabIcon} hideNavBar={true} initial>
-              <Scene
-                key="blue"
-                component={Contact}
-                title="Blue"
-                users={this.state.users}
-              />
+                <Scene key="contact" title="Contact" Iconname="ios-people" icon={TabIcon} hideNavBar={true} {...this.props} initial>
+                  <Scene
+                    key="Contact"
+                    component={Contact}
+                    users={this.state.users}
+                    openDrawer={this.openDrawer}
+                  />
+                  <Scene
+                    key="profile"
+                    component={Profile}
+                    users={this.state.users}
+                  />
+                </Scene>
+              </Scene>
             </Scene>
-          </Scene>
-        </Scene>
-      </Router>
+          </Router>
+        </Drawer>
     );
   }
 };
@@ -87,8 +125,13 @@ class Root extends Component {
 const styles = {
   text: {
     color: '#fff'
+  },
+  drawer: {
+    backgroundColor: '#000',
+    width: 100
   }
 };
 
 
 export default Root;
+

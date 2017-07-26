@@ -16,7 +16,7 @@ class Header extends Component {
 
   ListIconPressed() {
     this.setState({
-      listIconName: this.state.isList === true ? "ios-apps" : "ios-menu",
+      listIconName: this.state.isList === true ? "ios-apps" : "md-menu",
       isList: this.state.isList ? false : true,
     });
 
@@ -28,7 +28,7 @@ class Header extends Component {
     const { viewStyle, searchSection, iconLeft, iconList, textInput } = styles;
     return (
       <View style={viewStyle}>
-        <Icon name="ios-home" size={30} color="#fff" style={iconLeft} />
+        <Icon name="ios-home" size={30} color="#fff" style={iconLeft} onPress={this.props.openDrawer}/>
         <View style={searchSection}>
           <TextInput 
             type="text"
@@ -85,5 +85,8 @@ const styles = {
   },
 };
 
-// Make the component available to other parts of the app
+Header.propTypes = {
+  openDrawer: React.PropTypes.func,
+};
+
 export { Header };

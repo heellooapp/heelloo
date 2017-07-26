@@ -5,7 +5,7 @@ import {
   Image,
   Dimensions,
   ListView,
-  StyleSheet
+  StyleSheet, TouchableHighlight
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -73,47 +73,69 @@ class Contact extends Component {
   // }
 
   renderListView(rowData) {
-    const {listContainer, listProfileImage, middleSectionStyle, nameStyle, listIconStyle } = styles;
+    const {listContainer, listProfileImage, middleSectionStyle, nameStyle, listIconStyle, positionStyle } = styles;
     return (
-      <View style={listContainer}>
-        <Image
-          style={listProfileImage}
-          source={{uri: rowData.profile_img}} />
-        <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
-          <View style={middleSectionStyle}>
-            <Text style={nameStyle}>{rowData.firstName}</Text>
-            <Text style={{}}>{rowData.position}</Text>
-          </View>
-          {
-            rowData.phone &&
-            <View style={listIconStyle}>
-              <Icon name="phone-square" size={30} color="green" />
-              <Icon name="envelope" size={27} color="orange" />
+      <TouchableHighlight 
+        underlayColor="#e6e6e6" 
+        onPress={() => Actions.profile({
+          profile_img: rowData.profile_img, 
+          firstName: rowData.firstName,
+          lastname: rowData.lastname,
+          nickname: rowData.nickname,
+          position: rowData.position
+        })}
+      >
+        <View style={listContainer}>
+          <Image
+            style={listProfileImage}
+            source={{uri: rowData.profile_img}} />
+          <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View style={middleSectionStyle}>
+              <Text style={nameStyle}>{rowData.firstName} {rowData.lastname}</Text>
+              <Text style={positionStyle}>{rowData.position}</Text>
             </View>
-          }
+            {
+              rowData.phone &&
+              <View style={listIconStyle}>
+                <Icon name="phone-square" size={27} color="#009e11" />
+                <Icon name="envelope" size={23} color="#b45f00" />
+              </View>
+            }
+          </View>
         </View>
-      </View>
+      </TouchableHighlight>
     );
-
   }
 
   renderGridView(rowData) {
-    const {gridContainer, gridProfileImage, middleSectionStyle, nameStyle, gridIconStyle, iconStyle } = styles;
+    const {gridContainer, gridProfileImage, middleSectionStyle, nameStyle, gridIconStyle, iconStyle, iconGridStyle, positionStyle, lastNameStyle } = styles;
     return (
-      <View style={gridContainer}>
-        <Image
-          style={gridProfileImage}
-          source={{uri: rowData.profile_img}} />
-        <Text style={nameStyle}>{rowData.firstName}</Text>
-        <Text style={{}}>{rowData.position}</Text>
-        {
-          rowData.phone &&
-          <View style={gridIconStyle}>
-              <Icon name="phone-square" size={35} color="green" style={iconStyle} />
-              <Icon name="envelope" size={33} color="orange" style={iconStyle} />
-          </View>
-        }
-      </View>
+      <TouchableHighlight 
+        underlayColor="#e6e6e6" 
+        onPress={() => Actions.profile({
+          profile_img: rowData.profile_img, 
+          firstName: rowData.firstName,
+          lastname: rowData.lastname,
+          nickname: rowData.nickname,
+          position: rowData.position
+        })}
+      >
+        <View style={gridContainer}>
+          <Image
+            style={gridProfileImage}
+            source={{uri: rowData.profile_img}} />
+          <Text style={nameStyle}>{rowData.firstName}</Text>
+          <Text style={lastNameStyle}>{rowData.lastname}</Text>
+          <Text style={positionStyle}>{rowData.position}</Text>
+          {
+            rowData.phone &&
+            <View style={gridIconStyle}>
+                <Icon name="envelope" size={28} color="#b45f00" style={iconGridStyle} />
+                <Icon name="phone-square" size={30} color="#009e11" style={iconStyle} />
+            </View>
+          }
+        </View>
+      </TouchableHighlight>
     );
   }
 
@@ -123,7 +145,7 @@ class Contact extends Component {
     }
     return this.renderGridView(rowData);
   }
-
+ 
   renderContent() {
     if (this.state.loading) {
       return (
@@ -187,8 +209,9 @@ class Contact extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, paddingBottom: 135}}>
+      <View style={styles.container}>
         <Header
+          openDrawer={this.props.openDrawer}
           onListPress = {(isList) => this.changeLayout(isList)}
           searchValue = {this.state.searchValue}
           onChangeText = {searchValue => this.onSearch(searchValue)} />
@@ -215,7 +238,10 @@ class Contact extends Component {
 }
 
 const styles = StyleSheet.create({
-  listView: {
+  container: {
+    flex: 1, 
+    paddingBottom: 135, 
+    backgroundColor: '#eee'
   },
   gridView: {
     justifyContent: 'space-between',
@@ -225,37 +251,55 @@ const styles = StyleSheet.create({
   listContainer: {
     flex: 1,
     flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
-    margin: 5,
+    marginTop: 5,
     padding: 5,
-    backgroundColor: '#cce5ff',
+    backgroundColor: '#fff',
     borderRadius: 5
   },
   gridContainer: {
-    width: 190,
-    height: 260,
+    flex: 50,
+    height: windowHeight - 380,
     margin: 7,
     paddingTop: 20,
+    paddingRight: 14,
+    paddingLeft: 14,
     alignItems: 'center',
-    backgroundColor: '#cce5ff',
+    backgroundColor: '#fff',
     borderRadius: 5
   },
   listProfileImage: {
     width: 60,
     height: 60,
-    borderRadius: 30
+    borderRadius: 30,
+    borderColor: '#eee',
+    borderWidth: 1
   },
   gridProfileImage: {
-    width: 150,
-    height: 150,
-    borderRadius: 75
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    borderColor: '#eee',
+    borderWidth: 1,
+    marginBottom: 12
   },
   middleSectionStyle: {
     marginLeft: 12,
+    justifyContent: 'center',
+  },
+  positionStyle: {
+    fontSize: 13,
+    paddingTop: 5
   },
   nameStyle: {
     color: '#000',
-    fontSize: 20,
+    fontSize: 17,
+    fontWeight: 'bold'
+  },
+  lastNameStyle: {
+    color: '#000',
+    fontSize: 17,
     fontWeight: 'bold'
   },
   listIconStyle: {
@@ -264,14 +308,13 @@ const styles = StyleSheet.create({
   gridIconStyle: {
     flexDirection: 'row',
     alignSelf: 'flex-end',
-    marginRight: 20,
-    justifyContent: 'center'
   },
   iconStyle: {
-    padding: 3,
+    marginTop: 13
   },
-  floatButton: {
-    position: 'absolute',
+  iconGridStyle: {
+    marginTop: 15,
+    marginRight: 10
   }
 });
 

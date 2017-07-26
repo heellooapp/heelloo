@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 const FloatButton = (props) => {
   return (
     <View style={styles.containerStyle}>
-      <ActionButton buttonColor="#E74C3C">
+      <ActionButton buttonColor="#E74C3C" >
         <ActionButton.Item buttonColor='#E74C3C' title="Structure" onPress={props.onStructurePress}>
           <Icon name="flow-tree" style={styles.actionButtonIcon} />
         </ActionButton.Item>

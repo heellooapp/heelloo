@@ -1,6 +1,7 @@
 package com.newmediamarketingagency.teamon;
 
 import com.facebook.react.ReactActivity;
+import io.invertase.firebase.RNFirebasePackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 
 public class MainActivity extends ReactActivity {
