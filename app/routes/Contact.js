@@ -78,11 +78,7 @@ class Contact extends Component {
       <TouchableHighlight 
         underlayColor="#e6e6e6" 
         onPress={() => Actions.profile({
-          profile_img: rowData.profile_img, 
-          firstName: rowData.firstName,
-          lastname: rowData.lastname,
-          nickname: rowData.nickname,
-          position: rowData.position
+          uid: rowData.uid
         })}
       >
         <View style={listContainer}>
@@ -113,11 +109,7 @@ class Contact extends Component {
       <TouchableHighlight 
         underlayColor="#e6e6e6" 
         onPress={() => Actions.profile({
-          profile_img: rowData.profile_img, 
-          firstName: rowData.firstName,
-          lastname: rowData.lastname,
-          nickname: rowData.nickname,
-          position: rowData.position
+          uid: rowData.uid
         })}
       >
         <View style={gridContainer}>
