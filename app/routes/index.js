@@ -8,8 +8,11 @@ import images from '../config/images';
 import Anniversary from './Anniversary';
 import Contact from './Contact';
 import Profile from '../components/Profile';
-import { Spinner } from '../components/common'
+import { Spinner, FloatButton } from '../components/common'
 import firebase from '../utils/firebase';
+import NewStructure from './NewStructure';
+import NewAccount from './NewAccount';
+import Structure from './Structure';
 
 var width = Dimensions.get('window').width;
 
@@ -32,18 +35,34 @@ class Root extends Component {
     this._drawer.open()
   };
   
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       loading: true,
-      users: null
+      users: null,
     }
   }
 
   componentDidMount() {
     ref = firebase.database().ref('users');
+    
+    userUid = firebase.auth().currentUser.uid;
+    this.setState({ uid: userUid });
+    userRef = ref.orderByChild('uid').equalTo(userUid);
+    userRef.on('value', this.handleUser);
+
     ref.on('value', this.handleQuery);
+  }
+
+  handleUser = (snapshot) => {
+    val = snapshot.val() || {};
+    val = val[this.state.uid];
+    if (val.isAdmin) {
+      this.setState({ isAdmin: true });
+    } else {
+      this.setState({ isAdmin: false });
+    }
   }
 
   handleQuery = (snapshot) => {
@@ -66,7 +85,9 @@ class Root extends Component {
       <Drawer
         onPress={() => {this._drawer.open()}}
         ref={(ref) => this._drawer = ref}
-        content={<Sidemenu closeDrawer={this.closeDrawer} />}
+        content={<Sidemenu
+                            closeDrawer={this.closeDrawer}
+                            uid = {this.state.uid} />}
         tweenHandler={Drawer.tweenPresets.parallax}
         openDrawerOffset={(viewport) => {
           return 110
@@ -87,6 +108,7 @@ class Root extends Component {
         >
           <Router>
             <Scene key="root">
+
               <Scene
                 key="tabbar"
                 tabs={true}
@@ -98,6 +120,7 @@ class Root extends Component {
                     component={Anniversary}
                     tintColor='#6fa8dc'
                     users={this.state.users}
+                    isAdmin={this.state.isAdmin}
                   />
                 </Scene>
 
@@ -106,6 +129,7 @@ class Root extends Component {
                     key="Contact"
                     component={Contact}
                     users={this.state.users}
+                    isAdmin={this.state.isAdmin}
                     openDrawer={this.openDrawer}
                   />
                   <Scene
@@ -115,6 +139,23 @@ class Root extends Component {
                   />
                 </Scene>
               </Scene>
+
+              <Scene
+                key="newStructure"
+                component={NewStructure}
+                hideNavBar={true}
+              />
+              <Scene
+                key="structure"
+                component={Structure}
+                isAdmin={this.state.isAdmin}
+                hideNavBar={true}
+              />
+              <Scene
+                key="newAccount"
+                component={NewAccount}
+                hideNavBar={true}
+              />
             </Scene>
           </Router>
         </Drawer>

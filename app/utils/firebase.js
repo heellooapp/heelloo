@@ -1,7 +1,7 @@
 import Firebase from 'react-native-firebase';
 
 const configurationOptions = {
-  debug: true
+  debug: false
 };
 
 const firebase = Firebase.initializeApp(configurationOptions);

@@ -1,38 +1,50 @@
 import React, { Component } from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, AsyncStorage } from 'react-native';
 import images from '../config/images';
 import firebase from '../utils/firebase';
 import { Card, CardSection, Input, Button, Spinner } from '../components/common';
 
 class Login extends Component {
 
-  state = {
-    email: '',
-    password: '',
-    error: '',
-    loading: false,
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      email: '',
+      password: '',
+      error: '',
+      loading: false,
+    }
+
+    this.onLogin = this.onLogin.bind(this);
   }
 
   onLogin() {
     const { email, password } = this.state;
 
     this.setState({
-      error: '',
       loading: true,
     })
 
     firebase.auth().signInWithEmailAndPassword(email, password)
       .then((user) => {
-        this.setState({
-          email: '',
-          password: '',
-          error: 'Success',
-          loading: false
-        });
+        this.authSuccess(password);
       })
       .catch((err) => {
-        this.setState({ error: 'Authentication Failed.', loading: false });
+        this.authFailed();
       });
+  }
+
+  authSuccess(password) {
+    AsyncStorage.setItem('USER', password);
+    this.setState({
+      error: 'Success',
+      loading: false
+    });
+  }
+
+  authFailed() {
+    this.setState({ error: 'Authentication Failed.', loading: false });
   }
 
   renderButton() {
@@ -41,7 +53,7 @@ class Login extends Component {
     }
 
     return (
-      <Button onPress={this.onLogin.bind(this)}>
+      <Button onPress={this.onLogin}>
         Log in
       </Button>
     );
@@ -89,7 +101,7 @@ const styles = {
   },
   errorText: {
     textAlign: 'center',
-    color: 'red',
+    color: '#F44336',
     fontSize: 16,
     marginBottom: 6
   },
