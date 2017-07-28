@@ -28,9 +28,6 @@ class Anniversary extends Component {
   }
 
   componentDidMount() {
-    // ref = firebase.database().ref('users');
-    // ref.once('value', this.handleQuery);
-
     val = this.sortContactsByDate(this.props.users);
     this.setState({ db: val });
     this.setState({
@@ -44,11 +41,7 @@ class Anniversary extends Component {
     work.map(function (obj) {
       obj.isWork = true;
     });
-    // val.map(function (obj) {
-    //   obj.isWork = false;
-    // });
-    console.log(val);
-    console.log(work);
+    
     child = val.concat(work);
     sorted = child.sort( function (a, b) {
       var ad, bd;
@@ -116,23 +109,26 @@ class Anniversary extends Component {
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <Text>{rowData.firstName}</Text>
         {
-          !rowData.isWork &&
-          <Text>b {rowData.anniversary.birthday}</Text>
+          (!rowData.isWork && rowData.anniversary.birthday)
+            ? <Text>b {rowData.anniversary.birthday}</Text>
+            : null
         }
         {
-          rowData.isWork &&
-          <Text>a {rowData.anniversary.firstDay}</Text>
+          (rowData.isWork && rowData.anniversary.firstDay)
+            ? <Text>a {rowData.anniversary.firstDay}</Text>
+            : null
         }
       </View>
     );
   }
 
   addContact() {
-    console.log('addContact');
+    Actions.newAccount();
   }
 
   addStructure() {
-    console.log('addStructure')
+    Actions.newStructure();
+
   }
 
   render() {

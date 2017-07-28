@@ -46,8 +46,8 @@ class Profile extends Component {
     this.setState({ info });
   }
 
-  header(props) {
-    const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
+  header() {
+    const { viewStyle, iconLeft, iconList, textStyle } = styles;
     return (
     <View style={viewStyle}>
       <Icon name="caret-left" size={45} color="#fff" style={iconLeft} onPress={() => Actions.pop()} />

@@ -1,46 +1,94 @@
 import React from 'react';
 import {
   View,
-  TouchableHighlight,
+  TouchableOpacity,
   Image,
   Dimensions,
   Text,
 } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../config/images';
+import { Spinner } from './common';
+import firebase from '../utils/firebase';
 
 const Height = Dimensions.get('window').height;
 
 class Sidemenu extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true
+    }
+  }
+
+  componentDidMount() {
+    userRef = firebase.database().ref('users').orderByChild('uid').equalTo(this.props.uid);
+    userRef.on('value', this.handleUser);
+  }
+
+  handleUser = (snapshot) => {
+    val = snapshot.val() || {};
+    user = val[this.props.uid];
+    this.setState({ user, loading: false });
+  }
+
+  signOut() {
+    firebase.auth().signOut();
+  }
+
+  openStructure() {
+    Actions.structure();
+    this.props.closeDrawer();
+  }
+
+  renderContent() {
+    if (this.state.loading) {
+      return (
+        <Spinner />
+      )
+    }
+    return(
+      <View>
+      <View style={styles.userPart}>
+        <Image source={{uri: this.state.user.profile_img}} style={styles.ProfileImg}/>
+        <Text style={styles.userName}>{this.state.user.firstName} {this.state.user.lastname}</Text>
+        <Text style={styles.position}>{this.state.user.position}</Text>
+      </View>
+      <View style={styles.mainPart}>
+        <View style={styles.userInfo}>
+          <View style={styles.container}>
+            <Icon name="md-person" size={23} color="#000" style={styles.icon} />
+            <Text>My Profile</Text>
+          </View>
+          <TouchableOpacity onPress={this.signOut}>
+            <View style={styles.container}>
+              <Icon name="md-log-out" size={20} color="#000" style={styles.icon} />
+              <Text>Sign Out</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.appInfo}>
+          <TouchableOpacity onPress={this.openStructure.bind(this)}>
+            <View style={styles.container}>
+              <Icon name="md-menu" size={23} color="#000" style={styles.icon} />
+              <Text>Structure</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.logoContainer}>
+          <Image source={images.logo} style={styles.logo}/>
+        </View>
+      </View>
+      </View>
+    )
+  }
+
   render() {
     return (
       <View style={styles.menu}>
-         <View style={styles.userPart}>
-          <Image source={images.search} style={styles.ProfileImg}/>
-          <Text style={styles.userName}>Anu-Ujin Bat-ulzii</Text>
-          <Text style={styles.position}>React native developer</Text>
-         </View>
-         <View style={styles.mainPart}>
-          <View style={styles.userInfo}>
-            <View style={styles.container}>
-               <Icon name="md-person" size={23} color="#000" style={styles.icon} />
-               <Text>My Profile</Text>
-            </View>
-            <View style={styles.container}>
-               <Icon name="md-log-out" size={20} color="#000" style={styles.icon} />
-               <Text>Sign Out</Text>
-            </View>
-          </View>
-          <View style={styles.appInfo}>
-            <View style={styles.container}>
-               <Icon name="md-menu" size={23} color="#000" style={styles.icon} />
-               <Text>Structure</Text>
-            </View>
-          </View>
-          <View style={styles.logoContainer}>
-            <Image source={images.logo} style={styles.logo}/>
-          </View>
-         </View>
+        {this.renderContent()}
       </View>
     );
   }

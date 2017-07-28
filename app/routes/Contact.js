@@ -37,10 +37,6 @@ class Contact extends Component {
   }
 
   componentDidMount() {
-    console.log('Contact componentDidMount');
-    // ref = firebase.database().ref('users');
-    // ref.on('value', this.handleQuery);
-
     val = this.sortContactsByName(this.props.users);
     this.setState({ db: val });
     this.setState({
@@ -50,10 +46,6 @@ class Contact extends Component {
 
   }
 
-  // componentWillMount() {
-  //   console.log('Contact componentWillMount');
-  // }
-
   sortContactsByName(val) {
     return array.sort(function (a, b) {
       return b.firstName > a.firstName ? -1
@@ -61,17 +53,6 @@ class Contact extends Component {
     });
   }
   
-  // handleQuery = (snapshot) => {
-  //   this.setState({ loading: true });
-  //   val = snapshot.val() || {};
-  //   val = this.sortContactsByName(val);
-  //   this.setState({ db: val });
-  //   this.setState({
-  //     contactList: this.state.contactList.cloneWithRows(val),
-  //     loading: false
-  //   });
-  // }
-
   renderListView(rowData) {
     const {listContainer, listProfileImage, middleSectionStyle, nameStyle, listIconStyle, positionStyle } = styles;
     return (
@@ -192,11 +173,11 @@ class Contact extends Component {
   }
 
   addContact() {
-    console.log('addContact');
+    Actions.newAccount();
   }
 
   addStructure() {
-    console.log('addStructure')
+    Actions.newStructure();
   }
 
   render() {
@@ -208,22 +189,13 @@ class Contact extends Component {
           searchValue = {this.state.searchValue}
           onChangeText = {searchValue => this.onSearch(searchValue)} />
         {this.renderContent()}
-        {/*<ActionButton buttonColor="#E74C3C"/>*/}
-
-        {/*<View style={{marginBottom: 30}}>
-          <ActionButton buttonColor="#E74C3C">
-            <ActionButton.Item buttonColor='#E74C3C' title="Structure" onPress={props.onStructurePress}>
-              <Icon name="flow-tree" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
-            <ActionButton.Item buttonColor='#E74C3C' title="Contact" onPress={props.onContactPress}>
-              <Icon name="user" style={styles.actionButtonIcon} />
-            </ActionButton.Item>
-          </ActionButton>
-        </View>*/}
-        <FloatButton
-          style={styles.floatButton}
-          onContactPress={this.addContact}
-          onStructurePress={this.addStructure}/>
+        {
+          this.props.isAdmin &&
+          <FloatButton
+            style={styles.floatButton}
+            onContactPress={this.addContact}
+            onStructurePress={this.addStructure}/>
+        }
       </View>
     );
   }
@@ -236,7 +208,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee'
   },
   gridView: {
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
     flexDirection: 'row',
     flexWrap: 'wrap'
   },
@@ -251,8 +223,8 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   gridContainer: {
-    flex: 50,
-    height: windowHeight - 380,
+    flex: 1,
+    height: 300,
     margin: 7,
     paddingTop: 20,
     paddingRight: 14,

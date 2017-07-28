@@ -10,6 +10,7 @@
     "react": "16.0.0-alpha.12",
     "react-native": "0.45.1",
     "react-native-action-button": "^2.7.2",
+    "react-native-collapsible": "^0.8.1",
     "react-native-datepicker": "^1.6.0",
     "react-native-drawer": "^2.3.0",
     "react-native-elements": "^0.15.0",

@@ -9,19 +9,20 @@ class TeamOn extends Component {
 
   state = {
     loggedIn: null,
-    users: null
+    users: null,
   }
 
   componentWillMount() {
-    console.log('Index componentDidMount');
+    // firebase.auth().signOut();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        // console.log(user.uid);
         // user.updateProfile({
         //   displayName: "Ujin",
         // });
 
         // test = firebase.database()
-        //   .ref('users').child('AfUSjeq9TpRgcRHgHjP6AVdPQ7H2')
+        //   .ref('users').child('tmX4Fgmn2YffzUOECgu0tHxpdMj2')
         //   .set({
         //     "anniversary" : {
         //       "birthday" : "1995-04-04",
@@ -32,7 +33,7 @@ class TeamOn extends Component {
         //     "nickname" : "Juni",
         //     "position" : "React Native Developer",
         //     "profile_img" : "https://firebasestorage.googleapis.com/v0/b/teamon-68ca0.appspot.com/o/ujin.jpg?alt=media&token=c82ee4b3-7bf8-4c79-8bca-34aebe1c546f",
-        //     "uid" : "AfUSjeq9TpRgcRHgHjP6AVdPQ7H2"
+        //     "uid" : "tmX4Fgmn2YffzUOECgu0tHxpdMj2"
         //   });
 
         //   console.log(test);
