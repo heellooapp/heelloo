@@ -20,8 +20,8 @@ class Anniversary extends Component {
     listView = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       anniversaryList: listView.cloneWithRows([]),
-      db : [],
       loading: true,
+      today: false,
     }
     this.handleQuery = this.handleQuery.bind(this);
 
@@ -29,7 +29,6 @@ class Anniversary extends Component {
 
   componentDidMount() {
     val = this.sortContactsByDate(this.props.users);
-    this.setState({ db: val });
     this.setState({
       anniversaryList: this.state.anniversaryList.cloneWithRows(val),
       loading: false
@@ -43,7 +42,20 @@ class Anniversary extends Component {
     });
     
     child = val.concat(work);
-    sorted = child.sort( function (a, b) {
+
+    filtered = child.filter( (obj) => {
+      if (obj.anniversary) {
+        if (obj.anniversary.birthday && !obj.isWork) {
+          return true;
+        }
+        if (obj.anniversary.firstDay && obj.isWork) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+    sorted = filtered.sort( function (a, b) {
       var ad, bd;
       if (a.isWork) {
         ad = new Date(a.anniversary.firstDay);
@@ -61,15 +73,17 @@ class Anniversary extends Component {
       return new Date(ad) - new Date(bd);
     });
 
+    today = new Date();
+    today.setFullYear(1970);
+    today.setHours(0, 0, 0, 0);
     for (var i = 0; i < sorted.length; i++) {
       if (sorted[0].isWork)
         first = new Date(sorted[0].anniversary.firstDay);
       else
         first = new Date(sorted[0].anniversary.birthday);
       first.setFullYear(1970);
-      today = new Date();
-      today.setFullYear(1970);
-      if (first > today) {
+      first.setHours(0, 0, 0, 0);
+      if (first >= today) {
         break;
       }
       first = sorted.shift();
@@ -81,7 +95,6 @@ class Anniversary extends Component {
   handleQuery = (snapshot) => {
     val = snapshot.val() || {};
     val = this.sortContactsByDate(val);
-    this.setState({ db: val });
     this.setState({
       anniversaryList: this.state.anniversaryList.cloneWithRows(val),
       loading: false
@@ -110,12 +123,12 @@ class Anniversary extends Component {
         <Text>{rowData.firstName}</Text>
         {
           (!rowData.isWork && rowData.anniversary.birthday)
-            ? <Text>b {rowData.anniversary.birthday}</Text>
+            ? <Text>{rowData.anniversary.birthday}</Text>
             : null
         }
         {
           (rowData.isWork && rowData.anniversary.firstDay)
-            ? <Text>a {rowData.anniversary.firstDay}</Text>
+            ? <Text>{rowData.anniversary.firstDay}</Text>
             : null
         }
       </View>
@@ -133,7 +146,7 @@ class Anniversary extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, paddingBottom: 135, paddingTop: 30}}>
+      <View style={{flex: 1, paddingBottom: 65, paddingTop: 30}}>
         {this.renderContent()}
         <FloatButton
           style={styles.floatButton}

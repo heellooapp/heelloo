@@ -107,7 +107,7 @@ class NewAccount extends Component {
         firebase.database().ref('users/' + uid)
           .set({
             anniversary: {
-              firstDay: new Date()
+              firstDay: new Date().toISOString().split('T')[0]
             },
             isAdmin: this.state.isAdmin,
             email : this.state.email,
@@ -126,7 +126,7 @@ class NewAccount extends Component {
       });
 
   }
-
+  
   header() {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
