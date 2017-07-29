@@ -3,8 +3,10 @@ import {
   Text,
   View,
   ListView,
+  ScrollView,
   Dimensions,
   StyleSheet,
+  TouchableOpacity
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import firebase from '../utils/firebase';
@@ -110,25 +112,53 @@ class Anniversary extends Component {
       );
     }
     return (
-      <ListView 
-        dataSource           = {this.state.anniversaryList}
-        renderRow            = {(rowData) => this._renderRow(rowData)}
-        enableEmptySections  = {true}/>
+      <ScrollView >
+        <Text style={styles.centerText}>Today</Text>
+        <ListView 
+          dataSource           = {this.state.anniversaryList}
+          renderRow            = {(rowData) => this._renderRow(rowData)}
+          enableEmptySections  = {true}/>
+        <Text style={styles.centerText}>All Upcoming Events</Text>
+      </ScrollView>
     );
   }
 
   _renderRow(rowData) {
+    var months = ['', 'Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return (
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text>{rowData.firstName}</Text>
+      <View>
         {
           (!rowData.isWork && rowData.anniversary.birthday)
-            ? <Text>{rowData.anniversary.birthday}</Text>
-            : null
+            ?
+          <TouchableOpacity> 
+            <View style={styles.mainContainer}>
+              <View style={styles.secondContainer}>
+                <Text style={styles.name}>{rowData.firstName} {rowData.lastname}</Text>
+                <Text>Happy {new Date().getYear() - new Date(rowData.anniversary.birthday).getYear()}-year birthday!</Text>
+              </View>
+              <View style={styles.dateBirth}>
+                <Text style={styles.dateBirthtext}>{months[new Date(rowData.anniversary.birthday).getMonth(months)]}</Text>
+                <Text style={styles.dateBirthBold}>{new Date(rowData.anniversary.birthday).getDate()}</Text>
+              </View>
+            </View>
+          </TouchableOpacity> 
+          : null
         }
         {
           (rowData.isWork && rowData.anniversary.firstDay)
-            ? <Text>{rowData.anniversary.firstDay}</Text>
+            ?
+            <TouchableOpacity>
+              <View style={styles.mainContainer}>
+                <View style={styles.secondContainer}>
+                  <Text style={styles.name}>{rowData.firstName} {rowData.lastname}</Text>
+                  <Text>Happy {new Date().getYear() - new Date(rowData.anniversary.firstDay).getYear()}-year work anniversary!</Text>
+                </View> 
+                <View style={styles.dateWork}>
+                  <Text style={styles.dateWorktext}>{months[new Date(rowData.anniversary.firstDay).getMonth(months)]}</Text>
+                  <Text style={styles.dateWorkBold}>{new Date(rowData.anniversary.firstDay).getDate()}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
             : null
         }
       </View>
@@ -146,7 +176,7 @@ class Anniversary extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, paddingBottom: 65, paddingTop: 30}}>
+      <View style={styles.container}>
         {this.renderContent()}
         <FloatButton
           style={styles.floatButton}
@@ -158,15 +188,65 @@ class Anniversary extends Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    marginBottom: 5,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 3
+  },
+  centerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    padding: 13,
+    textAlign: 'center'
+  },
+  secondContainer: {
+    padding: 10
+  },
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'blue',
-    height: windowHeight
+    flex: 1, 
+    paddingBottom: 65, 
+    paddingTop: 30,
+    backgroundColor: '#eee',
   },
   floatButton: {
     position: 'absolute',
-  }
+  },
+  dateBirth: {
+    backgroundColor: '#fae6e6',
+    width: 70,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  dateBirthtext: {
+    color: '#e06666'
+  },
+  dateWorktext: {
+    color: '#009e11'
+  },
+  dateWorkBold: {
+    color: '#009e11',
+    fontWeight: 'bold',
+    fontSize: 21
+  },
+  dateBirthBold: {
+    color: '#e06666',
+    fontWeight: 'bold',
+    fontSize: 21
+  },
+  dateWork: {
+    backgroundColor: '#edf5ea',
+    width: 70,
+    padding: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
 });
 
 export default Anniversary;

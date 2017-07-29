@@ -52,7 +52,7 @@ class NewStructure extends Component {
       <TouchableOpacity  onPress={() => Actions.contact()} >
 	      <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
-      <Text style={textStyle}>Add Structure</Text>
+      <Text style={textStyle}>Add structure</Text>
       <TouchableOpacity onPress={this.saveStructure.bind(this)}>
 	      <Icon name="check" size={30} color="#fff" style={iconList} />
       </TouchableOpacity>
@@ -96,7 +96,8 @@ class NewStructure extends Component {
 		return (
 			<View>
 				{this.header()}
-				<View style={{padding: 10,}}>
+				<View style={styles.containerStyle}>
+          <Icon style={styles.iconOddStyle} name="sitemap" size={20} color="#67686c"/>
 					<TextInput
 		        placeholder='Structure name'
 		        autoCorrect={false}
@@ -106,8 +107,8 @@ class NewStructure extends Component {
 		        autoCapitalize='none'
 		        underlineColorAndroid='transparent'
 		      />
-		      {this.renderPicker()}
 		    </View>
+        {this.renderPicker()}
 			</View>
 		)
 	}
@@ -115,13 +116,12 @@ class NewStructure extends Component {
 
 const styles = StyleSheet.create({
   inputStyle: {
-    color: '#555',
+    color: '#333',
     paddingRight: 5,
     paddingLeft: 5,
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 23,
-    height: 50,
-    borderWidth: 1,
+    flex: 1
   },
   viewStyle: {
     backgroundColor: '#6fa8dc',
@@ -130,6 +130,24 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 75,
     paddingTop: (Platform.OS === 'ios') ? 20 : 0,
+  },
+  containerStyle: {
+    height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    marginBottom: 8,
+    marginRight: 20,
+    marginLeft: 20,
+    marginTop: 14,
+    borderColor: '#cccccc'
+  },
+  iconOddStyle: {
+    padding: 10,
+    backgroundColor: '#cccccc',
+    width: 39,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   textStyle: {
     fontSize: 23,

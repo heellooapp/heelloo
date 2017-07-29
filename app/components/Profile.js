@@ -6,6 +6,7 @@ import DatePicker from 'react-native-datepicker'
 import Modal from 'react-native-modal';
 import { Header, Spinner } from '../components/common';
 import images from '../config/images';
+import Communications from 'react-native-communications';
 import firebase from '../utils/firebase';
 
 Height = Dimensions.get("window").height
@@ -210,6 +211,18 @@ class Profile extends Component {
     });
   }
 
+  OnPhonePress(){
+    const { phone, firstName } = this.state.user;
+
+    Communications.phonecall(phone.toString(), false)
+  }
+
+  OnTextPress(){
+    const { phone, firstName } = this.state.user;
+
+    Communications.text(phone.toString(), `Hi, ${firstName}`)
+  }
+
   renderSocialIcons(userProp, infoProp) {
     return (
       <View style={{flexDirection: 'row', paddingBottom: 20, paddingTop: 10, justifyContent: 'space-around'}}>
@@ -370,6 +383,11 @@ class Profile extends Component {
               cancelBtnText="No"
               onDateChange={(firstDay) => this.setState({firstDay})}
             />
+          <View style={styles.mainStyle}>
+            <View style={styles.center}>
+              <Icon name="phone-square" size={37} color="#009e11" style={{marginRight: 15}} onPress={this.OnPhonePress.bind(this)} />
+              <Icon name="envelope" size={35} color="#b45f00" onPress={this.OnTextPress.bind(this)}/>
+            </View>
           </View>
         </ModalWrapper>
 
