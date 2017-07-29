@@ -43,6 +43,15 @@ class Sidemenu extends React.Component {
     this.props.closeDrawer();
   }
 
+  profileOnPress() {
+    this.props.closeDrawer();
+    Actions.profile({
+      uid: this.props.uid,
+      isAdmin: this.props.isAdmin,
+      currentUser: firebase.auth().currentUser.uid === this.props.uid
+    });
+  }
+
   renderContent() {
     if (this.state.loading) {
       return (
@@ -52,13 +61,17 @@ class Sidemenu extends React.Component {
     return(
       <View>
       <View style={styles.userPart}>
-        <Image source={{uri: this.state.user.profile_img}} style={styles.ProfileImg}/>
+        {
+          this.state.user.profile_img
+            ? <Image style={styles.ProfileImg} source={{uri: this.state.user.profile_img}} />
+            : <Image style={styles.ProfileImg} source={images.avatar} />
+        }
         <Text style={styles.userName}>{this.state.user.firstName} {this.state.user.lastname}</Text>
         <Text style={styles.position}>{this.state.user.position}</Text>
       </View>
       <View style={styles.mainPart}>
         <View style={styles.userInfo}>
-        <TouchableOpacity onPress={() => Actions.profile(this.props.closeDrawer())}>
+        <TouchableOpacity onPress={this.profileOnPress.bind(this)}>
           <View style={styles.container}>
             <Icon name="md-person" size={23} color="#000" style={styles.icon} />
             <Text>My Profile</Text>

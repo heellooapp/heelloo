@@ -8,6 +8,7 @@ const images = {
   instagram: require('../images/instagram.png'),
   linkedin: require('../images/linkedin.png'),
   skype: require('../images/skype.png'),
+  avatar: require('../images/no-avatar.png'),
 };
 
 export default images;

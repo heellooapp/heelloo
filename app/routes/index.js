@@ -87,7 +87,8 @@ class Root extends Component {
         ref={(ref) => this._drawer = ref}
         content={<Sidemenu
                             closeDrawer={this.closeDrawer}
-                            uid = {this.state.uid} />}
+                            uid = {this.state.uid}
+                            isAdmin={this.state.isAdmin} />}
         tweenHandler={Drawer.tweenPresets.parallax}
         openDrawerOffset={(viewport) => {
           return 110

@@ -11,6 +11,7 @@ import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Header, Spinner, FloatButton } from '../components/common'
 import firebase from '../utils/firebase';
+import images from '../config/images';
 import ActionButton from 'react-native-action-button';
 
 const windowWidth = Dimensions.get('window').width;
@@ -59,13 +60,17 @@ class Contact extends Component {
       <TouchableHighlight 
         underlayColor="#e6e6e6" 
         onPress={() => Actions.profile({
-          uid: rowData.uid
+          uid: rowData.uid,
+          isAdmin: this.props.isAdmin,
+          currentUser: firebase.auth().currentUser.uid === rowData.uid
         })}
       >
         <View style={listContainer}>
-          <Image
-            style={listProfileImage}
-            source={{uri: rowData.profile_img}} />
+          {
+            rowData.profile_img
+              ? <Image style={listProfileImage} source={{uri: rowData.profile_img}} />
+              : <Image style={listProfileImage} source={images.avatar} />
+          }
           <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
             <View style={middleSectionStyle}>
               <Text style={nameStyle}>{rowData.firstName} {rowData.lastname}</Text>
@@ -90,7 +95,8 @@ class Contact extends Component {
       <TouchableHighlight 
         underlayColor="#e6e6e6" 
         onPress={() => Actions.profile({
-          uid: rowData.uid
+          uid: rowData.uid,
+          isAdmin: this.props.isAdmin
         })}
       >
         <View style={gridContainer}>
