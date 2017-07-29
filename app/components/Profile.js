@@ -383,12 +383,14 @@ class Profile extends Component {
               cancelBtnText="No"
               onDateChange={(firstDay) => this.setState({firstDay})}
             />
+          </View>
           <View style={styles.mainStyle}>
             <View style={styles.center}>
               <Icon name="phone-square" size={37} color="#009e11" style={{marginRight: 15}} onPress={this.OnPhonePress.bind(this)} />
               <Icon name="envelope" size={35} color="#b45f00" onPress={this.OnTextPress.bind(this)}/>
             </View>
           </View>
+
         </ModalWrapper>
 
         <ModalWrapper

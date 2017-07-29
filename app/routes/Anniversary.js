@@ -178,10 +178,13 @@ class Anniversary extends Component {
     return (
       <View style={styles.container}>
         {this.renderContent()}
-        <FloatButton
-          style={styles.floatButton}
-          onContactPress={this.addContact}
-          onStructurePress={this.addStructure}/>
+        {
+          this.props.isAdmin &&
+          <FloatButton
+            style={styles.floatButton}
+            onContactPress={this.addContact}
+            onStructurePress={this.addStructure}/>
+        }
       </View>
     );
   }
