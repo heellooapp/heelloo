@@ -58,10 +58,12 @@ class Sidemenu extends React.Component {
       </View>
       <View style={styles.mainPart}>
         <View style={styles.userInfo}>
+        <TouchableOpacity onPress={() => Actions.profile(this.props.closeDrawer())}>
           <View style={styles.container}>
             <Icon name="md-person" size={23} color="#000" style={styles.icon} />
             <Text>My Profile</Text>
           </View>
+        </TouchableOpacity>
           <TouchableOpacity onPress={this.signOut}>
             <View style={styles.container}>
               <Icon name="md-log-out" size={20} color="#000" style={styles.icon} />
@@ -70,7 +72,7 @@ class Sidemenu extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={styles.appInfo}>
-          <TouchableOpacity onPress={this.openStructure.bind(this)}>
+          <TouchableOpacity onPress={() => Actions.structure(this.props.closeDrawer())}>
             <View style={styles.container}>
               <Icon name="md-menu" size={23} color="#000" style={styles.icon} />
               <Text>Structure</Text>

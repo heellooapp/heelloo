@@ -34,19 +34,26 @@ class CollapsibleWrapper extends Component {
   render() {
     const { structure, children } = this.props;
     return (
-      <TouchableOpacity onPress={this.manageCollapse.bind(this)}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          {
-            (this.state.collapsed && children)
-              ? <Icon name="plus-square-o" size={20} color="#000" />
-              : <Icon name="minus-square-o" size={20} color="#000" />
-          }
-          <Text style={{fontSize: 20, marginLeft: 10}}>{structure}</Text>
-        </View>
-        <Collapsible collapsed={this.state.collapsed}>
-          {children}
-        </Collapsible>
-      </TouchableOpacity>
+      <View>
+        <TouchableOpacity onPress={this.manageCollapse.bind(this)}>
+          <View style={styles.mainStructure}>
+            {
+              (this.state.collapsed && children)
+                ? <Icon name="plus-square-o" size={18} color="#000" />
+                : <Icon name="minus-square-o" size={18} color="#000" />
+            }
+            <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{fontSize: 15, marginLeft: 10}}>{structure}</Text>
+              <Icon name="pencil-square-o" size={18} color="#000" style={styles.iconStructure}/>
+            </View>
+          </View>
+          <Collapsible collapsed={this.state.collapsed} style={styles.childStructure}>
+            <View>
+                {children}
+            </View>
+          </Collapsible>
+        </TouchableOpacity>
+      </View>
     )
   }
 }
@@ -88,12 +95,12 @@ class Structure extends Component {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <TouchableOpacity  onPress={() => Actions.pop()} >
+      <TouchableOpacity  onPress={() => Actions.contact()} >
         <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
       <Text style={textStyle}>Structure</Text>
       <TouchableOpacity onPress={this.plusIconPressed}>
-        <Icon name="plus" size={30} color="#fff" style={iconList} />
+        <Icon name="plus-square-o" size={30} color="#fff" style={iconList} />
       </TouchableOpacity>
     </View>
   )}
@@ -126,6 +133,21 @@ class Structure extends Component {
 }
 
 const styles = StyleSheet.create({
+  mainStructure: {
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    backgroundColor: '#eee',
+    padding: 12,
+    marginBottom: 3,
+    marginLeft: -20,
+  },
+  childStructure: {
+    marginLeft: 10,
+    paddingLeft: 10,
+  },
+  childPlus: {
+    color: '#555',
+  },
   inputStyle: {
     color: '#555',
     paddingRight: 5,
@@ -155,6 +177,10 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
+  iconStructure: {
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+  }
 });
 
 export default Structure;

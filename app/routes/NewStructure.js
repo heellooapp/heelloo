@@ -49,7 +49,7 @@ class NewStructure extends Component {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <TouchableOpacity  onPress={() => Actions.pop()} >
+      <TouchableOpacity  onPress={() => Actions.contact()} >
 	      <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
       <Text style={textStyle}>Add Structure</Text>
@@ -81,6 +81,7 @@ class NewStructure extends Component {
 	    <Picker
 	    	selectedValue={this.state.parent}
 	    	onValueChange={(parent) => this.setState({ parent })}
+        mode="dropdown"
 	    >
 	    	{structureItems}
 	    </Picker>

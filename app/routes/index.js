@@ -138,24 +138,27 @@ class Root extends Component {
                     users={this.state.users}
                   />
                 </Scene>
+
+                 <Scene
+                  key="newStructure"
+                  component={NewStructure}
+                  hideNavBar={true}
+                />
+                <Scene
+                  key="structure"
+                  component={Structure}
+                  isAdmin={this.state.isAdmin}
+                  hideNavBar={true}
+                />
+                <Scene
+                  key="newAccount"
+                  component={NewAccount}
+                  hideNavBar={true}
+                />
+                
               </Scene>
 
-              <Scene
-                key="newStructure"
-                component={NewStructure}
-                hideNavBar={true}
-              />
-              <Scene
-                key="structure"
-                component={Structure}
-                isAdmin={this.state.isAdmin}
-                hideNavBar={true}
-              />
-              <Scene
-                key="newAccount"
-                component={NewAccount}
-                hideNavBar={true}
-              />
+
             </Scene>
           </Router>
         </Drawer>

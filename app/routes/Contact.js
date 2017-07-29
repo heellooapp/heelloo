@@ -204,7 +204,7 @@ class Contact extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1, 
-    paddingBottom: 135, 
+    paddingBottom: 60, 
     backgroundColor: '#eee'
   },
   gridView: {
