@@ -9,6 +9,7 @@ import {
   TextInput,
   Dimensions,
   StyleSheet,
+  ScrollView,
   AsyncStorage,
   TouchableOpacity,
 } from 'react-native';
@@ -134,7 +135,7 @@ class NewAccount extends Component {
       <TouchableOpacity  onPress={() => Actions.contact()} >
         <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
-      <Text style={textStyle}>Add Account</Text>
+      <Text style={textStyle}>Add contact</Text>
       <TouchableOpacity onPress={this.saveAccount}>
         <Icon name="check" size={30} color="#fff" style={iconList} />
       </TouchableOpacity>
@@ -149,6 +150,7 @@ class NewAccount extends Component {
     });
     return (
       <Picker
+       style={{marginBottom: 8}}
         selectedValue={this.state.parent}
         onValueChange={(parent) => this.setState({ parent })}
       >
@@ -172,90 +174,137 @@ class NewAccount extends Component {
     const { inputStyle } = styles;
     return (
       <View>
-        {this.header()}
-        <TouchableOpacity onPress={() => this.setState({isAdmin: !this.state.isAdmin})}>
-          <View style={{flexDirection: 'row'}}>
-          <Text>Is admin: </Text>
-          {
-            this.state.isAdmin
-              ? <Icon name="check-square-o" size={16} color='#000000' />
-              : <Icon name="square-o" size={16} color='#000000' />
-          }
+          {this.header()}
+        <ScrollView>
+          <View style={{marginBottom: 145}}>
+            <TouchableOpacity onPress={() => this.setState({isAdmin: !this.state.isAdmin})}>
+              <View style={{flexDirection: 'row', padding: 20 }}>
+                <Text>Is admin: </Text>
+                {
+                  this.state.isAdmin
+                    ? <Icon name="check-square-o" size={16} color='#000000' />
+                    : <Icon name="square-o" size={16} color='#000000' />
+                }
+              </View>
+            </TouchableOpacity>
+            {this.renderPicker()}
+            <View style={styles.containerStyle}>
+            <Icon style={styles.iconOddStyle} name="user" size={20} color="#67686c"/>
+              <TextInput
+                placeholder='First name'
+                autoCorrect={false}
+                style={inputStyle}
+                value={this.state.firstName}
+                onChangeText={firstName => this.setState({ firstName })}
+                autoCapitalize='none'
+                underlineColorAndroid='transparent'
+              />
+            </View>
+            <View style={styles.containerStyle}>
+            <Icon style={styles.iconOddStyle} name="user-o" size={18} color="#67686c"/>
+              <TextInput
+                placeholder='Last name'
+                autoCorrect={false}
+                style={inputStyle}
+                value={this.state.lastname}
+                onChangeText={lastname => this.setState({ lastname })}
+                autoCapitalize='none'
+                underlineColorAndroid='transparent'
+              />
+            </View>
+            <View style={styles.containerStyle}>
+            <Icon style={styles.iconOddStyle} name="envelope" size={18} color="#67686c"/>
+              <TextInput
+                placeholder='Email'
+                autoCorrect={false}
+                style={inputStyle}
+                value={this.state.email}
+                onChangeText={email => this.setState({ email })}
+                autoCapitalize='none'
+                underlineColorAndroid='transparent'
+              />
+            </View>
+            <View style={styles.containerStyle}>
+            <Icon style={styles.iconStyle} name="lock" size={24} color="#67686c"/>
+              <TextInput
+                secureTextEntry={true}
+                placeholder='Password'
+                autoCorrect={false}
+                style={inputStyle}
+                value={this.state.password}
+                onChangeText={password => this.setState({ password })}
+                autoCapitalize='none'
+                underlineColorAndroid='transparent'
+              />
+            </View>
+            <View style={styles.containerStyle}>
+            <Icon style={styles.iconStyle} name="lock" size={24} color="#67686c"/>
+              <TextInput
+                secureTextEntry={true}
+                placeholder='Repeat password'
+                autoCorrect={false}
+                style={inputStyle}
+                value={this.state.repeatPassword}
+                onChangeText={repeatPassword => this.setRepeatPassword(repeatPassword)}
+                autoCapitalize='none'
+                underlineColorAndroid='transparent'
+              />
+              <Text>{this.state.error}</Text>
+            </View>
+            <View style={styles.border}></View>
+            <View style={styles.containerStyle}>
+            <Icon style={styles.iconStyle} name="map-marker" size={24} color="#67686c"/>
+              <TextInput
+                placeholder='Position'
+                autoCorrect={false}
+                style={inputStyle}
+                value={this.state.position}
+                onChangeText={position => this.setState({ position })}
+                autoCapitalize='none'
+                underlineColorAndroid='transparent'
+              />
+            </View>
           </View>
-        </TouchableOpacity>
-
-        <TextInput
-          placeholder='First name'
-          autoCorrect={false}
-          style={inputStyle}
-          value={this.state.firstName}
-          onChangeText={firstName => this.setState({ firstName })}
-          autoCapitalize='none'
-          underlineColorAndroid='transparent'
-        />
-        <TextInput
-          placeholder='Last name'
-          autoCorrect={false}
-          style={inputStyle}
-          value={this.state.lastname}
-          onChangeText={lastname => this.setState({ lastname })}
-          autoCapitalize='none'
-          underlineColorAndroid='transparent'
-        />
-        <TextInput
-          placeholder='Email'
-          autoCorrect={false}
-          style={inputStyle}
-          value={this.state.email}
-          onChangeText={email => this.setState({ email })}
-          autoCapitalize='none'
-          underlineColorAndroid='transparent'
-        />
-        <TextInput
-          secureTextEntry={true}
-          placeholder='Password'
-          autoCorrect={false}
-          style={inputStyle}
-          value={this.state.password}
-          onChangeText={password => this.setState({ password })}
-          autoCapitalize='none'
-          underlineColorAndroid='transparent'
-        />
-        <TextInput
-          secureTextEntry={true}
-          placeholder='Repeat password'
-          autoCorrect={false}
-          style={inputStyle}
-          value={this.state.repeatPassword}
-          onChangeText={repeatPassword => this.setRepeatPassword(repeatPassword)}
-          autoCapitalize='none'
-          underlineColorAndroid='transparent'
-        />
-        <Text>{this.state.error}</Text>
-        {this.renderPicker()}
-        <TextInput
-          placeholder='Position'
-          autoCorrect={false}
-          style={inputStyle}
-          value={this.state.position}
-          onChangeText={position => this.setState({ position })}
-          autoCapitalize='none'
-          underlineColorAndroid='transparent'
-        />
+        </ScrollView>
       </View>
-    )
+      )
   }
 }
 
 const styles = StyleSheet.create({
   inputStyle: {
-    color: '#555',
+    color: '#333',
     paddingRight: 5,
     paddingLeft: 5,
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 23,
-    height: 50,
+    flex: 1
+  },
+  containerStyle: {
+    height: 40,
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
+    marginBottom: 8,
+    marginRight: 20,
+    marginLeft: 20,
+    borderColor: '#cccccc'
+  },
+  iconStyle: {
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 11,
+    backgroundColor: '#cccccc',
+    width: 39,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  iconOddStyle: {
+    padding: 10,
+    backgroundColor: '#cccccc',
+    width: 39,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   viewStyle: {
     backgroundColor: '#6fa8dc',
@@ -277,6 +326,12 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
   },
+  border: {
+    borderBottomWidth: 5,
+    borderColor: '#eee',
+    marginBottom: 30,
+    marginTop: 25
+  }
 });
 
 export default NewAccount;

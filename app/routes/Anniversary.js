@@ -3,8 +3,10 @@ import {
   Text,
   View,
   ListView,
+  ScrollView,
   Dimensions,
   StyleSheet,
+  TouchableOpacity
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import firebase from '../utils/firebase';
@@ -110,25 +112,48 @@ class Anniversary extends Component {
       );
     }
     return (
-      <ListView 
-        dataSource           = {this.state.anniversaryList}
-        renderRow            = {(rowData) => this._renderRow(rowData)}
-        enableEmptySections  = {true}/>
+      <ScrollView>
+        <ListView 
+          dataSource           = {this.state.anniversaryList}
+          renderRow            = {(rowData) => this._renderRow(rowData)}
+          enableEmptySections  = {true}/>
+      </ScrollView>
     );
   }
 
   _renderRow(rowData) {
     return (
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text>{rowData.firstName}</Text>
+      <View>
         {
           (!rowData.isWork && rowData.anniversary.birthday)
-            ? <Text>{rowData.anniversary.birthday}</Text>
-            : null
+            ?
+          <TouchableOpacity> 
+            <View style={styles.mainContainer}>
+              <View style={styles.secondContainer}>
+                <Text style={styles.name}>{rowData.firstName} {rowData.lastname}</Text>
+                <Text>Happy 35-year birthday!</Text>
+              </View>
+              <View style={styles.dateBirth}>
+                <Text style={styles.dateBirthtext}>{rowData.anniversary.birthday}</Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          : null
         }
         {
           (rowData.isWork && rowData.anniversary.firstDay)
-            ? <Text>{rowData.anniversary.firstDay}</Text>
+            ?
+            <TouchableOpacity>
+              <View style={styles.mainContainer}>
+                <View style={styles.secondContainer}>
+                  <Text style={styles.name}>{rowData.firstName} {rowData.lastname}</Text>
+                  <Text>Happy 4-year work anniversary!</Text>
+                </View> 
+                <View style={styles.dateWork}>
+                  <Text style={styles.dateWorktext}>{rowData.anniversary.firstDay}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
             : null
         }
       </View>
@@ -146,7 +171,7 @@ class Anniversary extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, paddingBottom: 65, paddingTop: 30}}>
+      <View style={styles.container}>
         {this.renderContent()}
         <FloatButton
           style={styles.floatButton}
@@ -158,15 +183,43 @@ class Anniversary extends Component {
 }
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flexDirection: 'row', 
+    justifyContent: 'space-between',
+    backgroundColor: '#fff',
+    marginBottom: 5,
+  },
+  name: {
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 3
+  },
+  secondContainer: {
+    padding: 10
+  },
   container: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'blue',
-    height: windowHeight
+    flex: 1, 
+    paddingBottom: 65, 
+    paddingTop: 30,
+    backgroundColor: '#eee'
   },
   floatButton: {
     position: 'absolute',
-  }
+  },
+  dateBirth: {
+    backgroundColor: '#fae6e6',
+    padding: 20
+  },
+  dateBirthtext: {
+    color: '#e06666'
+  },
+  dateWorktext: {
+    color: '#009e11'
+  },
+  dateWork: {
+    backgroundColor: '#edf5ea',
+    padding: 20
+  },
 });
 
 export default Anniversary;

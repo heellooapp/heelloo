@@ -5,13 +5,14 @@ import {
   Image,
   Dimensions,
   ListView,
-  StyleSheet, TouchableHighlight
+  StyleSheet, TouchableOpacity
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Header, Spinner, FloatButton } from '../components/common'
 import firebase from '../utils/firebase';
 import ActionButton from 'react-native-action-button';
+import Communications from 'react-native-communications';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -28,12 +29,13 @@ class Contact extends Component {
       isList: true,
       searchValue: '',
       db : [],
-
     }
     // this.handleQuery = this.handleQuery.bind(this);
     this._renderRow = this._renderRow.bind(this);
     this.changeLayout = this.changeLayout.bind(this);
     this.onSearch = this.onSearch.bind(this);
+    this.OnPhonePress = this.OnPhonePress.bind(this);
+    this.OnTextPress = this.OnTextPress.bind(this);
   }
 
   componentDidMount() {
@@ -52,11 +54,26 @@ class Contact extends Component {
            : b.firstName < a.firstName ? 1 : 0
     });
   }
+
+
+  OnPhonePress(rowData){
+    const phone = rowData.phone;
+    const firstName = rowData.firstName;
+
+    Communications.phonecall(phone.toString(), false)
+  }
+
+  OnTextPress(rowData){
+    const phone = rowData.phone;
+    const firstName = rowData.firstName;
+
+    Communications.text(phone.toString(), `Hi, ${firstName}`)
+  }
   
   renderListView(rowData) {
     const {listContainer, listProfileImage, middleSectionStyle, nameStyle, listIconStyle, positionStyle } = styles;
     return (
-      <TouchableHighlight 
+      <TouchableOpacity 
         underlayColor="#e6e6e6" 
         onPress={() => Actions.profile({
           uid: rowData.uid
@@ -74,20 +91,20 @@ class Contact extends Component {
             {
               rowData.phone &&
               <View style={listIconStyle}>
-                <Icon name="phone-square" size={27} color="#009e11" />
-                <Icon name="envelope" size={23} color="#b45f00" />
+                <Icon name="phone-square" size={27} color="#009e11" onPress={() => this.OnPhonePress(rowData)}/>
+                <Icon name="envelope" size={23} color="#b45f00"  onPress={() => this.OnTextPress(rowData)}/>
               </View>
             }
           </View>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 
   renderGridView(rowData) {
     const {gridContainer, gridProfileImage, middleSectionStyle, nameStyle, gridIconStyle, iconStyle, iconGridStyle, positionStyle, lastNameStyle } = styles;
     return (
-      <TouchableHighlight 
+      <TouchableOpacity 
         underlayColor="#e6e6e6" 
         onPress={() => Actions.profile({
           uid: rowData.uid
@@ -103,12 +120,12 @@ class Contact extends Component {
           {
             rowData.phone &&
             <View style={gridIconStyle}>
-                <Icon name="envelope" size={28} color="#b45f00" style={iconGridStyle} />
-                <Icon name="phone-square" size={30} color="#009e11" style={iconStyle} />
+                <Icon name="envelope" size={28} color="#b45f00" style={iconGridStyle} onPress={() => this.OnTextPress(rowData)} />
+                <Icon name="phone-square" size={30} color="#009e11" style={iconStyle} onPress={() => this.OnPhonePress(rowData)} />
             </View>
           }
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 
