@@ -16,28 +16,6 @@ class TeamOn extends Component {
     // firebase.auth().signOut();
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        // console.log(user.uid);
-        // user.updateProfile({
-        //   displayName: "Ujin",
-        // });
-
-        // test = firebase.database()
-        //   .ref('users').child('tmX4Fgmn2YffzUOECgu0tHxpdMj2')
-        //   .set({
-        //     "anniversary" : {
-        //       "birthday" : "1995-04-04",
-        //       "firstDay" : "2016-08-06"
-        //     },
-        //     "email" : "test@test.com",
-        //     "firstName" : "Ujin",
-        //     "nickname" : "Juni",
-        //     "position" : "React Native Developer",
-        //     "profile_img" : "https://firebasestorage.googleapis.com/v0/b/teamon-68ca0.appspot.com/o/ujin.jpg?alt=media&token=c82ee4b3-7bf8-4c79-8bca-34aebe1c546f",
-        //     "uid" : "tmX4Fgmn2YffzUOECgu0tHxpdMj2"
-        //   });
-
-        //   console.log(test);
-
         this.setState({ loggedIn: true });
       } else {
         this.setState({ loggedIn: false });
