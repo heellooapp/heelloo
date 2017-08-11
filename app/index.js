@@ -43,7 +43,7 @@ class TeamOn extends Component {
       <View style={styles.container}>
         <StatusBar
           backgroundColor="#2266ad"
-          barStyle="dark-content"
+          barStyle="light-content"
         />
         {this.renderContent()}
       </View>

@@ -3,6 +3,7 @@ import {
   Text,
   View,
   ListView,
+  Platform,
   ScrollView,
   Dimensions,
   StyleSheet,
@@ -214,7 +215,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1, 
     paddingBottom: 65, 
-    paddingTop: 30,
+    paddingTop: (Platform.OS === 'ios') ? 30 : 0,
     backgroundColor: '#eee',
   },
   floatButton: {

@@ -5,7 +5,8 @@ import {
   Image,
   Dimensions,
   ListView,
-  StyleSheet, TouchableOpacity
+  StyleSheet,
+  TouchableOpacity
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -14,6 +15,7 @@ import firebase from '../utils/firebase';
 import images from '../config/images';
 import ActionButton from 'react-native-action-button';
 import Communications from 'react-native-communications';
+import { SwipeListView } from 'react-native-swipe-list-view';
 
 const width = '50%';
 
@@ -78,7 +80,7 @@ class Contact extends Component {
     const phone = rowData.phone;
     const firstName = rowData.firstName;
 
-    Communications.text(phone.toString(), `Hi, ${firstName}`)
+    Communications.text(phone.toString(), '')
   }
   
   renderListView(rowData) {
@@ -127,9 +129,11 @@ class Contact extends Component {
         })}
       >
         <View style={gridContainer}>
-          <Image
-            style={gridProfileImage}
-            source={{uri: rowData.profile_img}} />
+          {
+            rowData.profile_img
+              ? <Image style={gridProfileImage} source={{uri: rowData.profile_img}} />
+              : <Image style={gridProfileImage} source={images.avatar} />
+          }
           <Text style={nameStyle}>{rowData.firstName}</Text>
           <Text style={lastNameStyle}>{rowData.lastname}</Text>
           <Text style={positionStyle}>{rowData.position}</Text>
@@ -155,6 +159,14 @@ class Contact extends Component {
       </View>
     )
   }
+
+  _renderHiddenRow(data) {
+    return (
+      <View>
+        <Text>Left</Text>
+      </View>
+      );
+  }
  
   renderContent() {
     if (this.state.loading) {
@@ -172,12 +184,16 @@ class Contact extends Component {
       listViewStyle = listView;
     }
     return (
-      <ListView
+      <SwipeListView
         key={this.state.isList}
         contentContainerStyle = {listViewStyle}
         dataSource           = {this.state.contactList}
         renderRow            = {(rowData) => this._renderRow(rowData)}
+        renderHiddenRow      = {(data) => this._renderHiddenRow(data)}
         enableEmptySections  = {true}
+        ref                  = {ref => this._listView = ref}
+        leftOpenValue={75}
+        rightOpenValue={-75}
       />
     );
   }
@@ -207,6 +223,7 @@ class Contact extends Component {
     let filteredData = this.filterNotes(searchValue, this.state.db);
 
     this.setState({ contactList: this.state.contactList.cloneWithRows(filteredData) });
+    this._listView.scrollTo({y: 0, animated: true});
   }
 
   addContact() {
@@ -257,7 +274,9 @@ const styles = StyleSheet.create({
     marginTop: 5,
     padding: 5,
     backgroundColor: '#fff',
-    borderRadius: 5
+    borderRadius: 5,
+    marginLeft: 10,
+    marginRight: 10,
   },
   gridContainer: {
     width,
