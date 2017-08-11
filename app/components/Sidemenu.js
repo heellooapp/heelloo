@@ -62,8 +62,8 @@ class Sidemenu extends React.Component {
       <View>
         <View style={styles.userPart}>
           {
-            this.state.user.profile_img
-              ? <Image style={styles.ProfileImg} source={{uri: this.state.user.profile_img}} />
+            this.state.user.profileImg
+              ? <Image style={styles.ProfileImg} source={{uri: this.state.user.profileImg}} />
               : <Image style={styles.ProfileImg} source={images.avatar} />
           }
           <Text style={styles.userName}>{this.state.user.firstName} {this.state.user.lastname}</Text>

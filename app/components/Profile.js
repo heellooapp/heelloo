@@ -4,10 +4,13 @@ import { View, Text, Platform, Image, Dimensions, ScrollView, TextInput, Picker,
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker'
 import Modal from 'react-native-modal';
-import { Header, Spinner } from '../components/common';
+import { Header, Spinner, FloatButton } from '../components/common';
+import { EditButton } from './common/EditButton';
 import images from '../config/images';
 import Communications from 'react-native-communications';
 import firebase from '../utils/firebase';
+import RNFetchBlob from 'react-native-fetch-blob';
+import ImagePicker from 'react-native-image-picker';
 
 Height = Dimensions.get("window").height
 Width = Dimensions.get("window").width
@@ -39,6 +42,29 @@ class ModalWrapper extends Component {
   }
 }
 
+class ModalWrapperClose extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    const { isVisible, onClose, children } = this.props;
+    const { modal, btnContainer, btn, btntextStyle } = styles;
+    return (
+      <Modal isVisible={isVisible}>
+        <View style={modal}>
+          {children}
+          <View style={btnContainer}>
+            <TouchableOpacity style={btn} onPress={onClose}>
+              <Text style={btntextStyle}>Close</Text>
+            </TouchableOpacity> 
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+}
+
 class ModalInput extends Component {
   constructor(props) {
     super(props);
@@ -62,6 +88,44 @@ class ModalInput extends Component {
   }
 }
 
+class Uploader {
+  static setImageUrl(userId, url){
+    let Path = "/users/"+userId+"/url"
+    return firebase.database().ref(Path).set(url)
+  }
+}
+
+const Blob = RNFetchBlob.polyfill.Blob
+const fs = RNFetchBlob.fs
+window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
+window.Blob = Blob
+
+const  uploadImage = (uri, imageName, mime = 'image/jpg') => {
+ return new Promise((resolve, reject) => {
+   const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+   let uploadBlob = null
+   const imageRef = firebase.storage().ref('profileImg').child(imageName)
+   fs.readFile(uploadUri, 'base64')
+     .then((data) => {
+         return Blob.build(data, { type: `${mime};BASE64` })
+     })
+     .then((blob) => {
+       uploadBlob = blob
+       return imageRef.put(blob, { contentType: mime })
+     })
+     .then(() => {
+       uploadBlob.close()
+       return imageRef.getDownloadURL()
+     })
+     .then((url) => {
+       resolve(url)
+     })
+     .catch((error) => {
+       reject(error)
+     })
+ })
+}
+
 class Profile extends Component {
   constructor(props) {
     super(props);
@@ -72,9 +136,10 @@ class Profile extends Component {
       loadingInfo: true,
       childNumber: 0,
       childrenObj: [],
-      currentUid: firebase.auth().currentUser.uid
+      currentUid: firebase.auth().currentUser.uid,
+      uid: '',
     };
-
+      
     this.renderContent = this.renderContent.bind(this);
     this.renderChildren = this.renderChildren.bind(this);
     this.addChildToObject = this.addChildToObject.bind(this);
@@ -89,8 +154,21 @@ class Profile extends Component {
       isMoreVisible: false,
       isNicknameVisible: false,
       isGenderVisible: false,
-      isPasswordVisible: false
+      isPasswordVisible: false,
+      isProfileImageVisible: false,
+      isBigImage: false
     }
+
+  async componentWillMount() {
+   try {
+      this.setState({
+        uid: this.state.currentUid
+      })
+    } catch(error){
+      console.log(error)
+    }
+  }
+
   componentDidMount() {
     userRef = firebase.database().ref(`/users/${this.props.uid}`);
     userRef.on('value', this.handleUser);
@@ -155,6 +233,15 @@ class Profile extends Component {
       nickname: this.state.nickname
     })
     .then(() => { this.setState({ isNicknameVisible: false })
+    });
+  }
+
+  saveProfileImage(){
+    firebase.database().ref(`/users/${this.props.uid}/`)
+    .update({ 
+      profileImg: this.state.imagePath
+    })
+    .then(() => { this.setState({ isProfileImageVisible: false })
     });
   }
 
@@ -353,6 +440,12 @@ class Profile extends Component {
             value={this.state.nickname} />
         </ModalWrapper>
 
+        <ModalWrapperClose
+          isVisible={this.state.isBigImage}
+          onClose={() => this.setState({ isBigImage: false })}>
+          <Image source={{uri: this.state.user.profileImg}} style={styles.bigImage} />
+        </ModalWrapperClose>
+
         <ModalWrapper
           isVisible={this.state.isGenderVisible}
           title="Gender"
@@ -364,6 +457,22 @@ class Profile extends Component {
             <Picker.Item label="Male" value="male" />
             <Picker.Item label="Female" value="female" />
           </Picker>
+        </ModalWrapper>
+
+        <ModalWrapper
+          isVisible={this.state.isProfileImageVisible}
+          title="Profile Image"
+          onSave={this.saveProfileImage.bind(this)}
+          onHide={() => this.setState({ isProfileImageVisible: false, profileImg: '' })}>
+            <TouchableOpacity onPress={() => this.openPicker()} style={styles.ProfileImageContainer}>
+            {
+            this.state.imagePath ? <Image style={styles.profileImageDetail} source={{uri: this.state.imagePath}} value={this.state.imagePath} onChangeImage={(profileImg) => this.setState({profileImg})} /> :
+              <View style={styles.ProfileImageContainer}>
+                <Text style={styles.profileImageText}>Энд</Text> 
+                <Text>дарж зурагаа оруулна уу</Text>
+              </View>
+            }
+            </TouchableOpacity>
         </ModalWrapper>
 
         <ModalWrapper
@@ -569,6 +678,31 @@ class Profile extends Component {
     <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isNicknameVisible: true })}/>
   }
 
+  openPicker(){
+      const options = {
+        title: 'Зурагаа сонгоно уу',
+        storageOptions: {
+          skipBackup: true,
+          path: 'profileImg'
+        }
+      }
+      ImagePicker.showImagePicker(options, (response) => {
+        if(response.didCancel){
+          console.log('User canccelled')
+        } else if (response.error){
+          console.log('Error' + response.error)
+        } else if(response.customButton){
+          console.log('custom'+ response.customButton)
+        } else {
+            this.setState({
+              imagePath: response.uri,
+              imageHeight: response.height,
+              imageWidth: response.width
+            })
+        }
+      })
+  }
+
   renderContent() {
     if (this.state.loadingUser || this.state.loadingInfo)
       return <Spinner/>
@@ -578,11 +712,18 @@ class Profile extends Component {
     return (
       <ScrollView style={{ marginBottom:60 }}>
         <View style={styles.mainStyle}>
-          {
-            userProp.profile_img
-              ? <Image style={styles.profileImage} source={{uri: userProp.profile_img}} />
-              : <Image style={styles.profileImage} source={images.avatar} />
-          }
+          { ( this.props.currentUser) ?
+            <TouchableOpacity onPress={() => this.setState({ isProfileImageVisible: true })}>
+              { userProp.profileImg ?  <Image source={{uri: userProp.profileImg}} style={styles.profileImage} /> :
+                <Image source={images.avatarAdd} style={styles.profileImage} />
+              } 
+            </TouchableOpacity> :
+            <TouchableOpacity onPress={() => this.setState({ isBigImage: true })}>
+              { userProp.profileImg ?  <Image source={{uri: userProp.profileImg}} style={styles.profileImage} /> :
+                <Image source={images.avatarAdd} style={styles.profileImage} />
+              } 
+            </TouchableOpacity> 
+         }
           <View style={styles.namePart}>
             <View style={styles.nameFlex}>
               <Text style={styles.generalText}>Name:</Text>
@@ -601,7 +742,7 @@ class Profile extends Component {
                     : null
                 }
                 {
-                  (this.props.isAdmin || this.props.currentUser)
+                  ( this.props.currentUser)
                     ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isNicknameVisible: true })}/>
                     : null
                 }
@@ -616,7 +757,7 @@ class Profile extends Component {
                     : null
                 }
                 {
-                  (this.props.isAdmin || this.props.currentUser)
+                  ( this.props.currentUser)
                     ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isGenderVisible: true })}/>
                     : null
                 }
@@ -640,7 +781,7 @@ class Profile extends Component {
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>Social accounts</Text>
             {
-              (this.props.isAdmin || this.props.currentUser)
+              ( this.props.currentUser)
                 ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isSocialVisible: true })}/>
                 : null
             }
@@ -650,7 +791,7 @@ class Profile extends Component {
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>Contact Info</Text>
             {
-              (this.props.isAdmin || this.props.currentUser)
+              ( this.props.currentUser)
                 ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isContactVisible: true })}/>
                 : null
             }
@@ -676,7 +817,7 @@ class Profile extends Component {
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>Anniversary</Text>
             {
-              (this.props.isAdmin || this.props.currentUser)
+              ( this.props.currentUser)
                 ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isAnniversaryVisible: true })}/>
                 : null
             }
@@ -701,7 +842,7 @@ class Profile extends Component {
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>Family</Text>
             {
-              (this.props.isAdmin || this.props.currentUser)
+              ( this.props.currentUser)
                 ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isFamilyVisible: true })}/>
                 : null
             }
@@ -734,7 +875,7 @@ class Profile extends Component {
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>Favourite things</Text>
             {
-              (this.props.isAdmin || this.props.currentUser)
+              ( this.props.currentUser)
                 ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isFavouriteVisible: true })}/>
                 : null
             }
@@ -790,7 +931,7 @@ class Profile extends Component {
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>Interest</Text>
             {
-              (this.props.isAdmin || this.props.currentUser)
+              ( this.props.currentUser)
                 ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isInterestVisible: true })}/>
                 : null
             }
@@ -810,7 +951,7 @@ class Profile extends Component {
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>More Information</Text>
             {
-              (this.props.isAdmin || this.props.currentUser)
+              ( this.props.currentUser)
                 ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isMoreVisible: true })}/>
                 : null
             }
@@ -832,6 +973,10 @@ class Profile extends Component {
     );
   }
 
+  editContact(){
+    Actions.newAccount();
+  }
+
   render() {
     return (
       <View style={{backgroundColor: '#eee', height: Height }}>
@@ -839,6 +984,11 @@ class Profile extends Component {
         {this.renderContent()}
         {
           (!this.state.loadingUser && !this.state.loadingInfo)  ? this.renderWrappers() : null
+        }
+        {
+          this.props.isAdmin &&
+          <EditButton
+            onEditPress={this.editContact}/>
         }
     </View>
     );
@@ -928,7 +1078,22 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginRight: 10,
     borderColor: '#eee',
-    borderWidth: 1
+    borderWidth: 1,
+    resizeMode: 'contain'
+  },
+  bigImage: {
+    height: 350,
+    resizeMode: 'contain',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  profileImageDetail: {
+    width: 100,
+    height: 100,
+    marginRight: 10,
+    borderColor: '#eee',
+    borderWidth: 1,
+    resizeMode: 'contain'
   },
   namePart: {
     flexDirection: 'column',
@@ -1024,6 +1189,14 @@ const styles = StyleSheet.create({
   longInput: {
     height: 150,
     flexDirection: 'column',
+  },
+  ProfileImageContainer: {
+    padding: 20,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  profileImageText: {
+    color: 'red'
   }
 });
 

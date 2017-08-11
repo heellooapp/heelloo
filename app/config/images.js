@@ -9,6 +9,7 @@ const images = {
   linkedin: require('../images/linkedin.png'),
   skype: require('../images/skype.png'),
   avatar: require('../images/no-avatar.png'),
+  avatarAdd: require('../images/addUser.png'),
 };
 
 export default images;

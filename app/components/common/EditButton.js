@@ -3,13 +3,10 @@ import { View, StyleSheet } from 'react-native';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Entypo';
 
-const FloatButton = (props) => {
+const EditButton = (props) => {
   return (
     <ActionButton buttonColor="#E74C3C" style={styles.containerStyle}>
-      <ActionButton.Item buttonColor='#E74C3C' title="Structure" onPress={props.onStructurePress}>
-        <Icon name="flow-tree" style={styles.actionButtonIcon} />
-      </ActionButton.Item>
-      <ActionButton.Item buttonColor='#E74C3C' title="Contact" onPress={props.onContactPress}>
+      <ActionButton.Item buttonColor='#E74C3C' title="Edit Contact" onPress={props.onEditPress}>
         <Icon name="user" style={styles.actionButtonIcon} />
       </ActionButton.Item>
     </ActionButton>
@@ -27,4 +24,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export { FloatButton };
+export { EditButton };

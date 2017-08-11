@@ -96,8 +96,8 @@ class Contact extends Component {
       >
         <View style={listContainer}>
           {
-            rowData.profile_img
-              ? <Image style={listProfileImage} source={{uri: rowData.profile_img}} />
+            rowData.profileImg
+              ? <Image style={listProfileImage} source={{uri: rowData.profileImg}} />
               : <Image style={listProfileImage} source={images.avatar} />
           }
           <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -130,8 +130,8 @@ class Contact extends Component {
       >
         <View style={gridContainer}>
           {
-            rowData.profile_img
-              ? <Image style={gridProfileImage} source={{uri: rowData.profile_img}} />
+            rowData.profileImg
+              ? <Image style={gridProfileImage} source={{uri: rowData.profileImg}} />
               : <Image style={gridProfileImage} source={images.avatar} />
           }
           <Text style={nameStyle}>{rowData.firstName}</Text>
@@ -158,14 +158,6 @@ class Contact extends Component {
         {this.renderGridView(rowData)}
       </View>
     )
-  }
-
-  _renderHiddenRow(data) {
-    return (
-      <View>
-        <Text>Left</Text>
-      </View>
-      );
   }
 
   _renderHiddenRow(data) {
