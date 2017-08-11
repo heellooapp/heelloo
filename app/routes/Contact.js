@@ -167,6 +167,14 @@ class Contact extends Component {
       </View>
       );
   }
+
+  _renderHiddenRow(data) {
+    return (
+      <View>
+        <Text>Left</Text>
+      </View>
+      );
+  }
  
   renderContent() {
     if (this.state.loading) {
