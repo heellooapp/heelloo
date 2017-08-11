@@ -19,6 +19,7 @@
     "react-native-modal": "^2.5.0",
     "react-native-modal-wrapper": "^2.3.0",
     "react-native-router-flux": "^3.40.1",
+    "react-native-swipe-list-view": "^0.4.1",
     "react-native-vector-icons": "^4.2.0",
     "react-redux": "^5.0.5"
   },
