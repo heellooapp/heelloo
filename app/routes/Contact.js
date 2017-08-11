@@ -6,7 +6,7 @@ import {
   Dimensions,
   ListView,
   StyleSheet,
-  TouchableOpacity
+  TouchableHighlight
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -82,11 +82,15 @@ class Contact extends Component {
 
     Communications.text(phone.toString(), '')
   }
+
+  deleteUser(data) {
+    console.log(data);
+  }
   
   renderListView(rowData) {
     const {listContainer, listProfileImage, middleSectionStyle, nameStyle, listIconStyle, positionStyle } = styles;
     return (
-      <TouchableOpacity 
+      <TouchableHighlight 
         underlayColor="#e6e6e6" 
         onPress={() => Actions.profile({
           uid: rowData.uid,
@@ -108,20 +112,18 @@ class Contact extends Component {
             {
               rowData.phone &&
               <View style={listIconStyle}>
-                <Icon name="phone-square" size={27} color="#009e11" onPress={() => this.OnPhonePress(rowData)}/>
-                <Icon name="envelope" size={23} color="#b45f00"  onPress={() => this.OnTextPress(rowData)}/>
               </View>
             }
           </View>
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     );
   }
 
   renderGridView(rowData) {
     const {gridContainer, gridProfileImage, middleSectionStyle, nameStyle, gridIconStyle, iconStyle, iconGridStyle, positionStyle, lastNameStyle } = styles;
     return (
-      <TouchableOpacity 
+      <TouchableHighlight 
         underlayColor="#e6e6e6" 
         onPress={() => Actions.profile({
           uid: rowData.uid,
@@ -145,7 +147,7 @@ class Contact extends Component {
             </View>
           }
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     );
   }
 
@@ -161,11 +163,36 @@ class Contact extends Component {
   }
 
   _renderHiddenRow(data) {
+    if (!this.state.isList) {
+      return;
+    }
     return (
-      <View>
-        <Text>Left</Text>
+      <View style={styles.listHiddenRow}>
+        <View style={styles.hiddenPhoneButtons}>
+          <TouchableHighlight onPress={() => this.OnPhonePress(data)}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#b45f00', width: 50}]}>
+              <Icon name="phone-square" size={30} color="#FFF"/>
+              <Text>Call</Text>
+            </View>
+          </TouchableHighlight>
+          <TouchableHighlight onPress={() => this.OnTextPress(data)}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#009e11', width: 50}]}>
+              <Icon name="envelope" size={30} color="#FFF"/>
+              <Text>SMS</Text>
+            </View>
+          </TouchableHighlight>
+        </View>
+        {
+          this.props.isAdmin &&
+          <TouchableHighlight onPress={() => this.deleteUser(data)}>
+            <View style={[styles.hiddenButton, {backgroundColor: 'red', width: 75}]}>
+              <Icon name="trash-o" size={30} color="#FFF"/>
+              <Text>Delete</Text>
+            </View>
+          </TouchableHighlight>
+        }
       </View>
-      );
+    );
   }
  
   renderContent() {
@@ -177,12 +204,17 @@ class Contact extends Component {
       );
     }
     const { listView, gridView } = styles;
-    listViewStyle = null;
+    listViewStyle  = null;
+    leftOpenValue  = 0;
+    rightOpenValue = 0;
     if (!this.state.isList) {
       listViewStyle = StyleSheet.flatten([listView, gridView]);
     } else {
       listViewStyle = listView;
+      leftOpenValue = 100;
     }
+    if (this.props.isAdmin)
+      rightOpenValue = -75;
     return (
       <SwipeListView
         key={this.state.isList}
@@ -191,9 +223,8 @@ class Contact extends Component {
         renderRow            = {(rowData) => this._renderRow(rowData)}
         renderHiddenRow      = {(data) => this._renderHiddenRow(data)}
         enableEmptySections  = {true}
-        ref                  = {ref => this._listView = ref}
-        leftOpenValue={75}
-        rightOpenValue={-75}
+        leftOpenValue={leftOpenValue}
+        rightOpenValue={rightOpenValue}
       />
     );
   }
@@ -223,7 +254,6 @@ class Contact extends Component {
     let filteredData = this.filterNotes(searchValue, this.state.db);
 
     this.setState({ contactList: this.state.contactList.cloneWithRows(filteredData) });
-    this._listView.scrollTo({y: 0, animated: true});
   }
 
   addContact() {
@@ -266,6 +296,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap'
   },
+  listHiddenRow: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    top: 0,
+    bottom: 0,
+  },
+  hiddenPhoneButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center'
+  },
+  hiddenButton: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   listContainer: {
     flex: 1,
     flexDirection: 'row',
@@ -274,7 +325,6 @@ const styles = StyleSheet.create({
     marginTop: 5,
     padding: 5,
     backgroundColor: '#fff',
-    borderRadius: 5,
     marginLeft: 10,
     marginRight: 10,
   },
