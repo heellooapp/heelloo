@@ -60,42 +60,45 @@ class Sidemenu extends React.Component {
     }
     return(
       <View>
-      <View style={styles.userPart}>
-        {
-          this.state.user.profile_img
-            ? <Image style={styles.ProfileImg} source={{uri: this.state.user.profile_img}} />
-            : <Image style={styles.ProfileImg} source={images.avatar} />
-        }
-        <Text style={styles.userName}>{this.state.user.firstName} {this.state.user.lastname}</Text>
-        <Text style={styles.position}>{this.state.user.position}</Text>
-      </View>
-      <View style={styles.mainPart}>
-        <View style={styles.userInfo}>
-        <TouchableOpacity onPress={this.profileOnPress.bind(this)}>
-          <View style={styles.container}>
-            <Icon name="md-person" size={23} color="#000" style={styles.icon} />
-            <Text>My Profile</Text>
+        <View style={styles.userPart}>
+          {
+            this.state.user.profile_img
+              ? <Image style={styles.ProfileImg} source={{uri: this.state.user.profile_img}} />
+              : <Image style={styles.ProfileImg} source={images.avatar} />
+          }
+          <Text style={styles.userName}>{this.state.user.firstName} {this.state.user.lastname}</Text>
+          <Text style={styles.position}>{this.state.user.position}</Text>
+        </View>
+        <View style={styles.mainPart}>
+          <View style={styles.userInfo}>
+          <TouchableOpacity onPress={this.profileOnPress.bind(this)}>
+            <View style={styles.container}>
+              <Icon name="md-person" size={23} color="#000" style={styles.icon} />
+              <Text>My Profile</Text>
+            </View>
+          </TouchableOpacity>
+            <TouchableOpacity onPress={this.signOut}>
+              <View style={styles.container}>
+                <Icon name="md-log-out" size={20} color="#000" style={styles.icon} />
+                <Text>Sign Out</Text>
+              </View>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-          <TouchableOpacity onPress={this.signOut}>
-            <View style={styles.container}>
-              <Icon name="md-log-out" size={20} color="#000" style={styles.icon} />
-              <Text>Sign Out</Text>
+          <View style={{flex: 1, flexDirection: 'column', justifyContent: 'space-between'}}>
+            <View style={styles.appInfo}>
+              <TouchableOpacity onPress={() => Actions.structure(this.props.closeDrawer())}>
+                <View style={styles.container}>
+                  <Icon name="md-menu" size={23} color="#000" style={styles.icon} />
+                  <Text>Structure</Text>
+                </View>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.appInfo}>
-          <TouchableOpacity onPress={() => Actions.structure(this.props.closeDrawer())}>
-            <View style={styles.container}>
-              <Icon name="md-menu" size={23} color="#000" style={styles.icon} />
-              <Text>Structure</Text>
+            <View style={styles.logoContainer}>
+              <Image source={images.logo} style={styles.logo}/>
             </View>
-          </TouchableOpacity>
+            <View></View>
+          </View>
         </View>
-        <View style={styles.logoContainer}>
-          <Image source={images.logo} style={styles.logo}/>
-        </View>
-      </View>
       </View>
     )
   }
@@ -134,7 +137,7 @@ const styles = {
     height: Height,
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 15
+    paddingTop: 15,
   },
   userInfo: {
     height: 70,
@@ -166,12 +169,13 @@ const styles = {
   },
   logoContainer: {
     flexDirection: 'column',
-    alignItems: 'center'
+    alignItems: 'center',
+    marginBottom: 40
   },
   logo: {
     width: 160,
     resizeMode: 'contain',
-    height: Height - 170
+    justifyContent: 'flex-end'
   }
 };
 

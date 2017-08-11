@@ -448,7 +448,6 @@ class Profile extends Component {
               onDateChange={(firstDay) => this.setState({firstDay})}
             />
           </View>
-
         </ModalWrapper>
 
         <ModalWrapper

@@ -15,8 +15,18 @@ import images from '../config/images';
 import ActionButton from 'react-native-action-button';
 import Communications from 'react-native-communications';
 
+const width = '50%';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
+
+function vw(percentageWidth) {
+  return Dimensions.get('window').width * (percentageWidth / 100);
+}
+
+function vh(percentageHeight) {
+  return Dimensions.get('window').height * (percentageHeight / 100);
+}
 
 class Contact extends Component {
 
@@ -139,7 +149,11 @@ class Contact extends Component {
     if (this.state.isList) {
       return this.renderListView(rowData);
     }
-    return this.renderGridView(rowData);
+    return (
+      <View style={styles.gridStyle}> 
+        {this.renderGridView(rowData)}
+      </View>
+    )
   }
  
   renderContent() {
@@ -246,7 +260,7 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   gridContainer: {
-    flex: 1,
+    width,
     height: 300,
     margin: 7,
     paddingTop: 20,
@@ -271,6 +285,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 12
   },
+
   middleSectionStyle: {
     marginLeft: 12,
     justifyContent: 'center',
