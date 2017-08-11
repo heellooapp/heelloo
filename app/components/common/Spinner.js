@@ -5,7 +5,7 @@ const Spinner = ({ size }) => {
   return (
     <View style={styles.spinnerStyle}>
       <ActivityIndicator size={size || 'large'} />
-      <Text style={styles.spinnerText}>Уншиж байна...</Text>
+      <Text style={styles.spinnerText}>Please Wait...</Text>
     </View>
   );
 };

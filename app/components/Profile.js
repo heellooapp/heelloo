@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Actions } from 'react-native-router-flux';
-import { View, Text, Platform, Image, Dimensions, ScrollView, TextInput, TouchableOpacity, TouchableHighlight, Linking, StyleSheet } from 'react-native';
+import { View, Text, Platform, Image, Dimensions, ScrollView, TextInput, Picker, TouchableOpacity, TouchableHighlight, Linking, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker'
 import Modal from 'react-native-modal';
@@ -89,6 +89,7 @@ class Profile extends Component {
       isMoreVisible: false,
       isNicknameVisible: false,
       isGenderVisible: false,
+      isPasswordVisible: false
     }
   componentDidMount() {
     userRef = firebase.database().ref(`/users/${this.props.uid}`);
@@ -101,15 +102,12 @@ class Profile extends Component {
   handleUser = (snapshot) => {
     val = snapshot.val() || {};
     user = val;
-    console.log(user);
     this.setState({ user, loadingUser: false });
   }
 
   handleInfo = (snapshot) => {
-    console.log(snapshot.val())
     val = snapshot.val() || {};
     info = val;
-    console.log(info);
     this.setState({
       info,
       loadingInfo: false
@@ -120,11 +118,24 @@ class Profile extends Component {
     const { viewStyle, iconLeft, iconList, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <Icon name="caret-left" size={45} color="#fff" style={iconLeft} onPress={() => Actions.pop()} />
+      <TouchableOpacity onPress={() => Actions.pop()} style={styles.headBtn}>
+        <Icon name="caret-left" size={45} color="#fff" style={iconLeft} />
+      </TouchableOpacity>
       <Text style={textStyle}>Profile</Text>
-      <Icon name="lock" size={30} color="#fff" style={iconList}  />
+      <TouchableOpacity onPress={() => this.setState({ isPasswordVisible: true })} style={styles.headBtn}>
+        <Icon name="lock" size={30} color="#fff" style={iconList} />
+      </TouchableOpacity>
     </View>
   )}
+
+  savePassword(){
+    firebase.database().ref(`/users/${this.props.uid}/`)
+    .update({ 
+      password: this.state.password
+    })
+    .then(() => { this.setState({ isPasswordVisible: false })
+    });
+  }
 
   saveFamily(){
     firebase.database().ref(`/userInfo/${this.props.uid}`)
@@ -178,6 +189,21 @@ class Profile extends Component {
     });
   }
 
+  saveSocialAccount() {
+    firebase.database().ref(`/userInfo/${this.props.uid}/`)
+    .update({
+      social: {
+        facebook: this.state.facebook,
+        twitter: this.state.twitter,
+        instagram: this.state.instagram,
+        linkedin: this.state.linkedin,
+        skype: this.state.skype
+      }
+    })
+    .then(() => { this.setState({ isSocialVisible: false })
+    });
+  }
+
   saveMoreInfo() {
     firebase.database().ref(`/userInfo/${this.props.uid}/`)
     .update({
@@ -226,21 +252,36 @@ class Profile extends Component {
   renderSocialIcons(userProp, infoProp) {
     return (
       <View style={{flexDirection: 'row', paddingBottom: 20, paddingTop: 10, justifyContent: 'space-around'}}>
-        <TouchableHighlight onPress={() => Linking.openURL(infoProp.fb)}>
+      {
+       (infoProp.social && infoProp.social.facebook) ?
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.facebook.com/'+infoProp.facebook)}>
           <Image source={images.fb} style={styles.socialImage} />
-        </TouchableHighlight>
-        <TouchableHighlight>
+        </TouchableOpacity> : null 
+      }
+      {
+      (infoProp.social && infoProp.social.twitter) ?
+        <TouchableOpacity>
           <Image source={images.twitter} style={styles.socialImage} />
-        </TouchableHighlight>
-        <TouchableHighlight>
+        </TouchableOpacity> : null      
+      }
+      {
+        (infoProp.social && infoProp.social.instagram) ?
+        <TouchableOpacity>
           <Image source={images.instagram} style={styles.socialImage} />
-        </TouchableHighlight>
-        <TouchableHighlight>
+        </TouchableOpacity> : null
+      }
+      {
+       (infoProp.social && infoProp.social.linkedin) ?
+        <TouchableOpacity>
           <Image source={images.linkedin} style={styles.socialImage} />
-        </TouchableHighlight>
-        <TouchableHighlight>
+        </TouchableOpacity> : null
+      }
+      {
+        (infoProp.social && infoProp.social.skype) ?
+        <TouchableOpacity>
           <Image source={images.skype} style={styles.socialImage} />
-        </TouchableHighlight>
+        </TouchableOpacity> : null
+      }
       </View>
   )}
 
@@ -279,6 +320,28 @@ class Profile extends Component {
     return (
       <View>
         <ModalWrapper
+          isVisible={this.state.isPasswordVisible}
+          title="Password"
+          onSave={this.savePassword.bind(this)}
+          onHide={() => this.setState({ isPasswordVisible: false, password: '' })}>
+          <ModalInput
+            icon="unlock-alt"
+            placeholder="Current password"
+            onChangeText={(facebook) => this.setState({facebook})}
+            value={this.state.facebook} />
+          <ModalInput
+            icon="lock"
+            placeholder="New password"
+            onChangeText={(twitter) => this.setState({twitter})}
+            value={this.state.twitter} />
+          <ModalInput
+            icon="lock"
+            placeholder="Repeat new password"
+            onChangeText={(twitter) => this.setState({twitter})}
+            value={this.state.twitter} />
+        </ModalWrapper>
+
+        <ModalWrapper
           isVisible={this.state.isNicknameVisible}
           title="Nickname"
           onSave={this.saveNickName.bind(this)}
@@ -292,20 +355,21 @@ class Profile extends Component {
 
         <ModalWrapper
           isVisible={this.state.isGenderVisible}
-          title="Nickname"
+          title="Gender"
           onSave={this.saveGender.bind(this)}
           onHide={() => this.setState({ isGenderVisible: false, gender: '' })}>
-          <ModalInput
-            icon="transgender"
-            placeholder="Gender"
-            onChangeText={(gender) => this.setState({gender})}
-            value={this.state.gender} />
+          <Picker
+            selectedValue={this.state.gender}
+            onValueChange={(gender) => this.setState({gender})}>
+            <Picker.Item label="Male" value="male" />
+            <Picker.Item label="Female" value="female" />
+          </Picker>
         </ModalWrapper>
 
         <ModalWrapper
           isVisible={this.state.isSocialVisible}
           title="Social accounts"
-          onSave={() => this.setState({ isSocialVisible: false, facebook: '', twitter: '', instagram: '', linkedin: '', skype: '' })}
+          onSave={this.saveSocialAccount.bind(this)}
           onHide={() => this.setState({ isSocialVisible: false, facebook: '', twitter: '', instagram: '', linkedin: '', skype: '' })} >
           <ModalInput
             icon="facebook-official"
@@ -384,12 +448,6 @@ class Profile extends Component {
               onDateChange={(firstDay) => this.setState({firstDay})}
             />
           </View>
-          <View style={styles.mainStyle}>
-            <View style={styles.center}>
-              <Icon name="phone-square" size={37} color="#009e11" style={{marginRight: 15}} onPress={this.OnPhonePress.bind(this)} />
-              <Icon name="envelope" size={35} color="#b45f00" onPress={this.OnTextPress.bind(this)}/>
-            </View>
-          </View>
 
         </ModalWrapper>
 
@@ -422,11 +480,16 @@ class Profile extends Component {
           title="More Information"
           onSave={this.saveMoreInfo.bind(this)}
           onHide={() => this.setState({ isMoreVisible: false, more: '' })}>
-          <ModalInput
-            icon="info"
-            placeholder="Write here..."
-            onChangeText={(more) => this.setState({more})}
-            value={this.state.more} />
+          <View style={styles.longInput}>
+            <TextInput
+              placeholder="More information about you..."
+              onChangeText={(more) => this.setState({more})}
+              value={this.state.more}
+              style={styles.textInputLong}
+              multiline = {true}
+              numberOfLines = {4}
+            />
+          </View>
         </ModalWrapper>
 
         <ModalWrapper
@@ -434,11 +497,16 @@ class Profile extends Component {
           title="Interest"
           onSave={this.saveInterest.bind(this)}
           onHide={() => this.setState({ isInterestVisible: false, interest: '' })}>
-          <ModalInput
-            icon="globe"
-            placeholder="Write about your hobby..."
-            onChangeText={(interest) => this.setState({interest})}
-            value={this.state.interest} />
+          <View style={styles.longInput}>
+            <TextInput
+              placeholder="Write about your hobby..."
+              onChangeText={(interest) => this.setState({interest})}
+              value={this.state.interest}
+              style={styles.textInputLong}
+              multiline = {true}
+              numberOfLines = {4}
+            />
+          </View>
         </ModalWrapper>
 
         <ModalWrapper
@@ -523,7 +591,7 @@ class Profile extends Component {
             </View>
             <View style={styles.nameFlex}>
               <Text style={styles.generalText}>Position:</Text>
-              <Text>{userProp.position}</Text>
+              <Text style={styles.position}>{userProp.position}</Text>
             </View>
             <View style={styles.nameFlex}>
               <Text style={styles.generalText}>Nickname:</Text>
@@ -557,12 +625,18 @@ class Profile extends Component {
             </View>
           </View>
         </View>
+
         <View style={styles.mainStyle}>
           <View style={styles.center}>
-            <Icon name="phone-square" size={37} color="#009e11" style={{marginRight: 15}} />
-            <Icon name="envelope" size={35} color="#b45f00" />
+            <TouchableOpacity onPress={this.OnPhonePress.bind(this)}>
+              <Icon name="phone-square" size={42} color="#009e11" style={{marginRight: 15}} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.OnTextPress.bind(this)}>
+              <Icon name="envelope" size={40} color="#b45f00" />
+            </TouchableOpacity>
           </View>
         </View>
+
         <View style={styles.columnStyle}>
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>Social accounts</Text>
@@ -584,14 +658,20 @@ class Profile extends Component {
             
           </View>
           <View style={styles.mainContent}>
-            <View style={styles.mainContainerStyle}>
-              <Icon style={styles.contentIconStyle} name="envelope" size={14} color="#333"/>
-              <Text style={styles.contentIconStyle}>{userProp.email}</Text>
-            </View>
-            <View style={styles.mainContainerStyle}>
-              <Icon style={styles.contentIconStyle} name="phone-square" size={18} color="#333"/>
-              <Text style={styles.contentIconStyle}>{userProp.phone}</Text>
-            </View>
+             {
+                userProp.email &&
+                <View style={styles.mainContainerStyle}>
+                  <Icon style={styles.contentIconStyle} name="envelope" size={14} color="#333"/>
+                  <Text style={styles.contentIconStyle}>{userProp.email}</Text>
+                </View>
+              }
+            {
+              userProp.phone &&
+              <View style={styles.mainContainerStyle}>
+                <Icon style={styles.contentIconStyle} name="phone-square" size={18} color="#333"/>
+                <Text style={styles.contentIconStyle}>{userProp.phone}</Text>
+              </View>
+             }
           </View>
 
           <View style={styles.mainTitle}>
@@ -604,14 +684,20 @@ class Profile extends Component {
             
           </View>
           <View style={styles.mainContent}>
+          {
+              userProp.anniversary.birthday &&
             <View style={styles.mainContainerStyle}>
               <Icon style={styles.contentIconStyle} name="birthday-cake" size={14} color="#333"/>
               <Text style={styles.contentIconStyle}>{userProp.anniversary.birthday}</Text>
             </View>
+          }
+          {
+              userProp.anniversary.firstDay &&
             <View style={styles.mainContainerStyle}>
               <Icon style={styles.contentIconStyle} name="briefcase" size={14} color="#333"/>
               <Text style={styles.contentIconStyle}>{userProp.anniversary.firstDay}</Text>
             </View>
+          }
           </View>
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>Family</Text>
@@ -624,10 +710,13 @@ class Profile extends Component {
           </View>
           <View style={styles.mainContent}>
             <View style={styles.mainContainerStyle}>
-              <Icon style={styles.contentIconStyle} name="heart" size={14} color="#333"/>
               {
                 (infoProp.family && infoProp.family.member)
-                  ? <Text style={styles.contentIconStyle}>{infoProp.family.member}</Text>
+                  ? 
+                  <View style={styles.btnContainer}>
+                    <Icon style={styles.contentIconStyle} name="heart" size={14} color="#333"/>
+                    <Text style={styles.contentIconStyle}>{infoProp.family.member}</Text>
+                  </View>
                   : null
               }
               {
@@ -654,37 +743,47 @@ class Profile extends Component {
           <View style={styles.mainContent}>
             <View style={styles.mainContainerStyle}>
              {
-                infoProp.favourite &&
-              <Icon style={styles.contentIconStyle} name="coffee" size={14} color="#333"/> &&
-              <Text style={styles.contentIconStyle}>{infoProp.favourite.drink}</Text>
-              }
+                (infoProp.favourite && infoProp.favourite.drink) ?
+                <View style={styles.btnContainer}>
+                  <Icon style={styles.contentIconStyle} name="coffee" size={14} color="#333"/>
+                  <Text style={styles.contentIconStyle}>{infoProp.favourite.drink}</Text>
+                </View> : null
+              } 
             </View>
             <View style={styles.mainContainerStyle}>
              {
-                infoProp.favourite &&
-              <Icon style={styles.contentIconStyle} name="cutlery" size={14} color="#333"/> &&
-              <Text style={styles.contentIconStyle}>{infoProp.favourite.food}</Text>
+               ( infoProp.favourite && infoProp.favourite.food) ? 
+              <View style={styles.btnContainer}>
+                <Icon style={styles.contentIconStyle} name="cutlery" size={14} color="#333"/> 
+                <Text style={styles.contentIconStyle}>{infoProp.favourite.food}</Text>
+              </View> : null 
               }
             </View>
             <View style={styles.mainContainerStyle}>
               {
-                infoProp.favourite &&
-              <Icon style={styles.contentIconStyle} name="apple" size={14} color="#333"/> &&
-              <Text style={styles.contentIconStyle}>{infoProp.favourite.snack}</Text>
+                (infoProp.favourite && infoProp.favourite.snack) ?
+              <View style={styles.btnContainer}>
+                <Icon style={styles.contentIconStyle} name="apple" size={14} color="#333"/> 
+                <Text style={styles.contentIconStyle}>{infoProp.favourite.snack}</Text>
+              </View> : null
               }
             </View>
             <View style={styles.mainContainerStyle}>
               {
-                infoProp.favourite &&
-              <Icon style={styles.contentIconStyle} name="headphones" size={14} color="#333"/> &&
-              <Text style={styles.contentIconStyle}>{infoProp.favourite.music}</Text>
-              }
-            </View>
+                (infoProp.favourite && infoProp.favourite.music) ?
+              <View style={styles.btnContainer}>
+                <Icon style={styles.contentIconStyle} name="headphones" size={14} color="#333"/> 
+                <Text style={styles.contentIconStyle}>{infoProp.favourite.music}</Text>
+              </View> : null
+              } 
+            </View> 
             <View style={styles.mainContainerStyle}>
               {
-                infoProp.favourite &&
-              <Icon style={styles.contentIconStyle} name="futbol-o" size={14} color="#333"/> &&
-              <Text style={styles.contentIconStyle}>{infoProp.favourite.sport}</Text>
+                (infoProp.favourite && infoProp.favourite.sport) ?
+              <View style={styles.btnContainer}>
+                <Icon style={styles.contentIconStyle} name="futbol-o" size={14} color="#333"/> 
+                <Text style={styles.contentIconStyle}>{infoProp.favourite.sport}</Text>
+              </View> : null
               }
             </View>
           </View>
@@ -700,7 +799,13 @@ class Profile extends Component {
           </View>
           <View style={styles.mainContent}>
             <View style={styles.mainContainerStyle}>
-              <Text style={styles.contentIconStyle}>{infoProp.interest}</Text>
+              {
+                infoProp.interest ?
+                <View style={styles.btnContainer}>
+                  <Icon style={styles.contentIconStyle} name="globe" size={14} color="#333"/> 
+                  <Text style={styles.contentIconStyle}>{infoProp.interest}</Text>
+                </View> : null
+              }
             </View>
           </View>
           <View style={styles.mainTitle}>
@@ -714,7 +819,13 @@ class Profile extends Component {
           </View>
           <View style={styles.mainContent}>
             <View style={styles.mainContainerStyle}>
-              <Text style={styles.contentIconStyle}>{infoProp.info}</Text>
+              {
+                infoProp.info ? 
+                <View style={styles.btnContainer}>
+                  <Icon style={styles.contentIconStyle} name="info" size={14} color="#333"/> 
+                  <Text style={styles.contentIconStyle}>{infoProp.info}</Text>
+                </View> : null
+              }
             </View>
           </View> 
         </View>
@@ -779,9 +890,10 @@ const styles = StyleSheet.create({
     marginLeft: 20
   },
   iconList: {
-    marginRight: 20,
-    width: 30,
-    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingLeft: 26,
+    margin: 10,
   },
   textInput: {
     flex: 1,
@@ -789,6 +901,15 @@ const styles = StyleSheet.create({
     paddingVertical: 0,
     justifyContent: 'flex-start',
     fontSize: 14
+  },
+  textInputLong: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    flexDirection: 'column',
+    flex: 1,
+    fontSize: 14,
+    padding: 15,
+    marginBottom: 7
   },
   modal: {
     backgroundColor: '#fff',
@@ -825,6 +946,9 @@ const styles = StyleSheet.create({
   },
   icon: {
     justifyContent: 'flex-end', 
+  },
+  position: {
+    width: 200,
   },
   socialImage: {
     width: 30,
@@ -894,6 +1018,13 @@ const styles = StyleSheet.create({
   btnContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around'
+  },
+  headBtn: {
+    width: 80,
+  },
+  longInput: {
+    height: 150,
+    flexDirection: 'column',
   }
 });
 

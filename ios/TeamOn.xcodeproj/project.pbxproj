@@ -49,7 +49,6 @@
 		8AE97A561F022592008E9AAF /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8AE97A551F022592008E9AAF /* GoogleService-Info.plist */; };
 		8B9AFB74C1564D6AB084362F /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0688B7C636744921BBAE5160 /* MaterialCommunityIcons.ttf */; };
 		9BAE4778C0B54F51A46199D2 /* libRNFirebase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 952D4A9C0CB8412F9A6F6FF5 /* libRNFirebase.a */; };
-		C73CE2F31C284A7472AEBB64 /* libPods-TeamOn.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C45051BAC1EDE0FCDA60208 /* libPods-TeamOn.a */; };
 		C91850C6F4404A709D532683 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AFCEEE8B4A29429CA8DB5BEC /* libRNVectorIcons.a */; };
 		E4B58003B9C54EF5B8915944 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 790F236255DD4547A5AE36C0 /* Zocial.ttf */; };
 		F13277583D0242B78FD35BE5 /* MaterialIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E015C531176C4B5695BCB572 /* MaterialIcons.ttf */; };
@@ -354,7 +353,6 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				C73CE2F31C284A7472AEBB64 /* libPods-TeamOn.a in Frameworks */,
 				C91850C6F4404A709D532683 /* libRNVectorIcons.a in Frameworks */,
 				9BAE4778C0B54F51A46199D2 /* libRNFirebase.a in Frameworks */,
 			);
