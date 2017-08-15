@@ -142,8 +142,8 @@ class Contact extends Component {
           {
             rowData.phone &&
             <View style={gridIconStyle}>
-                <Icon name="envelope" size={28} color="#b45f00" style={iconGridStyle} onPress={() => this.OnTextPress(rowData)} />
-                <Icon name="phone-square" size={30} color="#009e11" style={iconStyle} onPress={() => this.OnPhonePress(rowData)} />
+                <Icon name="envelope" size={35} color="#FFEB3B" style={iconGridStyle} onPress={() => this.OnTextPress(rowData)} />
+                <Icon name="phone-square" size={35} color="#009688" style={iconStyle} onPress={() => this.OnPhonePress(rowData)} />
             </View>
           }
         </View>
@@ -170,13 +170,13 @@ class Contact extends Component {
       <View style={styles.listHiddenRow}>
         <View style={styles.hiddenPhoneButtons}>
           <TouchableHighlight onPress={() => this.OnPhonePress(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: '#b45f00', width: 50}]}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#009688', width: 50}]}>
               <Icon name="phone-square" size={30} color="#FFF"/>
               <Text>Call</Text>
             </View>
           </TouchableHighlight>
           <TouchableHighlight onPress={() => this.OnTextPress(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: '#009e11', width: 50}]}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#FFEB3B', width: 50}]}>
               <Icon name="envelope" size={30} color="#FFF"/>
               <Text>SMS</Text>
             </View>
@@ -185,7 +185,7 @@ class Contact extends Component {
         {
           this.props.isAdmin &&
           <TouchableHighlight onPress={() => this.deleteUser(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: 'red', width: 75}]}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#FF6666', width: 75}]}>
               <Icon name="trash-o" size={30} color="#FFF"/>
               <Text>Delete</Text>
             </View>
@@ -207,14 +207,15 @@ class Contact extends Component {
     listViewStyle  = null;
     leftOpenValue  = 0;
     rightOpenValue = 0;
+    if (this.props.isAdmin)
+      rightOpenValue = -75;
     if (!this.state.isList) {
       listViewStyle = StyleSheet.flatten([listView, gridView]);
+      rightOpenValue = 0;
     } else {
       listViewStyle = listView;
       leftOpenValue = 100;
     }
-    if (this.props.isAdmin)
-      rightOpenValue = -75;
     return (
       <SwipeListView
         key={this.state.isList}
@@ -329,7 +330,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   gridContainer: {
-    width,
+    width: windowWidth / 2 - 20,
     height: 300,
     margin: 7,
     paddingTop: 20,
