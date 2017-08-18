@@ -13,9 +13,9 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Spinner } from '../components/common'
-import firebase from '../utils/firebase';
 import ActionButton from 'react-native-action-button';
+import { Spinner } from '../../components/common';
+import firebase from '../../utils/firebase';
 
 class NewStructure extends Component {
 	constructor(props) {
@@ -34,22 +34,15 @@ class NewStructure extends Component {
 
   handleQuery = (snapshot) => {
     val = snapshot.val();
-    if (val !== null && this.state.parent === 0) {
-    	this.updateParent(Object.keys(val)[0]);
-  	}
     this.setState({ loading: false, structures: val });
 
-  }
-
-  updateParent(parent) {
-  	this.setState({ parent });
   }
 
   header() {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <TouchableOpacity  onPress={() => Actions.contact()} >
+      <TouchableOpacity  onPress={() => Actions.structure()} >
 	      <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
       <Text style={textStyle}>Add structure</Text>
@@ -65,10 +58,11 @@ class NewStructure extends Component {
     firebase.database().ref()
       .child('structures')
       .push({
-        'name': this.state.name,
-        'parent': this.state.parent
+        name: this.state.name,
+        parent: this.state.parent
       });
-    this.setState({ name: '' });
+    this.setState({ name: '', parent: 0 });
+    Actions.structure();
   }
 
   renderPicker() {
@@ -77,6 +71,9 @@ class NewStructure extends Component {
 		let structureItems = Object.keys(this.state.structures).map((s, i) => {
 			return <Picker.Item key={i} label = {this.state.structures[s].name} value={s}/>
 		});
+    structureItems.unshift(
+      <Picker.Item key={-1} label='' value={0}/>
+    );
   	return (
 	    <Picker
 	    	selectedValue={this.state.parent}
@@ -163,4 +160,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default NewStructure;
+export { NewStructure };

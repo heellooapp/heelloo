@@ -4,13 +4,12 @@ import { View, Text, Platform, Image, Dimensions, ScrollView, TextInput, Picker,
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker'
 import Modal from 'react-native-modal';
-import { Header, Spinner, FloatButton } from '../components/common';
-import { EditButton } from './common/EditButton';
-import images from '../config/images';
 import Communications from 'react-native-communications';
-import firebase from '../utils/firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
 import ImagePicker from 'react-native-image-picker';
+import { Header, Spinner, FloatButton, EditButton } from '../../components/common';
+import images from '../../config/images';
+import firebase from '../../utils/firebase';
 
 Height = Dimensions.get("window").height
 Width = Dimensions.get("window").width
@@ -126,7 +125,7 @@ const  uploadImage = (uri, imageName, mime = 'image/jpg') => {
  })
 }
 
-class Profile extends Component {
+class Contact extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -769,10 +768,10 @@ class Profile extends Component {
         <View style={styles.mainStyle}>
           <View style={styles.center}>
             <TouchableOpacity onPress={this.OnPhonePress.bind(this)}>
-              <Icon name="phone-square" size={42} color="#009e11" style={{marginRight: 15}} />
+              <Icon name="phone-square" size={42} color="#a8dc6f" style={{marginRight: 15}} />
             </TouchableOpacity>
             <TouchableOpacity onPress={this.OnTextPress.bind(this)}>
-              <Icon name="envelope" size={40} color="#b45f00" />
+              <Icon name="envelope" size={42} color="#dca36f" />
             </TouchableOpacity>
           </View>
         </View>
@@ -1200,4 +1199,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Profile;
+export { Contact };

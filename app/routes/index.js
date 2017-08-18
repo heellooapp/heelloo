@@ -6,13 +6,10 @@ import { Router, Scene } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../config/images';
 import Anniversary from './Anniversary';
-import Contact from './Contact';
-import Profile from '../components/Profile';
-import { Spinner, FloatButton } from '../components/common'
 import firebase from '../utils/firebase';
-import NewStructure from './NewStructure';
-import NewAccount from './NewAccount';
-import Structure from './Structure';
+import { Spinner, FloatButton } from '../components/common'
+import { Contact, ContactList, NewContact } from './Contact';
+import { Structure, NewStructure, EditStructure } from './Structure';
 
 var width = Dimensions.get('window').width;
 
@@ -125,38 +122,45 @@ class Root extends Component {
                   />
                 </Scene>
 
-                <Scene key="contact" title="Contact" Iconname="ios-people" icon={TabIcon} hideNavBar={true} {...this.props} initial>
+                <Scene key="contactList" title="ContactList" Iconname="ios-people" icon={TabIcon} hideNavBar={true} {...this.props} initial>
                   <Scene
-                    key="Contact"
-                    component={Contact}
+                    key="ContactList"
+                    component={ContactList}
                     users={this.state.users}
                     isAdmin={this.state.isAdmin}
                     openDrawer={this.openDrawer}
                   />
                   <Scene
-                    key="profile"
-                    component={Profile}
+                    key="contact"
+                    component={Contact}
                     users={this.state.users}
                   />
                 </Scene>
 
-                 <Scene
+                <Scene
                   key="newStructure"
                   component={NewStructure}
                   hideNavBar={true}
                 />
+                
+                <Scene
+                  key="editStructure"
+                  component={EditStructure}
+                  hideNavBar={true}
+                />
+
                 <Scene
                   key="structure"
                   component={Structure}
                   isAdmin={this.state.isAdmin}
-                  hideNavBar={true}
-                />
+                  hideNavBar={true}/>
                 <Scene
-                  key="newAccount"
-                  component={NewAccount}
+                  key="newContact"
+                  component={NewContact}
                   hideNavBar={true}
                 />
-                
+
+
               </Scene>
 
 

@@ -167,7 +167,7 @@ class Anniversary extends Component {
   }
 
   addContact() {
-    Actions.newAccount();
+    Actions.newContact();
   }
 
   addStructure() {
