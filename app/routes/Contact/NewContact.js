@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  Image,
   Picker,
   Platform,
-  ListView,
   TextInput,
-  Dimensions,
   StyleSheet,
   ScrollView,
   AsyncStorage,

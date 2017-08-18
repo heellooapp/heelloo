@@ -91,7 +91,7 @@ class ContactList extends Component {
     return (
       <TouchableHighlight 
         underlayColor="#e6e6e6" 
-        onPress={() => Actions.profile({
+        onPress={() => Actions.contact({
           uid: rowData.uid,
           isAdmin: this.props.isAdmin,
           currentUser: firebase.auth().currentUser.uid === rowData.uid
@@ -124,7 +124,7 @@ class ContactList extends Component {
     return (
       <TouchableHighlight 
         underlayColor="#e6e6e6" 
-        onPress={() => Actions.profile({
+        onPress={() => Actions.contact({
           uid: rowData.uid,
           isAdmin: this.props.isAdmin,
           currentUser: firebase.auth().currentUser.uid === rowData.uid

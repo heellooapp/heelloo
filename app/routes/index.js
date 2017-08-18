@@ -8,7 +8,7 @@ import images from '../config/images';
 import Anniversary from './Anniversary';
 import firebase from '../utils/firebase';
 import { Spinner, FloatButton } from '../components/common'
-import { Contact, ContactList, NewContact } from './Contact';
+import { Contact, ContactList, NewContact, EditContact } from './Contact';
 import { Structure, NewStructure, EditStructure } from './Structure';
 
 var width = Dimensions.get('window').width;

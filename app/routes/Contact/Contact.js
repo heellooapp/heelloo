@@ -973,7 +973,9 @@ class Contact extends Component {
   }
 
   editContact(){
-    Actions.newAccount();
+    // Actions.editContact({
+    //   uid: this.props.uid
+    // });
   }
 
   render() {
@@ -987,7 +989,7 @@ class Contact extends Component {
         {
           this.props.isAdmin &&
           <EditButton
-            onEditPress={this.editContact}/>
+            onEditPress={this.editContact.bind(this)}/>
         }
     </View>
     );
