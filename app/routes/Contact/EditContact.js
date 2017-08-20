@@ -2,12 +2,9 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  Image,
   Picker,
   Platform,
-  ListView,
   TextInput,
-  Dimensions,
   StyleSheet,
   ScrollView,
   AsyncStorage,
@@ -15,11 +12,11 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Spinner } from '../components/common'
-import firebase from '../utils/firebase';
 import ActionButton from 'react-native-action-button';
+import { Spinner } from '../../components/common'
+import firebase from '../../utils/firebase';
 
-class NewAccount extends Component {
+class EditContact extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -132,10 +129,10 @@ class NewAccount extends Component {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <TouchableOpacity  onPress={() => Actions.contact()} >
+      <TouchableOpacity  onPress={() => Actions.contactList()} >
         <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
-      <Text style={textStyle}>Add contact</Text>
+      <Text style={textStyle}>Edit contact</Text>
       <TouchableOpacity onPress={this.saveAccount}>
         <Icon name="check" size={30} color="#fff" style={iconList} />
       </TouchableOpacity>
@@ -334,4 +331,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default NewAccount;
+export { EditContact };

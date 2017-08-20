@@ -10,12 +10,12 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Header, Spinner, FloatButton } from '../components/common'
-import firebase from '../utils/firebase';
-import images from '../config/images';
 import ActionButton from 'react-native-action-button';
 import Communications from 'react-native-communications';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import firebase from '../../utils/firebase';
+import images from '../../config/images';
+import { Header, Spinner, FloatButton } from '../../components/common'
 
 const width = '50%';
 
@@ -30,11 +30,10 @@ function vh(percentageHeight) {
   return Dimensions.get('window').height * (percentageHeight / 100);
 }
 
-class Contact extends Component {
+class ContactList extends Component {
 
   constructor(props) {
     super(props);
-
     listView = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       contactList: listView.cloneWithRows([]),
@@ -92,7 +91,7 @@ class Contact extends Component {
     return (
       <TouchableHighlight 
         underlayColor="#e6e6e6" 
-        onPress={() => Actions.profile({
+        onPress={() => Actions.contact({
           uid: rowData.uid,
           isAdmin: this.props.isAdmin,
           currentUser: firebase.auth().currentUser.uid === rowData.uid
@@ -121,13 +120,14 @@ class Contact extends Component {
   }
 
   renderGridView(rowData) {
-    const {gridContainer, gridProfileImage, middleSectionStyle, nameStyle, gridIconStyle, iconStyle, iconGridStyle, positionStyle, lastNameStyle } = styles;
+    const {gridContainer, gridProfileImage, middleSectionStyle, nameStyle, gridIconStyle, iconGridStyle, positionStyle } = styles;
     return (
       <TouchableHighlight 
         underlayColor="#e6e6e6" 
-        onPress={() => Actions.profile({
+        onPress={() => Actions.contact({
           uid: rowData.uid,
-          isAdmin: this.props.isAdmin
+          isAdmin: this.props.isAdmin,
+          currentUser: firebase.auth().currentUser.uid === rowData.uid
         })}
       >
         <View style={gridContainer}>
@@ -137,13 +137,13 @@ class Contact extends Component {
               : <Image style={gridProfileImage} source={images.avatar} />
           }
           <Text style={nameStyle}>{rowData.firstName}</Text>
-          <Text style={lastNameStyle}>{rowData.lastname}</Text>
+          <Text style={nameStyle}>{rowData.lastname}</Text>
           <Text style={positionStyle}>{rowData.position}</Text>
           {
             rowData.phone &&
             <View style={gridIconStyle}>
-                <Icon name="envelope" size={28} color="#b45f00" style={iconGridStyle} onPress={() => this.OnTextPress(rowData)} />
-                <Icon name="phone-square" size={30} color="#009e11" style={iconStyle} onPress={() => this.OnPhonePress(rowData)} />
+                <Icon name="phone-square" size={35} color="#a8dc6f" style={iconGridStyle} onPress={() => this.OnPhonePress(rowData)} />
+                <Icon name="envelope" size={35} color="#dca36f" style={iconGridStyle} onPress={() => this.OnTextPress(rowData)} />
             </View>
           }
         </View>
@@ -170,13 +170,13 @@ class Contact extends Component {
       <View style={styles.listHiddenRow}>
         <View style={styles.hiddenPhoneButtons}>
           <TouchableHighlight onPress={() => this.OnPhonePress(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: '#b45f00', width: 50}]}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#a8dc6f', width: 50}]}>
               <Icon name="phone-square" size={30} color="#FFF"/>
               <Text>Call</Text>
             </View>
           </TouchableHighlight>
           <TouchableHighlight onPress={() => this.OnTextPress(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: '#009e11', width: 50}]}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#dca36f', width: 50}]}>
               <Icon name="envelope" size={30} color="#FFF"/>
               <Text>SMS</Text>
             </View>
@@ -185,7 +185,7 @@ class Contact extends Component {
         {
           this.props.isAdmin &&
           <TouchableHighlight onPress={() => this.deleteUser(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: 'red', width: 75}]}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#FF6666', width: 75}]}>
               <Icon name="trash-o" size={30} color="#FFF"/>
               <Text>Delete</Text>
             </View>
@@ -207,14 +207,15 @@ class Contact extends Component {
     listViewStyle  = null;
     leftOpenValue  = 0;
     rightOpenValue = 0;
+    if (this.props.isAdmin)
+      rightOpenValue = -75;
     if (!this.state.isList) {
       listViewStyle = StyleSheet.flatten([listView, gridView]);
+      rightOpenValue = 0;
     } else {
       listViewStyle = listView;
       leftOpenValue = 100;
     }
-    if (this.props.isAdmin)
-      rightOpenValue = -75;
     return (
       <SwipeListView
         key={this.state.isList}
@@ -257,7 +258,7 @@ class Contact extends Component {
   }
 
   addContact() {
-    Actions.newAccount();
+    Actions.newContact();
   }
 
   addStructure() {
@@ -329,15 +330,14 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   gridContainer: {
-    width,
+    width: windowWidth / 2 - 20,
     height: 300,
-    margin: 7,
-    paddingTop: 20,
-    paddingRight: 14,
-    paddingLeft: 14,
+    marginTop: 10,
+    paddingTop: 10,
+    paddingRight: 10,
+    paddingLeft: 10,
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 5
   },
   listProfileImage: {
     width: 60,
@@ -347,14 +347,13 @@ const styles = StyleSheet.create({
     borderWidth: 1
   },
   gridProfileImage: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
+    width: windowWidth <= 320 ? 120 : 140,
+    height: windowWidth <= 320 ? 120 : 140,
+    borderRadius: windowWidth <= 320 ? 60 : 70,
     borderColor: '#eee',
     borderWidth: 1,
     marginBottom: 12
   },
-
   middleSectionStyle: {
     marginLeft: 12,
     justifyContent: 'center',
@@ -365,23 +364,16 @@ const styles = StyleSheet.create({
   },
   nameStyle: {
     color: '#000',
-    fontSize: 17,
-    fontWeight: 'bold'
-  },
-  lastNameStyle: {
-    color: '#000',
-    fontSize: 17,
+    fontSize: windowWidth <= 320 ? 14 : 17,
     fontWeight: 'bold'
   },
   listIconStyle: {
     marginRight: 5
   },
   gridIconStyle: {
+    bottom: 0,
     flexDirection: 'row',
     alignSelf: 'flex-end',
-  },
-  iconStyle: {
-    marginTop: 13
   },
   iconGridStyle: {
     marginTop: 15,
@@ -389,4 +381,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Contact;
+export { ContactList };

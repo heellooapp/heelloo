@@ -61,11 +61,13 @@ class Sidemenu extends React.Component {
     return(
       <View>
         <View style={styles.userPart}>
+          <TouchableOpacity onPress={this.profileOnPress.bind(this)}>
           {
             this.state.user.profileImg
               ? <Image style={styles.ProfileImg} source={{uri: this.state.user.profileImg}} />
               : <Image style={styles.ProfileImg} source={images.avatar} />
           }
+          </TouchableOpacity>
           <Text style={styles.userName}>{this.state.user.firstName} {this.state.user.lastname}</Text>
           <Text style={styles.position}>{this.state.user.position}</Text>
         </View>

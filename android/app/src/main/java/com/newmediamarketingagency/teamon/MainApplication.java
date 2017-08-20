@@ -7,6 +7,7 @@ import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
+import com.RNFetchBlob.RNFetchBlobPackage;  
 
 import io.invertase.firebase.RNFirebasePackage; // <-- Add this line
 // Optional packages - add as appropriate
@@ -45,7 +46,8 @@ public class MainApplication extends Application implements ReactApplication {
           new RNFirebaseDatabasePackage(),
           new RNFirebaseMessagingPackage(),
           new RNFirebasePerformancePackage(),
-          new RNFirebaseStoragePackage()
+          new RNFirebaseStoragePackage(),
+          new RNFetchBlobPackage()
       );
     }
   };
