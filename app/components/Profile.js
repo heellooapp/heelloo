@@ -11,6 +11,7 @@ import Communications from 'react-native-communications';
 import firebase from '../utils/firebase';
 import RNFetchBlob from 'react-native-fetch-blob';
 import ImagePicker from 'react-native-image-picker';
+import Uploader from './Uploader';
 
 Height = Dimensions.get("window").height
 Width = Dimensions.get("window").width
@@ -88,43 +89,38 @@ class ModalInput extends Component {
   }
 }
 
-class Uploader {
-  static setImageUrl(userId, url){
-    let Path = "/users/"+userId+"/url"
-    return firebase.database().ref(Path).set(url)
-  }
-}
-
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
 
-const  uploadImage = (uri, imageName, mime = 'image/jpg') => {
- return new Promise((resolve, reject) => {
-   const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
-   let uploadBlob = null
-   const imageRef = firebase.storage().ref('profileImg').child(imageName)
-   fs.readFile(uploadUri, 'base64')
-     .then((data) => {
-         return Blob.build(data, { type: `${mime};BASE64` })
-     })
-     .then((blob) => {
-       uploadBlob = blob
-       return imageRef.put(blob, { contentType: mime })
-     })
-     .then(() => {
-       uploadBlob.close()
-       return imageRef.getDownloadURL()
-     })
-     .then((url) => {
-       resolve(url)
-     })
-     .catch((error) => {
-       reject(error)
-     })
- })
-}
+const  uploadImage = (uri, mime = 'application/octet-stream') => {
+    return new Promise((resolve, reject) => {
+      const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+      let uploadBlob = null
+
+      const imageRef = firebase.storage().ref('images').child('image_001')
+      fs.readFile(uploadUri, 'base64')
+        .then((data) => {
+          return Blob.build(data, { type: `${mime};BASE64` })
+        })
+        .then((blob) => {
+          uploadBlob = blob
+          return imageRef.put(blob, { contentType: mime })
+        })
+        .then(() => {
+          uploadBlob.close()
+          return imageRef.getDownloadURL()
+        })
+        .then((url) => {
+          console.log(resolve(url))
+          resolve(url)
+        })
+        .catch((error) => {
+          reject(error)
+      })
+    })
+  }
 
 class Profile extends Component {
   constructor(props) {
@@ -137,7 +133,7 @@ class Profile extends Component {
       childNumber: 0,
       childrenObj: [],
       currentUid: firebase.auth().currentUser.uid,
-      uid: '',
+      // uid: '',
     };
       
     this.renderContent = this.renderContent.bind(this);
@@ -158,16 +154,6 @@ class Profile extends Component {
       isProfileImageVisible: false,
       isBigImage: false
     }
-
-  async componentWillMount() {
-   try {
-      this.setState({
-        uid: this.state.currentUid
-      })
-    } catch(error){
-      console.log(error)
-    }
-  }
 
   componentDidMount() {
     userRef = firebase.database().ref(`/users/${this.props.uid}`);
@@ -237,12 +223,26 @@ class Profile extends Component {
   }
 
   saveProfileImage(){
-    firebase.database().ref(`/users/${this.props.uid}/`)
-    .update({ 
-      profileImg: this.state.imagePath
-    })
-    .then(() => { this.setState({ isProfileImageVisible: false })
-    });
+    // console.log(this.state.uid);
+    // firebase.database().ref(`/users/${this.props.uid}/`)
+    // .update({ 
+    //   profileImg: this.state.imagePath
+    // })
+    // .then(() => { this.setState({ isProfileImageVisible: false })
+    // });
+  if(this.props.uid){
+      try {
+        this.state.imagePath ?
+           uploadImage(this.state.imagePath, `${this.props.uid}.jpg`)
+             .then((responseData) => {
+               Uploader.setImageUrl(this.props.uid, responseData)
+             })
+             .done()
+        : null
+      } catch(error){
+      console.log(error)
+    }
+    }
   }
 
   saveGender(){
