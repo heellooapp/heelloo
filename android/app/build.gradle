@@ -90,15 +90,22 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'teamon'
+            keyPassword '0602newmedia'
+            storeFile file('/Users/muba/workspace/TeamOn/android/keystores/teamon.keystore')
+            storePassword '0602newmedia'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         applicationId "com.newmediamarketingagency.teamon"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -115,6 +122,7 @@ android {
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.config
         }
     }
     // applicationVariants are e.g. debug, release
@@ -122,7 +130,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -133,26 +141,29 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-image-picker')
+    compile project(':react-native-fetch-blob')
+    compile project(':react-native-firebase')
     compile project(':react-native-vector-icons')
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.facebook.react:react-native:+'
+    // From node_modules
     // RNFirebase Required dependencies
     compile(project(':react-native-firebase')) {
         transitive = false
     }
-    compile "com.google.firebase:firebase-core:11.0.1"
-
+    compile 'com.google.firebase:firebase-core:11.0.1'
     // RNFirebase optional dependencies
-    compile "com.google.firebase:firebase-ads:11.0.1"
-    compile "com.google.firebase:firebase-analytics:11.0.1"
-    compile "com.google.firebase:firebase-auth:11.0.1"
-    compile "com.google.firebase:firebase-config:11.0.1"
-    compile "com.google.firebase:firebase-crash:11.0.1"
-    compile "com.google.firebase:firebase-database:11.0.1"
-    compile "com.google.firebase:firebase-messaging:11.0.1"
-    compile "com.google.firebase:firebase-perf:11.0.1"
-    compile "com.google.firebase:firebase-storage:11.0.1"
+    compile 'com.google.firebase:firebase-ads:11.0.1'
+    compile 'com.google.firebase:firebase-analytics:11.0.1'
+    compile 'com.google.firebase:firebase-auth:11.0.1'
+    compile 'com.google.firebase:firebase-config:11.0.1'
+    compile 'com.google.firebase:firebase-crash:11.0.1'
+    compile 'com.google.firebase:firebase-database:11.0.1'
+    compile 'com.google.firebase:firebase-messaging:11.0.1'
+    compile 'com.google.firebase:firebase-perf:11.0.1'
+    compile 'com.google.firebase:firebase-storage:11.0.1'
 }
 
 

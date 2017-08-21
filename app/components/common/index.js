@@ -5,3 +5,5 @@ export * from './Header';
 export * from './Input';
 export * from './Spinner';
 export * from './Confirm';
+export * from './FloatButton';
+export * from './EditButton';
