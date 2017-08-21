@@ -7,8 +7,8 @@ import Modal from 'react-native-modal';
 import Communications from 'react-native-communications';
 import RNFetchBlob from 'react-native-fetch-blob';
 import ImagePicker from 'react-native-image-picker';
-import Uploader from './Uploader';
-import { Header, Spinner, FloatButton, EditButton } from '../../components/common';
+import Uploader from '../../components/Uploader';
+import { Header, Spinner, EditButton } from '../../components/common';
 import images from '../../config/images';
 import firebase from '../../utils/firebase';
 
@@ -98,7 +98,7 @@ const  uploadImage = (uri, mime = 'application/octet-stream') => {
       const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
       let uploadBlob = null
 
-      const imageRef = firebase.storage().ref('images').child('image_001')
+      const imageRef = firebase.storage().ref('profileImg').child('image_001')
       fs.readFile(uploadUri, 'base64')
         .then((data) => {
           return Blob.build(data, { type: `${mime};BASE64` })
@@ -768,10 +768,10 @@ class Contact extends Component {
         <View style={styles.mainStyle}>
           <View style={styles.center}>
             <TouchableOpacity onPress={this.OnPhonePress.bind(this)}>
-              <Icon name="phone-square" size={42} color="#a8dc6f" style={{marginRight: 15}} />
+              <Icon name="phone-square" size={42} color="#009e11" style={{marginRight: 15}} />
             </TouchableOpacity>
             <TouchableOpacity onPress={this.OnTextPress.bind(this)}>
-              <Icon name="envelope" size={42} color="#dca36f" />
+              <Icon name="envelope" size={42} color="#b45f00" />
             </TouchableOpacity>
           </View>
         </View>

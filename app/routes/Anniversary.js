@@ -125,7 +125,7 @@ class Anniversary extends Component {
   }
 
   _renderRow(rowData) {
-    var months = ['', 'Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     return (
       <View>
         {
@@ -138,7 +138,7 @@ class Anniversary extends Component {
                 <Text>Happy {new Date().getYear() - new Date(rowData.anniversary.birthday).getYear()}-year birthday!</Text>
               </View>
               <View style={styles.dateBirth}>
-                <Text style={styles.dateBirthtext}>{months[new Date(rowData.anniversary.birthday).getMonth(months)]}</Text>
+                <Text style={styles.dateBirthtext}>{months[new Date(rowData.anniversary.birthday).getUTCMonth(months)]}</Text>
                 <Text style={styles.dateBirthBold}>{new Date(rowData.anniversary.birthday).getDate()}</Text>
               </View>
             </View>

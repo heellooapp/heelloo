@@ -142,8 +142,8 @@ class ContactList extends Component {
           {
             rowData.phone &&
             <View style={gridIconStyle}>
-                <Icon name="phone-square" size={35} color="#a8dc6f" style={iconGridStyle} onPress={() => this.OnPhonePress(rowData)} />
-                <Icon name="envelope" size={35} color="#dca36f" style={iconGridStyle} onPress={() => this.OnTextPress(rowData)} />
+                <Icon name="phone-square" size={35} color="#009e11" style={iconGridStyle} onPress={() => this.OnPhonePress(rowData)} />
+                <Icon name="envelope" size={35} color="#b45f00" style={iconGridStyle} onPress={() => this.OnTextPress(rowData)} />
             </View>
           }
         </View>
@@ -170,24 +170,21 @@ class ContactList extends Component {
       <View style={styles.listHiddenRow}>
         <View style={styles.hiddenPhoneButtons}>
           <TouchableHighlight onPress={() => this.OnPhonePress(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: '#a8dc6f', width: 50}]}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#009e11', width: 50}]}>
               <Icon name="phone-square" size={30} color="#FFF"/>
-              <Text>Call</Text>
             </View>
           </TouchableHighlight>
           <TouchableHighlight onPress={() => this.OnTextPress(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: '#dca36f', width: 50}]}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#b45f00', width: 50}]}>
               <Icon name="envelope" size={30} color="#FFF"/>
-              <Text>SMS</Text>
             </View>
           </TouchableHighlight>
         </View>
         {
           this.props.isAdmin &&
           <TouchableHighlight onPress={() => this.deleteUser(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: '#FF6666', width: 75}]}>
+            <View style={[styles.hiddenButton, {backgroundColor: '#c53636', width: 75}]}>
               <Icon name="trash-o" size={30} color="#FFF"/>
-              <Text>Delete</Text>
             </View>
           </TouchableHighlight>
         }

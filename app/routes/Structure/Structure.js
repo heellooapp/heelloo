@@ -59,7 +59,7 @@ class CollapsibleWrapper extends Component {
           currentUser: firebase.auth().currentUser.uid === rowData.uid
         })}>
         <View style={[styles.mainStructure, {backgroundColor: '#f6f6f6', paddingLeft: 25}]}>
-          <Text style={{fontSize: 15, marginLeft: 10}}>{rowData.firstName}</Text>
+          <Text style={{fontSize: 15, marginLeft: 10}}>{rowData.firstName} {rowData.lastname}</Text>
         </View>
       </TouchableOpacity>
       );
@@ -67,12 +67,12 @@ class CollapsibleWrapper extends Component {
 
   renderContacts() {
     return (
-      <ListView
-        dataSource          = {this.state.contactList}
-        renderRow           = {(rowData) => this.renderPerContact(rowData)}
-        enableEmptySections = {true}
-        scrollEnabled       ={false}
-      />
+        <ListView
+          dataSource          = {this.state.contactList}
+          renderRow           = {(rowData) => this.renderPerContact(rowData)}
+          enableEmptySections = {true}
+          scrollEnabled       ={false}
+        />
     );
   }
 
@@ -179,9 +179,11 @@ class Structure extends Component {
     return (
       <View>
         {this.header()}
-        <ScrollView style={{paddingBottom: 60}}>
+        <View style={{marginBottom: 210}}>
+        <ScrollView>
           {this.state.structures.map(this.renderStructures)}
         </ScrollView>
+        </View>
       </View>
     )
   }

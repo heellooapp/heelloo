@@ -9,12 +9,14 @@ import {
   ScrollView,
   AsyncStorage,
   TouchableOpacity,
+  KeyboardAvoidingView
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActionButton from 'react-native-action-button';
 import { Spinner } from '../../components/common'
 import firebase from '../../utils/firebase';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class NewContact extends Component {
 	constructor(props) {
@@ -173,6 +175,10 @@ class NewContact extends Component {
       <View>
           {this.header()}
         <ScrollView>
+        <KeyboardAwareScrollView
+          style={styles.container}
+          behavior="padding"
+        >
           <View style={{marginBottom: 145}}>
             <TouchableOpacity onPress={() => this.setState({isAdmin: !this.state.isAdmin})}>
               <View style={{flexDirection: 'row', padding: 20 }}>
@@ -262,6 +268,7 @@ class NewContact extends Component {
               />
             </View>
           </View>
+          </KeyboardAwareScrollView>
         </ScrollView>
       </View>
       )

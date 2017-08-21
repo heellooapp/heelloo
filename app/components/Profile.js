@@ -180,6 +180,7 @@ class Profile extends Component {
 
   header() {
     const { viewStyle, iconLeft, iconList, textStyle } = styles;
+    //console.log(Actions, action)
     return (
     <View style={viewStyle}>
       <TouchableOpacity onPress={() => Actions.pop()} style={styles.headBtn}>
@@ -191,7 +192,6 @@ class Profile extends Component {
       </TouchableOpacity>
     </View>
   )}
-
   savePassword(){
     firebase.database().ref(`/users/${this.props.uid}/`)
     .update({ 
