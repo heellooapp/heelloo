@@ -177,7 +177,6 @@ class ContactList extends Component {
       return;
     }
     rightBtn = {};
-    console.log(data.active);
     if (data.active === false) {
       rightBtn = <TouchableHighlight onPress={() => this.activateUser(data)}>
                   <View style={[styles.hiddenButton, {backgroundColor: '#66ffff', width: 75}]}>

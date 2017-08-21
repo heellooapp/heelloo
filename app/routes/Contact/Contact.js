@@ -65,47 +65,25 @@ class ModalWrapperClose extends Component {
   }
 }
 
-class ModalInput extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  render() {
-    const { placeholder, onChangeText, value, icon } = this.props;
-    const { iconStyle, inputStyle } = styles;
-    return (
-      <View style={styles.containerStyle}>
-        <Icon style={iconStyle} name={icon} size={23} color="#67686c"/>
-        <TextInput
-          placeholder          ={placeholder}
-          style                ={inputStyle}
-          underlineColorAndroid='transparent'
-          onChangeText         ={onChangeText}
-          value                ={value}
-          autoCorrect          ={false} />
-      </View>
-    );
-  }
-}
-
 const Blob = RNFetchBlob.polyfill.Blob
 const fs = RNFetchBlob.fs
 window.XMLHttpRequest = RNFetchBlob.polyfill.XMLHttpRequest
 window.Blob = Blob
 
-const  uploadImage = (uri, mime = 'application/octet-stream') => {
+const  uploadImage = (uri, mime, uid) => {
     return new Promise((resolve, reject) => {
-      const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri
+      const uploadUri = Platform.OS === 'ios' ? uri.replace('file://', '') : uri;
+      console.log(uploadUri);
       let uploadBlob = null
 
-      const imageRef = firebase.storage().ref('profileImg').child('image_001')
+      const imageRef = firebase.storage().ref('profileImg').child(uid)
       fs.readFile(uploadUri, 'base64')
         .then((data) => {
           return Blob.build(data, { type: `${mime};BASE64` })
         })
         .then((blob) => {
           uploadBlob = blob
-          return imageRef.put(blob, { contentType: mime })
+          return imageRef.put(uploadUri, { contentType: mime })
         })
         .then(() => {
           uploadBlob.close()
@@ -286,25 +264,18 @@ class Contact extends Component {
   }
 
   saveProfileImage(){
-    // console.log(this.state.uid);
-    // firebase.database().ref(`/users/${this.props.uid}/`)
-    // .update({ 
-    //   profileImg: this.state.imagePath
-    // })
-    // .then(() => { this.setState({ isProfileImageVisible: false })
-    // });
-  if(this.props.uid){
-      try {
-        this.state.imagePath ?
-           uploadImage(this.state.imagePath, `${this.props.uid}.jpg`)
-             .then((responseData) => {
-               Uploader.setImageUrl(this.props.uid, responseData)
-             })
-             .done()
-        : null
-      } catch(error){
-      console.log(error)
-    }
+    try {
+      uploadImage(this.state.imagePath, 'image/jpeg', `${this.props.uid}.jpg`)
+       .then((responseData) => {
+         firebase.database().ref(`users/${this.props.uid}`)
+          .update({
+            profileImg: responseData
+          })
+       })
+       .done(() => { 
+        this.setState({ isProfileImageVisible: false });
+       })
+    } catch(error){
     }
   }
 
@@ -515,7 +486,11 @@ class Contact extends Component {
         <ModalWrapperClose
           isVisible={this.state.isBigImage}
           onClose={() => this.setState({ isBigImage: false })}>
-          <Image source={{uri: this.state.user.profileImg}} style={styles.bigImage} />
+          {
+            this.state.user.profileImg
+              ? <Image source={{uri: this.state.user.profileImg}} style={styles.bigImage} />
+              : <Image source={images.avatar} style={styles.bigImage} />
+          }
         </ModalWrapperClose>
 
         <ModalWrapper
@@ -841,17 +816,18 @@ class Contact extends Component {
     return (
       <ScrollView style={{ marginBottom:60 }}>
         <View style={styles.mainStyle}>
-          { ( this.props.currentUser) ?
-            <TouchableOpacity onPress={() => this.setState({ isProfileImageVisible: true })}>
-              { userProp.profileImg ?  <Image source={{uri: userProp.profileImg}} style={styles.profileImage} /> :
-                <Image source={images.avatarAdd} style={styles.profileImage} />
-              } 
-            </TouchableOpacity> :
-            <TouchableOpacity onPress={() => this.setState({ isBigImage: true })}>
-              { userProp.profileImg ?  <Image source={{uri: userProp.profileImg}} style={styles.profileImage} /> :
-                <Image source={images.avatarAdd} style={styles.profileImage} />
-              } 
-            </TouchableOpacity> 
+          { 
+            ( this.props.currentUser)
+              ? <TouchableOpacity onPress={() => this.setState({ isProfileImageVisible: true })}>
+                  { userProp.profileImg ?  <Image source={{uri: userProp.profileImg}} style={styles.profileImage} /> :
+                    <Image source={images.avatarAdd} style={styles.profileImage} />
+                  } 
+                </TouchableOpacity>
+              : <TouchableOpacity onPress={() => this.setState({ isBigImage: true })}>
+                  { userProp.profileImg ?  <Image source={{uri: userProp.profileImg}} style={styles.profileImage} /> :
+                    <Image source={images.avatar} style={styles.profileImage} />
+                  } 
+                </TouchableOpacity> 
          }
           <View style={styles.namePart}>
             <View style={styles.nameFlex}>
@@ -1221,10 +1197,10 @@ const styles = StyleSheet.create({
     resizeMode: 'contain'
   },
   bigImage: {
-    height: 350,
+    height: 300,
     resizeMode: 'contain',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignSelf: 'center'
   },
   profileImageDetail: {
     width: 100,
@@ -1265,7 +1241,8 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     fontSize: 14,
     lineHeight: 23,
-    flex: 1
+    flex: 1,
+    fontSize: 14
   },
   iconStyle: {
     padding: 8,
