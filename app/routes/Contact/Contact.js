@@ -8,7 +8,7 @@ import Communications from 'react-native-communications';
 import RNFetchBlob from 'react-native-fetch-blob';
 import ImagePicker from 'react-native-image-picker';
 import Uploader from '../../components/Uploader';
-import { Header, Spinner, EditButton } from '../../components/common';
+import { Header, Spinner, FloatButton, EditButton, Input, CardSection, Card } from '../../components/common';
 import images from '../../config/images';
 import firebase from '../../utils/firebase';
 
@@ -77,12 +77,12 @@ class ModalInput extends Component {
       <View style={styles.containerStyle}>
         <Icon style={iconStyle} name={icon} size={23} color="#67686c"/>
         <TextInput
-          placeholder={placeholder}
-          style={inputStyle}
+          placeholder          ={placeholder}
+          style                ={inputStyle}
           underlineColorAndroid='transparent'
-          onChangeText={onChangeText}
-          value={value}
-          autoCorrect={false} />
+          onChangeText         ={onChangeText}
+          value                ={value}
+          autoCorrect          ={false} />
       </View>
     );
   }
@@ -125,14 +125,15 @@ class Contact extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user: null,
-      info: null,
+      user       : null,
+      info       : null,
       loadingUser: true,
       loadingInfo: true,
       childNumber: 0,
       childrenObj: [],
-      currentUid: firebase.auth().currentUser.uid,
-      // uid: '',
+      currentUid : firebase.auth().currentUser.uid,
+      uid        : '',
+      password   : ''
     };
       
     this.renderContent = this.renderContent.bind(this);
@@ -140,19 +141,30 @@ class Contact extends Component {
     this.addChildToObject = this.addChildToObject.bind(this);
   }
     state = {
-      isSocialVisible: false,
-      isContactVisible: false,
-      isAnniversaryVisible: false,
-      isFamilyVisible: false,
-      isFavouriteVisible: false,
-      isInterestVisible: false,
-      isMoreVisible: false,
-      isNicknameVisible: false,
-      isGenderVisible: false,
-      isPasswordVisible: false,
+      isSocialVisible      : false,
+      isContactVisible     : false,
+      isAnniversaryVisible : false,
+      isFamilyVisible      : false,
+      isFavouriteVisible   : false,
+      isInterestVisible    : false,
+      isMoreVisible        : false,
+      isNicknameVisible    : false,
+      isGenderVisible      : false,
+      isPasswordVisible    : false,
       isProfileImageVisible: false,
-      isBigImage: false
+      isBigImage           : false,
     }
+
+  componentWillMount() {
+   try {
+      this.setState({
+        uid: this.state.currentUid
+      })
+    } catch(error){
+      console.log(error)
+    }
+  }
+
 
   componentDidMount() {
     userRef = firebase.database().ref(`/users/${this.props.uid}`);
@@ -165,15 +177,56 @@ class Contact extends Component {
   handleUser = (snapshot) => {
     val = snapshot.val() || {};
     user = val;
-    this.setState({ user, loadingUser: false });
+    this.setState({
+      user,
+      loadingUser: false,
+      firstName  : user.firstName,
+      lastname   : user.lastname,
+      email      : user.email,
+      phone      : user.phone,
+      birthday   : user.anniversary.birthday,
+      firstDay   : user.anniversary.firstDay
+    });
   }
 
   handleInfo = (snapshot) => {
     val = snapshot.val() || {};
     info = val;
+
+    member     = '';
+    child      = [];
+    childNumber= 0;
+    drink      = '';
+    food       = '';
+    snack      = '';
+    music      = '';
+    sport      = '';
+    if (typeof info.family !== 'undefined') {
+      member     = info.family.member;
+      child      = info.family.children;
+      childNumber= info.family.children.length;
+    }
+    if (info.favourite) {
+      drink = info.favourite.drink;
+      food  = info.favourite.food;
+      snack = info.favourite.snack;
+      music = info.favourite.music;
+      sport = info.favourite.sport;
+    }
     this.setState({
       info,
-      loadingInfo: false
+      member,
+      child,
+      childNumber,
+      drink,
+      food,
+      snack,
+      music,
+      sport,
+      loadingInfo: false,
+      nickname   : info.nickname,
+      gender     : info.gender,
+      more       : info.info
     });
   }
 
@@ -185,27 +238,38 @@ class Contact extends Component {
         <Icon name="caret-left" size={45} color="#fff" style={iconLeft} />
       </TouchableOpacity>
       <Text style={textStyle}>Profile</Text>
-      <TouchableOpacity onPress={() => this.setState({ isPasswordVisible: true })} style={styles.headBtn}>
-        <Icon name="lock" size={30} color="#fff" style={iconList} />
-      </TouchableOpacity>
+      {
+        this.props.currentUser === true
+          ? (<TouchableOpacity onPress={() => this.setState({ isPasswordVisible: true })} style={styles.headBtn}>
+              <Icon name="lock" size={30} color="#fff" style={iconList} />
+            </TouchableOpacity>)
+          : <View/>
+      }
     </View>
   )}
 
   savePassword(){
-    firebase.database().ref(`/users/${this.props.uid}/`)
-    .update({ 
-      password: this.state.password
-    })
-    .then(() => { this.setState({ isPasswordVisible: false })
-    });
+    if (this.state.password.length === 0) {
+      this.setState({ passwordErr: 'Password should not be null.' });
+      return;
+    }
+    if (this.state.password !== this.state.newPassword) {
+      this.setState({ passwordErr: 'Password does not match.' });
+      return;
+    }
+    let user = firebase.auth().currentUser;
+    user.updatePassword(this.state.password)
+      .then(() => {
+        this.setState({ isPasswordVisible: false, newPassword: '', password: '', passwordErr: '' })
+      });
   }
 
   saveFamily(){
     firebase.database().ref(`/userInfo/${this.props.uid}`)
     .update({
       family: {
-        member: this.state.member,
-        children: this.state.childrenObj
+        member  : this.state.member,
+        children: this.state.child
       }
     })
     .then(() => { this.setState({ isFamilyVisible: false })
@@ -259,7 +323,13 @@ class Contact extends Component {
       phone: this.state.phone,
       email: this.state.email
      })
-    .then(() => { this.setState({ isContactVisible: false })
+    .then(() => {
+      this.setState({ isContactVisible: false });
+      Actions.contact({
+        uid: this.props.uid,
+        isAdmin: this.props.isAdmin,
+        currentUser: firebase.auth().currentUser.uid === this.props.uid
+      });
     });
   }
 
@@ -279,11 +349,11 @@ class Contact extends Component {
     firebase.database().ref(`/userInfo/${this.props.uid}/`)
     .update({
       social: {
-        facebook: this.state.facebook,
-        twitter: this.state.twitter,
+        facebook : this.state.facebook,
+        twitter  : this.state.twitter,
         instagram: this.state.instagram,
-        linkedin: this.state.linkedin,
-        skype: this.state.skype
+        linkedin : this.state.linkedin,
+        skype    : this.state.skype
       }
     })
     .then(() => { this.setState({ isSocialVisible: false })
@@ -313,7 +383,7 @@ class Contact extends Component {
     .update({
       favourite: {
         drink: this.state.drink,
-        food: this.state.food,
+        food : this.state.food,
         snack: this.state.snack,
         music: this.state.music,
         sport: this.state.sport,
@@ -372,12 +442,9 @@ class Contact extends Component {
   )}
 
   addChildToObject(index, child) {
-    let arr = this.state.childrenObj.slice();
+    let arr = this.state.child.slice();
     arr[index] = child;
-    this.setState({ childrenObj: arr });
-
-    console.log(this.state.childrenObj);
-      // (child) => this.setState({ childrenObj[i]: [...this.state.childrenObj, child] })
+    this.setState({ child: arr });
   }
 
   renderChildren() {
@@ -385,17 +452,14 @@ class Contact extends Component {
     for ( let i = 0; i < this.state.childNumber; i ++) {
 
       children.push(
-        <View key={i} style={styles.containerStyle}>
-          <Icon style={styles.iconStyle} name="child" size={26} color="#67686c"/>
-          <TextInput
-            placeholder="Firstname /Child/"
-            style={styles.inputStyle}
-            underlineColorAndroid='transparent'
+        <CardSection key={i}>
+          <Input
+            icon        ='ios-body'
+            placeholder ="Firstname /Child/"
             onChangeText={(child) => this.addChildToObject(i, child)}
-            value={this.state.childrenObj[i]}
-            autoCorrect={false}
+            value       ={this.state.child[i]}
           />
-        </View>
+        </CardSection>
       );
     }
 
@@ -409,34 +473,43 @@ class Contact extends Component {
           isVisible={this.state.isPasswordVisible}
           title="Password"
           onSave={this.savePassword.bind(this)}
-          onHide={() => this.setState({ isPasswordVisible: false, password: '' })}>
-          <ModalInput
-            icon="unlock-alt"
-            placeholder="Current password"
-            onChangeText={(facebook) => this.setState({facebook})}
-            value={this.state.facebook} />
-          <ModalInput
-            icon="lock"
-            placeholder="New password"
-            onChangeText={(twitter) => this.setState({twitter})}
-            value={this.state.twitter} />
-          <ModalInput
-            icon="lock"
-            placeholder="Repeat new password"
-            onChangeText={(twitter) => this.setState({twitter})}
-            value={this.state.twitter} />
+          onHide={() => this.setState({ isPasswordVisible: false, password: '', newPassword: '' })}>
+          <Card>
+            <CardSection>
+              <Input
+                icon        ="md-lock"
+                placeholder ="New password"
+                onChangeText={(password) => this.setState({ password })}
+                value       ={this.state.twitter}
+                secureTextEntry />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon        ="md-lock"
+                placeholder ="Repeat new password"
+                onChangeText={(newPassword) => this.setState({ newPassword })}
+                value       ={this.state.twitter}
+                secureTextEntry />
+            </CardSection>
+            <Text style={styles.errorText}>{this.state.passwordErr}</Text>
+          </Card>
         </ModalWrapper>
 
         <ModalWrapper
           isVisible={this.state.isNicknameVisible}
           title="Nickname"
           onSave={this.saveNickName.bind(this)}
-          onHide={() => this.setState({ isNicknameVisible: false, nickname: '' })}>
-          <ModalInput
-            icon="user-circle-o"
-            placeholder="Nickname"
-            onChangeText={(nickname) => this.setState({nickname})}
-            value={this.state.nickname} />
+          onHide={() => this.setState({ isNicknameVisible: false, nickname: this.state.info.nickname })}>
+          <Card>
+            <CardSection>
+              <Input
+                icon          ='ios-contact'
+                placeholder   ="Nickname"
+                onChangeText  ={(nickname) => this.setState({nickname})}
+                value         ={this.state.nickname}
+                autoCapitalize='words' />
+            </CardSection>
+          </Card>
         </ModalWrapper>
 
         <ModalWrapperClose
@@ -449,7 +522,7 @@ class Contact extends Component {
           isVisible={this.state.isGenderVisible}
           title="Gender"
           onSave={this.saveGender.bind(this)}
-          onHide={() => this.setState({ isGenderVisible: false, gender: '' })}>
+          onHide={() => this.setState({ isGenderVisible: false, gender: this.state.info.gender })}>
           <Picker
             selectedValue={this.state.gender}
             onValueChange={(gender) => this.setState({gender})}>
@@ -479,173 +552,230 @@ class Contact extends Component {
           title="Social accounts"
           onSave={this.saveSocialAccount.bind(this)}
           onHide={() => this.setState({ isSocialVisible: false, facebook: '', twitter: '', instagram: '', linkedin: '', skype: '' })} >
-          <ModalInput
-            icon="facebook-official"
-            placeholder="Facebook"
-            onChangeText={(facebook) => this.setState({facebook})}
-            value={this.state.facebook} />
-          <ModalInput
-            icon="twitter-square"
-            placeholder="Twitter"
-            onChangeText={(twitter) => this.setState({twitter})}
-            value={this.state.twitter} />
-          <ModalInput
-            icon="instagram"
-            placeholder="Instagram"
-            onChangeText={(instagram) => this.setState({instagram})}
-            value={this.state.instagram} />
-          <ModalInput
-            icon="linkedin-square"
-            placeholder="Linkedin"
-            onChangeText={(linkedin) => this.setState({linkedin})}
-            value={this.state.linkedin} />
-          <ModalInput
-            icon="skype"
-            placeholder="Skype"
-            onChangeText={(skype) => this.setState({skype})}
-            value={this.state.skype} />
+          <Card>
+            <CardSection>
+              <Input
+                icon          ="logo-facebook"
+                placeholder   ="Facebook"
+                onChangeText  ={(facebook) => this.setState({facebook})}
+                value         ={this.state.facebook}
+                autoCapitalize='none' />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon          ="logo-twitter"
+                placeholder   ="Twitter"
+                onChangeText  ={(twitter) => this.setState({twitter})}
+                value         ={this.state.twitter}
+                autoCapitalize='none' />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon          ="logo-instagram"
+                placeholder   ="Instagram"
+                onChangeText  ={(instagram) => this.setState({instagram})}
+                value         ={this.state.instagram}
+                autoCapitalize='none'  />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon          ="logo-linkedin"
+                placeholder   ="Linkedin"
+                onChangeText  ={(linkedin) => this.setState({linkedin})}
+                value         ={this.state.linkedin}
+                autoCapitalize='none'  />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon          ="logo-skype"
+                placeholder   ="Skype"
+                onChangeText  ={(skype) => this.setState({skype})}
+                value         ={this.state.skype}
+                autoCapitalize='none'  />
+            </CardSection>
+          </Card>
         </ModalWrapper>
 
         <ModalWrapper
           isVisible={this.state.isContactVisible}
           title="Contact Info"
           onSave={this.saveContact.bind(this)}
-          onHide={() => this.setState({ isContactVisible: false, email: '', phone: '' })} >
-          <ModalInput
-            icon="envelope"
-            placeholder="E-mail address"
-            onChangeText={(email) => this.setState({email})}
-            value={this.state.email} />
-          <ModalInput
-            icon="phone-square"
-            placeholder="Phone number"
-            onChangeText={(phone) => this.setState({phone})}
-            value={this.state.phone} />
+          onHide={() => this.setState({ isContactVisible: false, email: this.state.user.email, phone: this.state.user.phone })} >
+          <Card>
+            <CardSection>
+              <Input
+                icon="ios-mail"
+                placeholder="E-mail address"
+                onChangeText={(email) => this.setState({email})}
+                value={this.state.email} />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon="ios-call"
+                placeholder="Phone number"
+                onChangeText={(phone) => this.setState({phone})}
+                value={this.state.phone} />
+            </CardSection>
+          </Card>
         </ModalWrapper>
 
         <ModalWrapper
           isVisible={this.state.isAnniversaryVisible}
           title="Anniversary"
           onSave={this.saveAnniversary.bind(this)}
-          onHide={() => this.setState({ isAnniversaryVisible: false, birthday: '', firstDay: '' })} >
-          <View style={styles.containerStyle}>
-            <Icon style={styles.iconStyle} name="birthday-cake" size={23} color="#67686c"/>
-            <DatePicker
-              style={styles.datePicker}
-              value={this.state.birthday}
-              date={this.state.birthday}
-              mode="date"
-              placeholder="Birthday"
-              format="YYYY-MM-DD"
-              confirmBtnText="Yes"
-              cancelBtnText="No"
-              onDateChange={(birthday) => this.setState({birthday})}
-            />
-          </View>
-          <View style={styles.containerStyle}>
-            <Icon style={styles.iconStyle} name="briefcase" size={23} color="#67686c"/>
-            <DatePicker
-              style={styles.datePicker}
-              value={this.state.firstDay}
-              date={this.state.firstDay}
-              mode="date"
-              placeholder="Work anniversary"
-              format="YYYY-MM-DD"
-              confirmBtnText="Yes"
-              cancelBtnText="No"
-              onDateChange={(firstDay) => this.setState({firstDay})}
-            />
-          </View>
+          onHide={() => this.setState({ isAnniversaryVisible: false, birthday: this.state.user.anniversary.birthday, firstDay: this.state.user.anniversary.firstDay })} >
+          <Card>
+            <CardSection>
+              <Icon style={styles.iconStyle} name="birthday-cake" size={23} color="#98bce1"/>
+              <DatePicker
+                style         ={styles.datePicker}
+                value         ={this.state.birthday}
+                date          ={this.state.birthday}
+                mode          ="date"
+                placeholder   ="Birthday"
+                format        ="YYYY-MM-DD"
+                confirmBtnText="Yes"
+                cancelBtnText ="No"
+                onDateChange  ={(birthday) => this.setState({birthday})}
+              />
+            </CardSection>
+            <CardSection>
+              <Icon style={styles.iconStyle} name="briefcase" size={23} color="#98bce1"/>
+              <DatePicker
+                style         ={styles.datePicker}
+                value         ={this.state.firstDay}
+                date          ={this.state.firstDay}
+                mode          ="date"
+                placeholder   ="Work anniversary"
+                format        ="YYYY-MM-DD"
+                confirmBtnText="Yes"
+                cancelBtnText ="No"
+                onDateChange  ={(firstDay) => this.setState({firstDay})}
+              />
+            </CardSection>
+          </Card>
         </ModalWrapper>
 
         <ModalWrapper
           isVisible={this.state.isFamilyVisible}
           title="Family"
           onSave={this.saveFamily.bind(this)}
-          onHide={() => this.setState({ isFamilyVisible: false, member: '', child: '' })} >
-          <View style={styles.containerStyle}>
-            <Icon style={styles.iconStyle} name="heart" size={23} color="#67686c"/>
-            <TextInput
-              placeholder="Firstame /Husband or Wife/"
-              style={styles.inputStyle}
-              underlineColorAndroid='transparent'
-              onChangeText={(member) => this.setState({member})}
-              value={this.state.member}
-            />
-          </View>
-          {this.renderChildren()}
-          <View style={{ alignSelf: 'flex-end', marginRight: 20}}>
-            <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => this.setState({ childNumber: this.state.childNumber + 1 })}>
-              <Icon name="plus" size={15} color="#000"/>
-              <Text>Add child</Text>
-            </TouchableOpacity>
-          </View>
+          onHide={() => this.setState({ isFamilyVisible: false, member: this.state.info.family.member, child: this.state.info.family.children, childNumber: this.state.info.family.children.length })} >
+          <Card>
+            <CardSection>
+              <Input
+                icon        ='ios-heart'
+                placeholder ="Firstame /Husband or Wife/"
+                style       ={styles.inputStyle}
+                onChangeText={(member) => this.setState({member})}
+                value       ={this.state.member}
+              />
+            </CardSection>
+            {this.renderChildren()}
+            <CardSection style={{ alignSelf: 'flex-end', marginRight: 20}}>
+              <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => this.setState({ childNumber: this.state.childNumber + 1 })}>
+                <Icon name="plus" size={15} color="#555"/>
+                <Text>Add child</Text>
+              </TouchableOpacity>
+            </CardSection>
+          </Card>
         </ModalWrapper>
 
         <ModalWrapper
           isVisible={this.state.isMoreVisible}
           title="More Information"
           onSave={this.saveMoreInfo.bind(this)}
-          onHide={() => this.setState({ isMoreVisible: false, more: '' })}>
-          <View style={styles.longInput}>
-            <TextInput
-              placeholder="More information about you..."
-              onChangeText={(more) => this.setState({more})}
-              value={this.state.more}
-              style={styles.textInputLong}
-              multiline = {true}
-              numberOfLines = {4}
-            />
-          </View>
+          onHide={() => this.setState({ isMoreVisible: false, more: this.state.info.info })}>
+          <Card>
+            <CardSection>
+              <TextInput
+                placeholder  ="More information about you..."
+                onChangeText ={(more) => this.setState({more})}
+                value        ={this.state.more}
+                style        ={styles.textInputLong}
+                multiline    = {true}
+                numberOfLines= {4}
+                autoCorrect  = {false}
+              />
+            </CardSection>
+          </Card>
         </ModalWrapper>
 
         <ModalWrapper
           isVisible={this.state.isInterestVisible}
           title="Interest"
           onSave={this.saveInterest.bind(this)}
-          onHide={() => this.setState({ isInterestVisible: false, interest: '' })}>
-          <View style={styles.longInput}>
-            <TextInput
-              placeholder="Write about your hobby..."
-              onChangeText={(interest) => this.setState({interest})}
-              value={this.state.interest}
-              style={styles.textInputLong}
-              multiline = {true}
-              numberOfLines = {4}
-            />
-          </View>
+          onHide={() => this.setState({ isInterestVisible: false, interest: this.state.info.interest })}>
+          <Card>
+            <CardSection>
+              <TextInput
+                placeholder  ="Write about your hobby..."
+                onChangeText ={(interest) => this.setState({interest})}
+                value        ={this.state.interest}
+                style        ={styles.textInputLong}
+                multiline    = {true}
+                numberOfLines= {4}
+                autoCorrect  = {false}
+              />
+            </CardSection>
+          </Card>
         </ModalWrapper>
 
         <ModalWrapper
           isVisible={this.state.isFavouriteVisible}
           title="Favourite things"
           onSave={this.saveFavourites.bind(this)}
-          onHide={() => this.setState({ isFavouriteVisible: false })}>
-          <ModalInput
-            icon="coffee"
-            placeholder="Drinks"
-            onChangeText={(drink) => this.setState({drink})}
-            value={this.state.drink} />
-          <ModalInput
-            icon="cutlery"
-            placeholder="Foods"
-            onChangeText={(food) => this.setState({food})}
-            value={this.state.food} />
-          <ModalInput
-            icon="apple"
-            placeholder="Snacks"
-            onChangeText={(snack) => this.setState({snack})}
-            value={this.state.snack} />
-          <ModalInput
-            icon="headphones"
-            placeholder="Music"
-            onChangeText={(music) => this.setState({music})}
-            value={this.state.music} />
-          <ModalInput
-            icon="futbol-o"
-            placeholder="Sport"
-            onChangeText={(sport) => this.setState({sport})}
-            value={this.state.sport} />
+          onHide={() =>
+            this.setState({
+              isFavouriteVisible: false,
+              drink: this.state.info.favourite.drink,
+              food : this.state.info.favourite.food,
+              snack: this.state.info.favourite.snack,
+              music: this.state.info.favourite.music,
+              sport: this.state.info.favourite.sport
+            })}>
+          <Card>
+            <CardSection>
+              <Input
+                icon          ="ios-beer"
+                placeholder   ="Drinks"
+                onChangeText  ={(drink) => this.setState({drink})}
+                value         ={this.state.drink}
+                autoCapitalize='none' />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon          ="ios-pizza"
+                placeholder   ="Foods"
+                onChangeText  ={(food) => this.setState({food})}
+                value         ={this.state.food}
+                autoCapitalize='none' />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon          ="logo-apple"
+                placeholder   ="Snacks"
+                onChangeText  ={(snack) => this.setState({snack})}
+                value         ={this.state.snack}
+                autoCapitalize='none' />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon          ="ios-headset"
+                placeholder   ="Music"
+                onChangeText  ={(music) => this.setState({music})}
+                value         ={this.state.music}
+                autoCapitalize='none' />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon          ="ios-basketball"
+                placeholder   ="Sport"
+                onChangeText  ={(sport) => this.setState({sport})}
+                value         ={this.state.sport}
+                autoCapitalize='none' />
+            </CardSection>
+          </Card>
         </ModalWrapper>
 
         {/*
@@ -973,14 +1103,14 @@ class Contact extends Component {
   }
 
   editContact(){
-    // Actions.editContact({
-    //   uid: this.props.uid
-    // });
+    Actions.editContact({
+      uid: this.props.uid
+    });
   }
 
   render() {
     return (
-      <View style={{backgroundColor: '#eee', height: Height }}>
+      <View style={{backgroundColor: '#eee', paddingBottom: 20 }}>
         {this.header()}
         {this.renderContent()}
         {
@@ -989,6 +1119,7 @@ class Contact extends Component {
         {
           this.props.isAdmin &&
           <EditButton
+            style={styles.floatButton}
             onEditPress={this.editContact.bind(this)}/>
         }
     </View>
@@ -1002,6 +1133,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 10,
     marginTop: 5
+  },
+  floatButton: {
+    position: 'absolute',
+    marginBottom: 60,
   },
   columnStyle: {
     flexDirection: 'column',
@@ -1053,13 +1188,16 @@ const styles = StyleSheet.create({
     fontSize: 14
   },
   textInputLong: {
-    borderWidth: 1,
-    borderColor: '#ddd',
     flexDirection: 'column',
     flex: 1,
-    fontSize: 14,
-    padding: 15,
-    marginBottom: 7
+    fontSize: 16,
+    marginBottom: 7,
+    color: '#555'
+  },
+  errorText: {
+    textAlign: 'center',
+    color: '#F44336',
+    fontSize: 16,
   },
   modal: {
     backgroundColor: '#fff',
@@ -1131,7 +1269,6 @@ const styles = StyleSheet.create({
   },
   iconStyle: {
     padding: 8,
-    backgroundColor: '#cccccc',
     width: 39
   },
   containerStyle: {

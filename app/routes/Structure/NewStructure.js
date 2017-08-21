@@ -14,7 +14,7 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActionButton from 'react-native-action-button';
-import { Spinner } from '../../components/common';
+import { Spinner, Card, CardSection, Input } from '../../components/common';
 import firebase from '../../utils/firebase';
 
 class NewStructure extends Component {
@@ -42,7 +42,7 @@ class NewStructure extends Component {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <TouchableOpacity  onPress={() => Actions.structure()} >
+      <TouchableOpacity  onPress={() => Actions.pop()} >
 	      <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
       <Text style={textStyle}>Add structure</Text>
@@ -53,8 +53,10 @@ class NewStructure extends Component {
   )}
 
   saveStructure() {
-    if (this.state.name.length === 0)
+    if (this.state.name.length === 0) {
+      this.setState({ error: 'Department name should not be empty.' })
       return;
+    }
     firebase.database().ref()
       .child('structures')
       .push({
@@ -62,7 +64,7 @@ class NewStructure extends Component {
         parent: this.state.parent
       });
     this.setState({ name: '', parent: 0 });
-    Actions.structure();
+    Actions.pop();
   }
 
   renderPicker() {
@@ -93,19 +95,24 @@ class NewStructure extends Component {
 		return (
 			<View>
 				{this.header()}
-				<View style={styles.containerStyle}>
-          <Icon style={styles.iconOddStyle} name="sitemap" size={20} color="#67686c"/>
-					<TextInput
-		        placeholder='Structure name'
-		        autoCorrect={false}
-		        style={inputStyle}
-		        value={this.state.name}
-		        onChangeText={name => this.setState({ name })}
-		        autoCapitalize='none'
-		        underlineColorAndroid='transparent'
-		      />
-		    </View>
-        {this.renderPicker()}
+				<Card>
+          <CardSection>
+  					<Input
+              icon='ios-git-merge'
+  		        placeholder='Department name'
+  		        autoCorrect={false}
+  		        style={inputStyle}
+  		        value={this.state.name}
+  		        onChangeText={name => this.setState({ name })}
+  		        autoCapitalize='none'
+  		        underlineColorAndroid='transparent'
+  		      />
+          </CardSection>
+          <CardSection>
+            <Text style={styles.labelStyle}>Head department</Text>
+          </CardSection>
+          {this.renderPicker()}
+        </Card>
 			</View>
 		)
 	}
@@ -127,6 +134,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 75,
     paddingTop: (Platform.OS === 'ios') ? 20 : 0,
+  },
+  labelStyle: {
+    color: '#555',
+    fontSize: 16,
+    padding: 5
   },
   containerStyle: {
     height: 40,

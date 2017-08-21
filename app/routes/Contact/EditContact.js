@@ -7,13 +7,12 @@ import {
   TextInput,
   StyleSheet,
   ScrollView,
-  AsyncStorage,
   TouchableOpacity,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActionButton from 'react-native-action-button';
-import { Spinner } from '../../components/common'
+import { Spinner, Input, Card, CardSection } from '../../components/common'
 import firebase from '../../utils/firebase';
 
 class EditContact extends Component {
@@ -25,40 +24,42 @@ class EditContact extends Component {
       isAdmin: false,
       firstName: '',
       lastname: '',
-      email: '',
-      password: '',
-      repeatPassword: '',
       position: '',
 		}
 
-    this.setRepeatPassword = this.setRepeatPassword.bind(this);
     this.saveAccount = this.saveAccount.bind(this);
-    this.signInBack = this.signInBack.bind(this);
 	}
 
 	componentDidMount() {
+    const { uid } = this.props;
+    userRef = firebase.database().ref(`/users/${uid}`);
+    userRef.on('value', this.handleUser);
+  }
+
+  handleUser = (snapshot) => {
+    val = snapshot.val() || {};
+    user = val;
+    console.log(user);
+    this.setState({
+      isAdmin: user.isAdmin,
+      firstName: user.firstName,
+      lastname: user.lastname,
+      position: user.position,
+      parent: user.structure
+    });
+
     ref = firebase.database().ref('structures');
     ref.on('value', this.handleQuery);
-    AsyncStorage.getItem('USER', (err, result) => {
-      console.log(result);
-      this.setState({ currentPassword: result });
-    });
   }
 
   handleQuery = (snapshot) => {
     val = snapshot.val();
-    if (val !== null && this.state.parent === 0) {
-      this.updateParent(Object.keys(val)[0]);
-    }
     this.setState({ loading: false, structures: val });
-
-  }
-
-  updateParent(parent) {
-    this.setState({ parent });
   }
 
   saveAccount() {
+    const { uid } = this.props;
+
     if (this.state.firstName.length === 0) {
       this.setState({ error: 'Fill First name' });
       return;
@@ -67,69 +68,31 @@ class EditContact extends Component {
       this.setState({ error: 'Fill Last name' });
       return;
     }
-    if (this.state.email.length === 0) {
-      this.setState({ error: 'Fill email' });
-      return;
-    }
-    if (this.state.password.length === 0) {
-      this.setState({ error: 'Fill password' });
-      return;
-    }
-    if (this.state.password !== this.state.repeatPassword) {
-      this.setState({ error: "Password doesn't match" });
-      return;
-    }
+    
     if (this.state.position.length === 0) {
       this.setState({ error: 'Fill position' });
       return;
     }
     this.setState({ error: '' });
 
-    currentUser = firebase.auth().currentUser;
-
-    email = currentUser.email;
-
-
-    firebase.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then((user) => {
-        this.signInBack(email, user.uid);
+    firebase.database().ref(`/users/${uid}`)
+      .update({
+        isAdmin: this.state.isAdmin,
+        firstName: this.state.firstName,
+        lastname: this.state.lastname,
+        position: this.state.position,
+        structure: this.state.parent
       })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
-
-  signInBack(email, uid) {
-    firebase.auth().signInWithEmailAndPassword(email, this.state.currentPassword)
-      .then((user) => {
-        firebase.database().ref('users/' + uid)
-          .set({
-            anniversary: {
-              firstDay: new Date().toISOString().split('T')[0]
-            },
-            isAdmin: this.state.isAdmin,
-            email : this.state.email,
-            firstName : this.state.firstName,
-            lastname : this.state.lastname,
-            position : this.state.position,
-            uid : uid,
-            structure: this.state.parent
-          });
-        this.setState({ error: 'Success' });
-        console.log(user);
+      .then( () => {
         Actions.pop();
-      })
-      .catch((err) => {
-        console.log(err);
       });
-
   }
-  
+
   header() {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <TouchableOpacity  onPress={() => Actions.contactList()} >
+      <TouchableOpacity  onPress={() => Actions.pop()} >
         <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
       <Text style={textStyle}>Edit contact</Text>
@@ -146,22 +109,14 @@ class EditContact extends Component {
       return <Picker.Item key={i} label = {this.state.structures[s].name} value={s}/>
     });
     return (
-      <Picker
-       style={{marginBottom: 8}}
-        selectedValue={this.state.parent}
-        onValueChange={(parent) => this.setState({ parent })}
-      >
-        {structureItems}
-      </Picker>
+        <Picker
+         style={{marginBottom: 8}}
+          selectedValue={this.state.parent}
+          onValueChange={(parent) => this.setState({ parent })}
+        >
+          {structureItems}
+        </Picker>
     )
-  }
-
-  setRepeatPassword(repeatPassword) {
-    this.setState({ repeatPassword });
-    if (this.state.password !== repeatPassword)
-      this.setState({ error: "Password doesn't match" });
-    else 
-      this.setState({ error: '' });
   }
 
   render() {
@@ -171,97 +126,52 @@ class EditContact extends Component {
     const { inputStyle } = styles;
     return (
       <View>
-          {this.header()}
+        {this.header()}
         <ScrollView>
-          <View style={{marginBottom: 145}}>
+          <Card style={{paddingBottom: 145}}>
             <TouchableOpacity onPress={() => this.setState({isAdmin: !this.state.isAdmin})}>
-              <View style={{flexDirection: 'row', padding: 20 }}>
-                <Text>Is admin: </Text>
+              <CardSection style={{flexDirection: 'row' }}>
+                <Text style={styles.labelStyle}>Admin: </Text>
                 {
                   this.state.isAdmin
-                    ? <Icon name="check-square-o" size={16} color='#000000' />
-                    : <Icon name="square-o" size={16} color='#000000' />
+                    ? <Icon name="check-square-o" size={25} color='#555' />
+                    : <Icon name="square-o" size={25} color='#555' />
                 }
-              </View>
+              </CardSection>
             </TouchableOpacity>
+            <CardSection>
+              <Text style={styles.labelStyle}>Department</Text>
+            </CardSection>
             {this.renderPicker()}
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconOddStyle} name="user" size={20} color="#67686c"/>
-              <TextInput
+            <CardSection>
+              <Input
+                icon='ios-contact'
                 placeholder='First name'
-                autoCorrect={false}
-                style={inputStyle}
                 value={this.state.firstName}
                 onChangeText={firstName => this.setState({ firstName })}
-                autoCapitalize='none'
-                underlineColorAndroid='transparent'
+                autoCapitalize='words'
               />
-            </View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconOddStyle} name="user-o" size={18} color="#67686c"/>
-              <TextInput
+            </CardSection>
+            <CardSection>
+              <Input
+                icon='ios-contact-outline'
                 placeholder='Last name'
-                autoCorrect={false}
-                style={inputStyle}
                 value={this.state.lastname}
                 onChangeText={lastname => this.setState({ lastname })}
-                autoCapitalize='none'
-                underlineColorAndroid='transparent'
+                autoCapitalize='words'
               />
-            </View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconOddStyle} name="envelope" size={18} color="#67686c"/>
-              <TextInput
-                placeholder='Email'
-                autoCorrect={false}
-                style={inputStyle}
-                value={this.state.email}
-                onChangeText={email => this.setState({ email })}
-                autoCapitalize='none'
-                underlineColorAndroid='transparent'
-              />
-            </View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconStyle} name="lock" size={24} color="#67686c"/>
-              <TextInput
-                secureTextEntry={true}
-                placeholder='Password'
-                autoCorrect={false}
-                style={inputStyle}
-                value={this.state.password}
-                onChangeText={password => this.setState({ password })}
-                autoCapitalize='none'
-                underlineColorAndroid='transparent'
-              />
-            </View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconStyle} name="lock" size={24} color="#67686c"/>
-              <TextInput
-                secureTextEntry={true}
-                placeholder='Repeat password'
-                autoCorrect={false}
-                style={inputStyle}
-                value={this.state.repeatPassword}
-                onChangeText={repeatPassword => this.setRepeatPassword(repeatPassword)}
-                autoCapitalize='none'
-                underlineColorAndroid='transparent'
-              />
-              <Text>{this.state.error}</Text>
-            </View>
-            <View style={styles.border}></View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconStyle} name="map-marker" size={24} color="#67686c"/>
-              <TextInput
+            </CardSection>
+            <Text style={styles.errorText}>{this.state.error}</Text>
+            <CardSection >
+              <Input
+                icon='ios-navigate'
                 placeholder='Position'
-                autoCorrect={false}
-                style={inputStyle}
                 value={this.state.position}
                 onChangeText={position => this.setState({ position })}
-                autoCapitalize='none'
-                underlineColorAndroid='transparent'
+                autoCapitalize='words'
               />
-            </View>
-          </View>
+            </CardSection>
+          </Card>
         </ScrollView>
       </View>
       )
@@ -276,6 +186,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 23,
     flex: 1
+  },
+  errorText: {
+    textAlign: 'center',
+    color: '#F44336',
+    fontSize: 16,
+    marginBottom: 6
+  },
+  labelStyle: {
+    color: '#555',
+    fontSize: 16,
+    padding: 5
   },
   containerStyle: {
     height: 40,

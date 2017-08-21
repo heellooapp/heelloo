@@ -33,7 +33,7 @@ const styles = {
   },
   iconStyle: {
     paddingLeft: 10,
-    paddingRight: 23
+    paddingRight: 15
   },
   containerStyle: {
     height: 40,

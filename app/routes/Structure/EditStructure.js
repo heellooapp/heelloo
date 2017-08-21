@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Spinner } from '../../components/common';
+import { Spinner, Card, CardSection, Input } from '../../components/common';
 import firebase from '../../utils/firebase';
 import ActionButton from 'react-native-action-button';
 
@@ -21,8 +21,6 @@ class EditStructure extends Component {
 	constructor(props) {
 		super(props);
     structure = props.structure;
-    console.log(structure);
-    console.log(props.hasChild);
 		this.state = {
 			loading: true,
       name: structure.name,
@@ -48,7 +46,7 @@ class EditStructure extends Component {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <TouchableOpacity  onPress={() => Actions.structure()} >
+      <TouchableOpacity  onPress={() => Actions.pop()} >
 	      <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
       <Text style={textStyle}>Edit structure</Text>
@@ -59,8 +57,10 @@ class EditStructure extends Component {
   )}
 
   saveStructure() {
-    if (this.state.name.length === 0)
+    if (this.state.name.length === 0) {
+      this.setState({ error: 'Department name should not be empty.' })
       return;
+    }
     if (this.state.id === this.state.parent) {
       this.setState({ error: 'You can\' pick same structure as parent structure.' });
       return;
@@ -72,10 +72,11 @@ class EditStructure extends Component {
       .update({
         name: this.state.name,
         parent: this.state.parent
+      })
+      .then(() => {
+        this.setState({ name: '', parent: 0 });
+        Actions.pop();
       });
-    this.setState({ name: '', parent: 0 });
-
-    Actions.structure();
   }
 
   deleteStructure() {
@@ -91,15 +92,13 @@ class EditStructure extends Component {
       .child(this.state.id)
       .remove();
 
-    Actions.structure();
+    Actions.pop();
   }
 
   renderPicker() {
   	if (this.state.structures === null)
   		return;
 		let structureItems = Object.keys(this.state.structures).map((s, i) => {
-      if (this.state.id === s) 
-        return;
 			return <Picker.Item key={i} label = {this.state.structures[s].name} value={s}/>
 		});
     structureItems.unshift(
@@ -124,11 +123,11 @@ class EditStructure extends Component {
 		return (
 			<View>
 				{this.header()}
-        <View style={styles.container}>
-  				<View style={styles.inputContainer}>
-            <Icon style={styles.iconOddStyle} name="sitemap" size={20} color="#67686c"/>
-  					<TextInput
-  		        placeholder='Structure name'
+        <Card>
+  				<CardSection style={styles.inputContainer}>
+  					<Input
+              icon='ios-git-merge'
+  		        placeholder='Department name'
   		        autoCorrect={false}
   		        style={inputStyle}
   		        value={this.state.name}
@@ -136,16 +135,18 @@ class EditStructure extends Component {
   		        autoCapitalize='none'
   		        underlineColorAndroid='transparent'
   		      />
-  		    </View>
+  		    </CardSection>
+          <CardSection>
+            <Text style={styles.labelStyle}>Head department</Text>
+          </CardSection>
           {this.renderPicker()}
           <Text style={styles.errorText}>{this.state.error}</Text>
           <TouchableOpacity onPress={this.deleteStructure.bind(this)}>
-            <View style={{ alignItems: 'center', backgroundColor: '#FF6666' }}>
+            <View style={{ alignItems: 'center', backgroundColor: '#FF6666', padding: 10 }}>
               <Icon name="trash-o" size={30} color="#FFF"/>
-              <Text>Delete</Text>
             </View>
           </TouchableOpacity>
-        </View>
+        </Card>
 			</View>
 		)
 	}
@@ -160,6 +161,11 @@ const styles = StyleSheet.create({
     color: '#F44336',
     fontSize: 16,
     marginBottom: 6
+  },
+  labelStyle: {
+    color: '#555',
+    fontSize: 16,
+    padding: 5
   },
   inputStyle: {
     color: '#333',

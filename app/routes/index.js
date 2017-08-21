@@ -123,7 +123,7 @@ class Root extends Component {
                   />
                 </Scene>
 
-                <Scene key="contactList" title="ContactList" Iconname="ios-people" icon={TabIcon} hideNavBar={true} {...this.props} initial>
+                <Scene key="contactList" title="Contacts" Iconname="ios-people" icon={TabIcon} hideNavBar={true} {...this.props} initial={true}>
                   <Scene
                     key="ContactList"
                     component={ContactList}
@@ -131,45 +131,45 @@ class Root extends Component {
                     isAdmin={this.state.isAdmin}
                     openDrawer={this.openDrawer}
                   />
-                  <Scene
-                    key="contact"
-                    component={Contact}
-                    users={this.state.users}
-                  />
                 </Scene>
-
-                <Scene
-                  key="profile"
-                  component={Profile}
-                  hideNavBar={true}
-                />
-
-                <Scene
-                  key="newStructure"
-                  component={NewStructure}
-                  hideNavBar={true}
-                />
-                
-                <Scene
-                  key="editStructure"
-                  component={EditStructure}
-                  hideNavBar={true}
-                />
-
-                <Scene
-                  key="structure"
-                  component={Structure}
-                  isAdmin={this.state.isAdmin}
-                  hideNavBar={true}/>
-                <Scene
-                  key="newContact"
-                  component={NewContact}
-                  hideNavBar={true}
-                />
-
-
               </Scene>
 
+
+              <Scene
+                key="contact"
+                component={Contact}
+                users={this.state.users}
+                hideNavBar={true}
+              />
+              <Scene
+                key="newStructure"
+                component={NewStructure}
+                hideNavBar={true}
+              />
+              
+              <Scene
+                key="editStructure"
+                component={EditStructure}
+                hideNavBar={true}
+              />
+
+              <Scene
+                key="structure"
+                component={Structure}
+                isAdmin={this.state.isAdmin}
+                hideNavBar={true}
+              />
+
+              <Scene
+                key="newContact"
+                component={NewContact}
+                hideNavBar={true}
+              />
+              <Scene
+                key="editContact"
+                component={EditContact}
+                hideNavBar={true}
+              />
 
             </Scene>
           </Router>

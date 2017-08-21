@@ -14,7 +14,7 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import ActionButton from 'react-native-action-button';
-import { Spinner } from '../../components/common'
+import { Spinner, Input, Card, CardSection } from '../../components/common'
 import firebase from '../../utils/firebase';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
@@ -131,7 +131,7 @@ class NewContact extends Component {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <TouchableOpacity  onPress={() => Actions.contactList()} >
+      <TouchableOpacity  onPress={() => Actions.pop()} >
         <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
       <Text style={textStyle}>Add contact</Text>
@@ -172,103 +172,93 @@ class NewContact extends Component {
     }
     const { inputStyle } = styles;
     return (
-      <View>
+      <View style={{marginBottom: 60}}>
           {this.header()}
         <ScrollView>
         <KeyboardAwareScrollView
           style={styles.container}
           behavior="padding"
         >
-          <View style={{marginBottom: 145}}>
+          <Card style={{marginBottom: 145}}>
             <TouchableOpacity onPress={() => this.setState({isAdmin: !this.state.isAdmin})}>
-              <View style={{flexDirection: 'row', padding: 20 }}>
-                <Text>Is admin: </Text>
+              <CardSection style={{flexDirection: 'row' }}>
+                <Text style={styles.labelStyle}>Admin: </Text>
                 {
                   this.state.isAdmin
-                    ? <Icon name="check-square-o" size={16} color='#000000' />
-                    : <Icon name="square-o" size={16} color='#000000' />
+                    ? <Icon name="check-square-o" size={25} color='#555' />
+                    : <Icon name="square-o" size={25} color='#555' />
                 }
-              </View>
+              </CardSection>
             </TouchableOpacity>
+            <CardSection>
+              <Text style={styles.labelStyle}>Department</Text>
+            </CardSection>
             {this.renderPicker()}
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconOddStyle} name="user" size={20} color="#67686c"/>
-              <TextInput
+            <CardSection>
+              <Input
+                icon='ios-contact'
                 placeholder='First name'
-                autoCorrect={false}
                 style={inputStyle}
                 value={this.state.firstName}
                 onChangeText={firstName => this.setState({ firstName })}
-                autoCapitalize='none'
-                underlineColorAndroid='transparent'
+                autoCapitalize='words'
               />
-            </View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconOddStyle} name="user-o" size={18} color="#67686c"/>
-              <TextInput
+            </CardSection>
+            <CardSection>
+              <Input
+                icon='ios-contact-outline'
                 placeholder='Last name'
-                autoCorrect={false}
                 style={inputStyle}
                 value={this.state.lastname}
                 onChangeText={lastname => this.setState({ lastname })}
-                autoCapitalize='none'
-                underlineColorAndroid='transparent'
+                autoCapitalize='words'
               />
-            </View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconOddStyle} name="envelope" size={18} color="#67686c"/>
-              <TextInput
+            </CardSection>
+            <CardSection>
+              <Input
+                icon='ios-mail'
                 placeholder='Email'
-                autoCorrect={false}
                 style={inputStyle}
                 value={this.state.email}
                 onChangeText={email => this.setState({ email })}
                 autoCapitalize='none'
-                underlineColorAndroid='transparent'
               />
-            </View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconStyle} name="lock" size={24} color="#67686c"/>
-              <TextInput
+            </CardSection>
+            <CardSection>
+              <Input
+                icon='ios-lock'
                 secureTextEntry={true}
                 placeholder='Password'
-                autoCorrect={false}
                 style={inputStyle}
                 value={this.state.password}
                 onChangeText={password => this.setState({ password })}
                 autoCapitalize='none'
-                underlineColorAndroid='transparent'
               />
-            </View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconStyle} name="lock" size={24} color="#67686c"/>
-              <TextInput
+            </CardSection>
+            <CardSection>
+              <Input
+                icon='ios-lock'
                 secureTextEntry={true}
                 placeholder='Repeat password'
-                autoCorrect={false}
                 style={inputStyle}
                 value={this.state.repeatPassword}
                 onChangeText={repeatPassword => this.setRepeatPassword(repeatPassword)}
                 autoCapitalize='none'
-                underlineColorAndroid='transparent'
               />
-              <Text>{this.state.error}</Text>
-            </View>
-            <View style={styles.border}></View>
-            <View style={styles.containerStyle}>
-            <Icon style={styles.iconStyle} name="map-marker" size={24} color="#67686c"/>
-              <TextInput
+            </CardSection>
+            <Text style={styles.errorText}>{this.state.error}</Text>
+            <CardSection>
+              <Input
+                icon='ios-navigate'
                 placeholder='Position'
-                autoCorrect={false}
                 style={inputStyle}
                 value={this.state.position}
                 onChangeText={position => this.setState({ position })}
                 autoCapitalize='none'
-                underlineColorAndroid='transparent'
               />
-            </View>
-          </View>
-          </KeyboardAwareScrollView>
+            </CardSection>
+          </Card>
+         </KeyboardAwareScrollView>
         </ScrollView>
       </View>
       )
@@ -293,6 +283,16 @@ const styles = StyleSheet.create({
     marginRight: 20,
     marginLeft: 20,
     borderColor: '#cccccc'
+  },
+  errorText: {
+    textAlign: 'center',
+    color: '#F44336',
+    fontSize: 16,
+  },
+  labelStyle: {
+    color: '#555',
+    fontSize: 16,
+    padding: 5
   },
   iconStyle: {
     paddingTop: 8,
