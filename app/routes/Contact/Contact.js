@@ -216,6 +216,7 @@ class Contact extends Component {
         <Icon name="caret-left" size={45} color="#fff" style={iconLeft} />
       </TouchableOpacity>
       <Text style={textStyle}>Profile</Text>
+      <Text></Text>
       {
         this.props.currentUser === true
           ? (<TouchableOpacity onPress={() => this.setState({ isPasswordVisible: true })} style={styles.headBtn}>
@@ -488,7 +489,9 @@ class Contact extends Component {
           onClose={() => this.setState({ isBigImage: false })}>
           {
             this.state.user.profileImg
-              ? <Image source={{uri: this.state.user.profileImg}} style={styles.bigImage} />
+              ? <View style={{alignItems: 'center', justifyContent: 'center'}}>
+                <Image source={{uri: this.state.user.profileImg}} style={styles.bigImage} />
+                </View>
               : <Image source={images.avatar} style={styles.bigImage} />
           }
         </ModalWrapperClose>
@@ -1095,7 +1098,6 @@ class Contact extends Component {
         {
           this.props.isAdmin &&
           <EditButton
-            style={styles.floatButton}
             onEditPress={this.editContact.bind(this)}/>
         }
     </View>
@@ -1198,9 +1200,11 @@ const styles = StyleSheet.create({
   },
   bigImage: {
     height: 300,
+    width: 300,
+    margin: 10,
     resizeMode: 'contain',
     justifyContent: 'center',
-    alignSelf: 'center'
+    alignItems: 'center',
   },
   profileImageDetail: {
     width: 100,

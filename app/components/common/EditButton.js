@@ -15,8 +15,8 @@ const EditButton = (props) => {
 
 const styles = StyleSheet.create({
   containerStyle: {
-    marginBottom: 50,
-    marginRight: 20
+    marginBottom: 70,
+    marginRight: 15
   },
   actionButtonIcon: {
     fontSize: 20,

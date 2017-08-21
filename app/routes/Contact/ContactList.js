@@ -186,9 +186,8 @@ class ContactList extends Component {
                 </TouchableHighlight>
     } else {
       rightBtn = <TouchableHighlight onPress={() => this.deactivateUser(data)}>
-                  <View style={[styles.hiddenButton, {backgroundColor: '#FF6666', width: 75}]}>
-                    <Icon name="minus-circle" size={30} color="#FFF"/>
-                    <Text>Delete</Text>
+                  <View style={[styles.hiddenButton, {backgroundColor: '#e92c2c', width: 75}]}>
+                    <Icon name="trash" size={30} color="#FFF"/>
                   </View>
                 </TouchableHighlight>
     }
