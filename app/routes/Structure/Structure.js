@@ -166,7 +166,7 @@ class Structure extends Component {
     arr = [];
     arr.push(struct);
     return (
-      <View style={{paddingLeft: 13}} key={struct.id}>
+      <View key={struct.id}>
         <CollapsibleWrapper structure={struct} isAdmin={this.props.isAdmin}>
           {(struct.subcats && struct.subcats.length) ? struct.subcats.map(this.renderStructures) : null}
         </CollapsibleWrapper>
@@ -197,7 +197,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#eee',
     padding: 12,
     marginBottom: 3,
-    marginLeft: -13,
   },
   childStructure: {
     marginLeft: 10,

@@ -130,17 +130,18 @@ class Root extends Component {
                     isAdmin={this.state.isAdmin}
                     openDrawer={this.openDrawer}
                   />
-                  <Scene
-                    key="contact"
-                    component={Contact}
-                    users={this.state.users}
-                  />
                 </Scene>
 
 
               </Scene>
 
 
+              <Scene
+                key="contact"
+                component={Contact}
+                users={this.state.users}
+                hideNavBar={true}
+              />
               <Scene
                 key="newStructure"
                 component={NewStructure}

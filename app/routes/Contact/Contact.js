@@ -1097,7 +1097,7 @@ class Contact extends Component {
 
   render() {
     return (
-      <View style={{backgroundColor: '#eee', height: Height }}>
+      <View style={{backgroundColor: '#eee', paddingBottom: 20 }}>
         {this.header()}
         {this.renderContent()}
         {
@@ -1106,6 +1106,7 @@ class Contact extends Component {
         {
           this.props.isAdmin &&
           <EditButton
+            style={styles.floatButton}
             onEditPress={this.editContact.bind(this)}/>
         }
     </View>
@@ -1119,6 +1120,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 10,
     marginTop: 5
+  },
+  floatButton: {
+    position: 'absolute',
+    marginBottom: 60,
   },
   columnStyle: {
     flexDirection: 'column',

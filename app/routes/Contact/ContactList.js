@@ -82,8 +82,18 @@ class ContactList extends Component {
     Communications.text(phone.toString(), '')
   }
 
-  deleteUser(data) {
-    console.log(data);
+  deactivateUser(data) {
+    firebase.database().ref(`/users/${data.uid}`)
+      .remove();
+    firebase.database().ref(`/userInfo/${data.uid}`)
+      .remove();
+  }
+
+  activateUser(data) {
+    firebase.database().ref(`/users/${data.uid}`)
+      .update({
+        active: true
+      });
   }
   
   renderListView(rowData) {
@@ -166,6 +176,23 @@ class ContactList extends Component {
     if (!this.state.isList) {
       return;
     }
+    rightBtn = {};
+    console.log(data.active);
+    if (data.active === false) {
+      rightBtn = <TouchableHighlight onPress={() => this.activateUser(data)}>
+                  <View style={[styles.hiddenButton, {backgroundColor: '#66ffff', width: 75}]}>
+                    <Icon name="plus-circle" size={30} color="#FFF"/>
+                    <Text>Activate</Text>
+                  </View>
+                </TouchableHighlight>
+    } else {
+      rightBtn = <TouchableHighlight onPress={() => this.deactivateUser(data)}>
+                  <View style={[styles.hiddenButton, {backgroundColor: '#FF6666', width: 75}]}>
+                    <Icon name="minus-circle" size={30} color="#FFF"/>
+                    <Text>Delete</Text>
+                  </View>
+                </TouchableHighlight>
+    }
     return (
       <View style={styles.listHiddenRow}>
         <View style={styles.hiddenPhoneButtons}>
@@ -183,13 +210,9 @@ class ContactList extends Component {
           </TouchableHighlight>
         </View>
         {
-          this.props.isAdmin &&
-          <TouchableHighlight onPress={() => this.deleteUser(data)}>
-            <View style={[styles.hiddenButton, {backgroundColor: '#FF6666', width: 75}]}>
-              <Icon name="trash-o" size={30} color="#FFF"/>
-              <Text>Delete</Text>
-            </View>
-          </TouchableHighlight>
+          this.props.isAdmin
+            ? rightBtn
+            : null
         }
       </View>
     );
@@ -296,6 +319,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flexDirection: 'row',
     flexWrap: 'wrap'
+  },
+  floatButton: {
+    position: 'absolute',
   },
   listHiddenRow: {
     flex: 1,
