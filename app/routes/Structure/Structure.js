@@ -53,13 +53,13 @@ class CollapsibleWrapper extends Component {
   renderPerContact(rowData) {
     return (
       <TouchableOpacity 
-        onPress={() => Actions.profile({
+        onPress={() => Actions.contact({
           uid: rowData.uid,
           isAdmin: this.props.isAdmin,
           currentUser: firebase.auth().currentUser.uid === rowData.uid
         })}>
         <View style={[styles.mainStructure, {backgroundColor: '#f6f6f6', paddingLeft: 25}]}>
-          <Text style={{fontSize: 15, marginLeft: 10}}>{rowData.firstName}</Text>
+          <Text style={{fontSize: 15, marginLeft: 10, color: '#555'}}>{rowData.firstName}</Text>
         </View>
       </TouchableOpacity>
       );
@@ -71,7 +71,7 @@ class CollapsibleWrapper extends Component {
         dataSource          = {this.state.contactList}
         renderRow           = {(rowData) => this.renderPerContact(rowData)}
         enableEmptySections = {true}
-        scrollEnabled       ={false}
+        scrollEnabled       = {false}
       />
     );
   }
@@ -84,17 +84,17 @@ class CollapsibleWrapper extends Component {
           <View style={styles.mainStructure}>
             {
               (this.state.collapsed)
-                ? <Icon name="plus-square-o" size={18} color="#000" />
-                : <Icon name="minus-square-o" size={18} color="#000" />
+                ? <Icon name="plus-square-o" size={25} color="#555" />
+                : <Icon name="minus-square-o" size={25} color="#555" />
             }
             <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{fontSize: 15, marginLeft: 10, fontWeight: 'bold'}}>{structure.name}</Text>
+              <Text style={{fontSize: 15, marginLeft: 10, fontWeight: 'bold', color: '#555'}}>{structure.name}</Text>
               <TouchableOpacity
                 onPress={() => Actions.editStructure({
                   structure,
                   hasChild: this.state.contactList.getRowCount() > 0 || children !== null
                 })}>
-                <Icon name="pencil-square-o" size={18} color="#000" style={styles.iconStructure}/>
+                <Icon name="pencil-square-o" size={25} color="#555" style={styles.iconStructure}/>
               </TouchableOpacity>
             </View>
           </View>
@@ -122,9 +122,11 @@ class Structure extends Component {
     }
     this.renderStructures = this.renderStructures.bind(this);
     this.plusIconPressed = this.plusIconPressed.bind(this);
+    console.log('Structure constructor');
   }
 
   componentDidMount() {
+    console.log('Structure componentDidMount');
     ref = firebase.database().ref('structures');
     ref.on('value', this.handleQuery);
   }
@@ -150,7 +152,7 @@ class Structure extends Component {
     const { viewStyle, searchSection, iconLeft, iconList, textInput, textStyle } = styles;
     return (
     <View style={viewStyle}>
-      <TouchableOpacity  onPress={() => Actions.contact()} >
+      <TouchableOpacity  onPress={() => Actions.pop()} >
         <Icon name="caret-left" size={45} color="#fff" style={iconLeft}/>
       </TouchableOpacity>
       <Text style={textStyle}>Structure</Text>

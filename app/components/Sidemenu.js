@@ -45,7 +45,7 @@ class Sidemenu extends React.Component {
 
   profileOnPress() {
     this.props.closeDrawer();
-    Actions.profile({
+    Actions.contact({
       uid: this.props.uid,
       isAdmin: this.props.isAdmin,
       currentUser: firebase.auth().currentUser.uid === this.props.uid
