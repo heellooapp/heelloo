@@ -42,7 +42,7 @@ class NewContact extends Component {
     ref = firebase.database().ref('structures');
     ref.on('value', this.handleQuery);
     AsyncStorage.getItem('USER', (err, result) => {
-      console.log(result);
+      // console.log(result);
       this.setState({ currentPassword: result });
     });
   }
@@ -176,7 +176,6 @@ class NewContact extends Component {
           {this.header()}
         <ScrollView>
         <KeyboardAwareScrollView
-          style={styles.container}
           behavior="padding"
         >
           <Card style={{marginBottom: 145}}>
@@ -190,9 +189,7 @@ class NewContact extends Component {
                 }
               </CardSection>
             </TouchableOpacity>
-            <CardSection>
-              <Text style={styles.labelStyle}>Department</Text>
-            </CardSection>
+            <Text style={styles.labelStyle}>Choose department :</Text>
             {this.renderPicker()}
             <CardSection>
               <Input

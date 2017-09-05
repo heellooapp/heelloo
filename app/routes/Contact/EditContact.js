@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import ActionButton from 'react-native-action-button';
 import { Spinner, Input, Card, CardSection } from '../../components/common'
 import firebase from '../../utils/firebase';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 class EditContact extends Component {
 	constructor(props) {
@@ -128,7 +129,12 @@ class EditContact extends Component {
       <View>
         {this.header()}
         <ScrollView>
-          <Card style={{paddingBottom: 145}}>
+          <KeyboardAwareScrollView
+            style={styles.container}
+            behavior="padding"
+          >
+          <View style={{paddingBottom: 115}}>
+          <Card>
             <TouchableOpacity onPress={() => this.setState({isAdmin: !this.state.isAdmin})}>
               <CardSection style={{flexDirection: 'row' }}>
                 <Text style={styles.labelStyle}>Admin: </Text>
@@ -172,6 +178,8 @@ class EditContact extends Component {
               />
             </CardSection>
           </Card>
+         </View>
+         </KeyboardAwareScrollView>
         </ScrollView>
       </View>
       )

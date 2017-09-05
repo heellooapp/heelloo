@@ -3,6 +3,7 @@ import { Text, View, Image, AsyncStorage } from 'react-native';
 import images from '../config/images';
 import firebase from '../utils/firebase';
 import { Card, CardSection, Input, Button, Spinner } from '../components/common';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 class Login extends Component {
 
@@ -65,30 +66,34 @@ class Login extends Component {
         <View  style={styles.logo}>
           <Image source={images.logo} />
         </View>
-        <Card>
-          <CardSection>
-            <Input
-              icon="ios-person"
-              placeholder="E-mail address"
-              value={this.state.email}
-              autoCapitalize={'none'}
-              onChangeText={email => this.setState({ email })}
-            />
-          </CardSection>
-          <CardSection>
-            <Input
-              icon="md-lock"
-              placeholder="Password"
-              value={this.state.password}
-              onChangeText={password => this.setState({ password })}
-              secureTextEntry
-            />
-          </CardSection>
-          <Text style={styles.errorText}>{this.state.error}</Text>
-          <View style={styles.btn}>
-            {this.renderButton()}
-          </View>
-        </Card>
+        <KeyboardAwareScrollView
+          behavior="padding"
+        >
+          <Card>
+            <CardSection>
+              <Input
+                icon="ios-person"
+                placeholder="E-mail address"
+                value={this.state.email}
+                autoCapitalize={'none'}
+                onChangeText={email => this.setState({ email })}
+              />
+            </CardSection>
+            <CardSection>
+              <Input
+                icon="md-lock"
+                placeholder="Password"
+                value={this.state.password}
+                onChangeText={password => this.setState({ password })}
+                secureTextEntry
+              />
+            </CardSection>
+            <Text style={styles.errorText}>{this.state.error}</Text>
+            <View style={styles.btn}>
+              {this.renderButton()}
+            </View>
+          </Card>
+        </KeyboardAwareScrollView>
       </View>
     );
   }

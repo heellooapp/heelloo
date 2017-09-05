@@ -11,6 +11,7 @@ import Uploader from '../../components/Uploader';
 import { Header, Spinner, FloatButton, EditButton, Input, CardSection, Card } from '../../components/common';
 import images from '../../config/images';
 import firebase from '../../utils/firebase';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 Height = Dimensions.get("window").height
 Width = Dimensions.get("window").width
@@ -105,8 +106,10 @@ class Contact extends Component {
     this.state = {
       user       : null,
       info       : null,
+      structure  : null,
       loadingUser: true,
       loadingInfo: true,
+      loadingStructure: true,
       childNumber: 0,
       childrenObj: [],
       currentUid : firebase.auth().currentUser.uid,
@@ -120,7 +123,6 @@ class Contact extends Component {
   }
     state = {
       isSocialVisible      : false,
-      isContactVisible     : false,
       isAnniversaryVisible : false,
       isFamilyVisible      : false,
       isFavouriteVisible   : false,
@@ -150,11 +152,15 @@ class Contact extends Component {
 
     infoRef = firebase.database().ref(`/userInfo/${this.props.uid}`);
     infoRef.on('value', this.handleInfo);
+
+    structureRef = firebase.database().ref(`/structures`);
+    structureRef.on('value', this.handleStructure);
   }
 
   handleUser = (snapshot) => {
     val = snapshot.val() || {};
     user = val;
+    console.log(user)
     this.setState({
       user,
       loadingUser: false,
@@ -165,6 +171,18 @@ class Contact extends Component {
       birthday   : user.anniversary.birthday,
       firstDay   : user.anniversary.firstDay
     });
+  }
+
+  handleStructure = (snapshot) => {
+    val = snapshot.val();
+    var items = Object.keys(val).map((s, i) => {
+      var obj = {id: s, parent: val[s].parent, name: val[s].name};
+      return obj;
+    });
+    items.forEach(e => e.subcats=items.filter(el=>el.parent==e.id));
+    items=items.filter(e=>e.parent==0);
+    this.setState({ loadingStructure: false, structures: items });
+    console.log(this.state.structures)
   }
 
   handleInfo = (snapshot) => {
@@ -179,6 +197,11 @@ class Contact extends Component {
     snack      = '';
     music      = '';
     sport      = '';
+    facebook   = '';
+    instagram  = '';
+    linkedin   = '';
+    skype      = '';
+    twitter    = '';
     if (typeof info.family !== 'undefined') {
       member     = info.family.member;
       child      = info.family.children;
@@ -191,11 +214,23 @@ class Contact extends Component {
       music = info.favourite.music;
       sport = info.favourite.sport;
     }
+    if (info.social) {
+      facebook   = info.social.facebook;
+      instagram  = info.social.instagram;
+      linkedin   = info.social.linkedin;
+      skype      = info.social.skype;
+      twitter    = info.social.twitter;
+    }
     this.setState({
       info,
       member,
       child,
       childNumber,
+      facebook,
+      instagram,
+      linkedin,
+      skype,
+      twitter,
       drink,
       food,
       snack,
@@ -289,22 +324,6 @@ class Contact extends Component {
     });
   }
 
-  saveContact() {
-    firebase.database().ref(`/users/${this.props.uid}/`)
-    .update({
-      phone: this.state.phone,
-      email: this.state.email
-     })
-    .then(() => {
-      this.setState({ isContactVisible: false });
-      Actions.contact({
-        uid: this.props.uid,
-        isAdmin: this.props.isAdmin,
-        currentUser: firebase.auth().currentUser.uid === this.props.uid
-      });
-    });
-  }
-
   saveAnniversary() {
     firebase.database().ref(`/users/${this.props.uid}/`)
     .update({
@@ -366,7 +385,7 @@ class Contact extends Component {
   }
 
   OnPhonePress(){
-    const { phone, firstName } = this.state.user;
+    const { phone } = this.state.user;
 
     Communications.phonecall(phone.toString(), false)
   }
@@ -377,36 +396,42 @@ class Contact extends Component {
     Communications.text(phone.toString(), `Hi, ${firstName}`)
   }
 
+   OnEmailPress(){
+    const { email } = this.state.user;
+
+    Communications.email([email.toString()],null,null,'My Subject','My body text')
+  }
+
   renderSocialIcons(userProp, infoProp) {
     return (
       <View style={{flexDirection: 'row', paddingBottom: 20, paddingTop: 10, justifyContent: 'space-around'}}>
       {
        (infoProp.social && infoProp.social.facebook) ?
-        <TouchableOpacity onPress={() => Linking.openURL('https://www.facebook.com/'+infoProp.facebook)}>
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.facebook.com/'+infoProp.social.facebook)}>
           <Image source={images.fb} style={styles.socialImage} />
         </TouchableOpacity> : null 
       }
       {
       (infoProp.social && infoProp.social.twitter) ?
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.twitter.com/'+infoProp.social.twitter)}>
           <Image source={images.twitter} style={styles.socialImage} />
         </TouchableOpacity> : null      
       }
       {
         (infoProp.social && infoProp.social.instagram) ?
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.instagram.com/'+infoProp.social.instagram)}>
           <Image source={images.instagram} style={styles.socialImage} />
         </TouchableOpacity> : null
       }
       {
        (infoProp.social && infoProp.social.linkedin) ?
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.linkedin.com/'+infoProp.social.linkedin)}>
           <Image source={images.linkedin} style={styles.socialImage} />
         </TouchableOpacity> : null
       }
       {
         (infoProp.social && infoProp.social.skype) ?
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => Linking.openURL('https://www.skype.com/'+infoProp.social.skype)}>
           <Image source={images.skype} style={styles.socialImage} />
         </TouchableOpacity> : null
       }
@@ -529,7 +554,18 @@ class Contact extends Component {
           isVisible={this.state.isSocialVisible}
           title="Social accounts"
           onSave={this.saveSocialAccount.bind(this)}
-          onHide={() => this.setState({ isSocialVisible: false, facebook: '', twitter: '', instagram: '', linkedin: '', skype: '' })} >
+          onHide={() => 
+            this.setState({ 
+              isSocialVisible: false, 
+              facebook:  this.state.info.social.facebook, 
+              twitter:   this.state.info.social.twitter, 
+              instagram: this.state.info.social.instagram, 
+              linkedin:  this.state.info.social.linkedin, 
+              skype:     this.state.info.social.skype 
+            })}>
+          <KeyboardAwareScrollView
+            behavior="padding"
+          >
           <Card>
             <CardSection>
               <Input
@@ -572,29 +608,7 @@ class Contact extends Component {
                 autoCapitalize='none'  />
             </CardSection>
           </Card>
-        </ModalWrapper>
-
-        <ModalWrapper
-          isVisible={this.state.isContactVisible}
-          title="Contact Info"
-          onSave={this.saveContact.bind(this)}
-          onHide={() => this.setState({ isContactVisible: false, email: this.state.user.email, phone: this.state.user.phone })} >
-          <Card>
-            <CardSection>
-              <Input
-                icon="ios-mail"
-                placeholder="E-mail address"
-                onChangeText={(email) => this.setState({email})}
-                value={this.state.email} />
-            </CardSection>
-            <CardSection>
-              <Input
-                icon="ios-call"
-                placeholder="Phone number"
-                onChangeText={(phone) => this.setState({phone})}
-                value={this.state.phone} />
-            </CardSection>
-          </Card>
+        </KeyboardAwareScrollView>
         </ModalWrapper>
 
         <ModalWrapper
@@ -712,6 +726,9 @@ class Contact extends Component {
               music: this.state.info.favourite.music,
               sport: this.state.info.favourite.sport
             })}>
+          <KeyboardAwareScrollView
+            behavior="padding"
+          >
           <Card>
             <CardSection>
               <Input
@@ -754,6 +771,7 @@ class Contact extends Component {
                 autoCapitalize='none' />
             </CardSection>
           </Card>
+        </KeyboardAwareScrollView>
         </ModalWrapper>
 
         {/*
@@ -812,10 +830,11 @@ class Contact extends Component {
 
   renderContent() {
     if (this.state.loadingUser || this.state.loadingInfo)
-      return <Spinner/>
-
+    return <Spinner/>
     const userProp = this.state.user;
-    const infoProp = this.state.info; 
+    const infoProp = this.state.info;
+    const structureProp = this.state.structure; 
+    // console.log(this.state.user, this.state.structure)
     return (
       <ScrollView style={{ marginBottom:60 }}>
         <View style={styles.mainStyle}>
@@ -842,6 +861,10 @@ class Contact extends Component {
               <Text style={styles.position}>{userProp.position}</Text>
             </View>
             <View style={styles.nameFlex}>
+              <Text style={styles.generalText}>Structure:</Text>
+              <Text style={styles.structure}>jfgfhfhfhjgjghf</Text>
+            </View>
+            <View style={styles.nameFlex}>
               <Text style={styles.generalText}>Nickname:</Text>
               <View style={styles.mainTitle}>
                 {
@@ -861,7 +884,7 @@ class Contact extends Component {
               <View style={styles.mainTitle}>
                 {
                   infoProp.gender
-                    ? <Text>{infoProp.gender}</Text>
+                    ? <Text style={styles.gender}>{infoProp.gender}</Text>
                     : null
                 }
                 {
@@ -880,7 +903,10 @@ class Contact extends Component {
               <Icon name="phone-square" size={42} color="#009e11" style={{marginRight: 15}} />
             </TouchableOpacity>
             <TouchableOpacity onPress={this.OnTextPress.bind(this)}>
-              <Icon name="envelope" size={42} color="#b45f00" />
+              <Icon name="envelope" size={42} color="#b45f00" style={{marginRight: 15}} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.OnEmailPress.bind(this)}>
+              <Icon name="paper-plane" size={37} color="#1e7ad7" />
             </TouchableOpacity>
           </View>
         </View>
@@ -895,32 +921,6 @@ class Contact extends Component {
             }
           </View>
           {this.renderSocialIcons(userProp, infoProp)}
-
-          <View style={styles.mainTitle}>
-            <Text style={styles.mainTitleText}>Contact Info</Text>
-            {
-              ( this.props.currentUser)
-                ? <Icon name="pencil-square-o" size={23} color="#000" style={styles.icon} onPress={() => this.setState({ isContactVisible: true })}/>
-                : null
-            }
-            
-          </View>
-          <View style={styles.mainContent}>
-             {
-                userProp.email &&
-                <View style={styles.mainContainerStyle}>
-                  <Icon style={styles.contentIconStyle} name="envelope" size={14} color="#333"/>
-                  <Text style={styles.contentIconStyle}>{userProp.email}</Text>
-                </View>
-              }
-            {
-              userProp.phone &&
-              <View style={styles.mainContainerStyle}>
-                <Icon style={styles.contentIconStyle} name="phone-square" size={18} color="#333"/>
-                <Text style={styles.contentIconStyle}>{userProp.phone}</Text>
-              </View>
-             }
-          </View>
 
           <View style={styles.mainTitle}>
             <Text style={styles.mainTitleText}>Anniversary</Text>
@@ -994,7 +994,7 @@ class Contact extends Component {
                 (infoProp.favourite && infoProp.favourite.drink) ?
                 <View style={styles.btnContainer}>
                   <Icon style={styles.contentIconStyle} name="coffee" size={14} color="#333"/>
-                  <Text style={styles.contentIconStyle}>{infoProp.favourite.drink}</Text>
+                  <Text style={styles.contentIcon}>{infoProp.favourite.drink}</Text>
                 </View> : null
               } 
             </View>
@@ -1003,7 +1003,7 @@ class Contact extends Component {
                ( infoProp.favourite && infoProp.favourite.food) ? 
               <View style={styles.btnContainer}>
                 <Icon style={styles.contentIconStyle} name="cutlery" size={14} color="#333"/> 
-                <Text style={styles.contentIconStyle}>{infoProp.favourite.food}</Text>
+                <Text style={styles.contentIcon}>{infoProp.favourite.food}</Text>
               </View> : null 
               }
             </View>
@@ -1012,7 +1012,7 @@ class Contact extends Component {
                 (infoProp.favourite && infoProp.favourite.snack) ?
               <View style={styles.btnContainer}>
                 <Icon style={styles.contentIconStyle} name="apple" size={14} color="#333"/> 
-                <Text style={styles.contentIconStyle}>{infoProp.favourite.snack}</Text>
+                <Text style={styles.contentIcon}>{infoProp.favourite.snack}</Text>
               </View> : null
               }
             </View>
@@ -1021,7 +1021,7 @@ class Contact extends Component {
                 (infoProp.favourite && infoProp.favourite.music) ?
               <View style={styles.btnContainer}>
                 <Icon style={styles.contentIconStyle} name="headphones" size={14} color="#333"/> 
-                <Text style={styles.contentIconStyle}>{infoProp.favourite.music}</Text>
+                <Text style={styles.contentIcon}>{infoProp.favourite.music}</Text>
               </View> : null
               } 
             </View> 
@@ -1030,7 +1030,7 @@ class Contact extends Component {
                 (infoProp.favourite && infoProp.favourite.sport) ?
               <View style={styles.btnContainer}>
                 <Icon style={styles.contentIconStyle} name="futbol-o" size={14} color="#333"/> 
-                <Text style={styles.contentIconStyle}>{infoProp.favourite.sport}</Text>
+                <Text style={styles.contentIcon}>{infoProp.favourite.sport}</Text>
               </View> : null
               }
             </View>
@@ -1051,7 +1051,7 @@ class Contact extends Component {
                 infoProp.interest ?
                 <View style={styles.btnContainer}>
                   <Icon style={styles.contentIconStyle} name="globe" size={14} color="#333"/> 
-                  <Text style={styles.contentIconStyle}>{infoProp.interest}</Text>
+                  <Text style={styles.contentIcon}>{infoProp.interest}</Text>
                 </View> : null
               }
             </View>
@@ -1071,7 +1071,7 @@ class Contact extends Component {
                 infoProp.info ? 
                 <View style={styles.btnContainer}>
                   <Icon style={styles.contentIconStyle} name="info" size={14} color="#333"/> 
-                  <Text style={styles.contentIconStyle}>{infoProp.info}</Text>
+                  <Text style={styles.contentIcon}>{infoProp.info}</Text>
                 </View> : null
               }
             </View>
@@ -1111,6 +1111,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 10,
     marginTop: 5
+  },
+  userName:{
+    marginLeft: 24,
+    width: 140,
   },
   floatButton: {
     position: 'absolute',
@@ -1170,6 +1174,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     marginBottom: 7,
+    height: 100,
     color: '#555'
   },
   errorText: {
@@ -1231,7 +1236,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end', 
   },
   position: {
-    width: 200,
+    width: 150,
+    marginLeft: 9
   },
   socialImage: {
     width: 30,
@@ -1296,7 +1302,10 @@ const styles = StyleSheet.create({
   contentIconStyle: {
     paddingRight: 8,
     minWidth: 22,
-    justifyContent: 'center'
+    justifyContent: 'center',
+  },
+  contentIcon: {
+    justifyContent: 'center',
   },
   btnContainer: {
     flexDirection: 'row',
@@ -1316,6 +1325,12 @@ const styles = StyleSheet.create({
   },
   profileImageText: {
     color: 'red'
+  },
+  structure: {
+    marginLeft: 2
+  },
+  gender: {
+    marginLeft: 17
   }
 });
 

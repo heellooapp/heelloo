@@ -108,9 +108,7 @@ class NewStructure extends Component {
   		        underlineColorAndroid='transparent'
   		      />
           </CardSection>
-          <CardSection>
-            <Text style={styles.labelStyle}>Head department</Text>
-          </CardSection>
+          <Text style={styles.labelStyle}>Choose Head department :</Text>
           {this.renderPicker()}
         </Card>
 			</View>

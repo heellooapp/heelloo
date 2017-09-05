@@ -6,7 +6,6 @@ import { Router, Scene } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../config/images';
 import Anniversary from './Anniversary';
-import Profile from '../components/Profile';
 import firebase from '../utils/firebase';
 import { Spinner, FloatButton } from '../components/common'
 import { Contact, ContactList, NewContact, EditContact } from './Contact';
