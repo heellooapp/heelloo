@@ -11,7 +11,9 @@ const Card = (props) => {
 
 const styles = {
   containerStyle: {
-    margin: 20
+    marginLeft: 50,
+    marginRight: 50,
+    marginBottom: 25
   }
 };
 

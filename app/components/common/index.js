@@ -7,3 +7,7 @@ export * from './Spinner';
 export * from './Confirm';
 export * from './FloatButton';
 export * from './EditButton';
+export * from './Footer';
+export * from './BubbleScreen';
+export * from './FloatingLabel';
+export * from './BackBtn';

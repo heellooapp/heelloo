@@ -14,13 +14,14 @@ const styles = {
   spinnerStyle: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    backgroundColor: 'transparent'
   },
   spinnerText: {
-        textAlign: 'center',
-        color: 'rgb(170, 170, 170)',
-        marginTop: 10,
-        fontSize: 11
+    textAlign: 'center',
+    color: 'rgb(170, 170, 170)',
+    marginTop: 10,
+    fontSize: 11
   }
 };
 

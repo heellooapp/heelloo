@@ -1,10 +1,6 @@
 package com.newmediamarketingagency.teamon;
 
 import com.facebook.react.ReactActivity;
-import com.imagepicker.ImagePickerPackage;
-import com.RNFetchBlob.RNFetchBlobPackage;
-import io.invertase.firebase.RNFirebasePackage;
-import com.oblador.vectoricons.VectorIconsPackage;
 
 public class MainActivity extends ReactActivity {
 

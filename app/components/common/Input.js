@@ -1,22 +1,32 @@
 import React from 'react';
-import { TextInput, View, Text } from 'react-native';
+import {TextInput, View, Text, Platform} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {FloatingLabel} from './FloatingLabel';
 
-const Input = ({ icon, value, onChangeText, placeholder, secureTextEntry, autoCapitalize }) => {
-  const { inputStyle, labelStyle, containerStyle } = styles;
+const Input = ({
+  icon,
+  value,
+  onChangeText,
+  placeholder,
+  password,
+  autoCapitalize,
+}) => {
+  const {inputStyle, labelStyle, containerStyle, placeholderStyle} = styles;
 
   return (
     <View style={containerStyle}>
-      <Icon style={styles.iconStyle} name={icon} size={30} color="#98bce1"/>
-      <TextInput
-        secureTextEntry={secureTextEntry}
+      <FloatingLabel
+        containerStyle={containerStyle}
+        label={placeholder}
         placeholder={placeholder}
+        placeholderTextColor={'#555'}
         autoCorrect={false}
-        style={inputStyle}
         value={value}
+        style={inputStyle}
         onChangeText={onChangeText}
+        password={password}
         autoCapitalize={autoCapitalize}
-        underlineColorAndroid='transparent'
+        underlineColorAndroid="transparent"
       />
     </View>
   );
@@ -24,23 +34,21 @@ const Input = ({ icon, value, onChangeText, placeholder, secureTextEntry, autoCa
 
 const styles = {
   inputStyle: {
-    color: '#555',
-    paddingRight: 5,
-    paddingLeft: 5,
+    color: '#000',
     fontSize: 14,
-    lineHeight: 23,
-    flex: 2,  
-  },
-  iconStyle: {
-    paddingLeft: 10,
-    paddingRight: 15
+    textAlign: 'center',
+    fontFamily: 'Montserrat-Regular',
+    lineHeight: 35,
+    marginTop: 20,
+    height: 40,
+    flex: 2,
   },
   containerStyle: {
     height: 40,
     flex: 1,
     flexDirection: 'row',
-    alignItems: 'center'
-  }
+    alignItems: 'center',
+  },
 };
 
-export { Input };
+export {Input};

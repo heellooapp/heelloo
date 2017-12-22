@@ -1,0 +1,46 @@
+[debug] [2017-12-14T10:35:15.904Z] ----------------------------------------------------------------------
+[debug] [2017-12-14T10:35:15.907Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy --only functions
+[debug] [2017-12-14T10:35:15.907Z] CLI Version:   3.9.2
+[debug] [2017-12-14T10:35:15.908Z] Platform:      darwin
+[debug] [2017-12-14T10:35:15.908Z] Node Version:  v8.2.1
+[debug] [2017-12-14T10:35:15.908Z] Time:          Thu Dec 14 2017 18:35:15 GMT+0800 (+08)
+[debug] [2017-12-14T10:35:15.908Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-12-14T10:35:15.926Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-12-14T10:35:15.927Z] > authorizing via signed-in user
+[debug] [2017-12-14T10:35:15.928Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/teamon-68ca0  
+ Thu Dec 14 2017 18:35:15 GMT+0800 (+08)
+[debug] [2017-12-14T10:35:17.446Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-14T10:35:17.447Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/teamon-68ca0/tokens  
+ Thu Dec 14 2017 18:35:17 GMT+0800 (+08)
+[debug] [2017-12-14T10:36:16.904Z] ----------------------------------------------------------------------
+[debug] [2017-12-14T10:36:16.907Z] Command:       /usr/local/bin/node /usr/local/bin/firebase deploy --only functions
+[debug] [2017-12-14T10:36:16.907Z] CLI Version:   3.9.2
+[debug] [2017-12-14T10:36:16.907Z] Platform:      darwin
+[debug] [2017-12-14T10:36:16.907Z] Node Version:  v8.2.1
+[debug] [2017-12-14T10:36:16.908Z] Time:          Thu Dec 14 2017 18:36:16 GMT+0800 (+08)
+[debug] [2017-12-14T10:36:16.908Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2017-12-14T10:36:16.925Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2017-12-14T10:36:16.926Z] > authorizing via signed-in user
+[debug] [2017-12-14T10:36:16.931Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/teamon-68ca0  
+ Thu Dec 14 2017 18:36:16 GMT+0800 (+08)
+[debug] [2017-12-14T10:36:18.283Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-14T10:36:18.285Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/database/teamon-68ca0/tokens  
+ Thu Dec 14 2017 18:36:18 GMT+0800 (+08)
+[debug] [2017-12-14T10:37:19.124Z] <<< HTTP RESPONSE 200
+[debug] [2017-12-14T10:37:19.571Z] Error: Firebase.authWithCustomToken failed: First argument must be a valid credential (a string).
+    at ng (/usr/local/lib/node_modules/firebase-tools/node_modules/firebase/lib/firebase-node.js:129:313)
+    at X.gg (/usr/local/lib/node_modules/firebase-tools/node_modules/firebase/lib/firebase-node.js:266:131)
+    at /usr/local/lib/node_modules/firebase-tools/lib/acquireRefs.js:19:19
+    at initializePromise (/usr/local/lib/node_modules/firebase-tools/node_modules/rsvp/dist/rsvp.js:567:5)
+    at new Promise (/usr/local/lib/node_modules/firebase-tools/node_modules/rsvp/dist/rsvp.js:1039:33)
+    at /usr/local/lib/node_modules/firebase-tools/lib/acquireRefs.js:12:12
+    at tryCatch (/usr/local/lib/node_modules/firebase-tools/node_modules/rsvp/dist/rsvp.js:525:12)
+    at invokeCallback (/usr/local/lib/node_modules/firebase-tools/node_modules/rsvp/dist/rsvp.js:538:13)
+    at publish (/usr/local/lib/node_modules/firebase-tools/node_modules/rsvp/dist/rsvp.js:508:7)
+    at flush (/usr/local/lib/node_modules/firebase-tools/node_modules/rsvp/dist/rsvp.js:2415:5)
+    at _combinedTickCallback (internal/process/next_tick.js:131:7)
+    at process._tickCallback (internal/process/next_tick.js:180:9)
+[error] 
+[error] Error: An unexpected error has occurred.
