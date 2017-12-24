@@ -242,7 +242,7 @@ const mValid = [
     if(!mValid.find((item) => !this.isValid(item))) {
       this.setState({mError: '', family: false});
       this.updateFamily();
-    };
+    }
   };
 
   updateFamily() {

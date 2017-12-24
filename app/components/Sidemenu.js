@@ -238,7 +238,6 @@ class Sidemenu extends Component {
         <Image
           style={styles.ProfileImg}
           source={{uri: this.state.user.profileImg}}
-          resizeMode="contain"
         />
       );
     } else {

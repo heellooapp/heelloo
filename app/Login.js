@@ -14,6 +14,11 @@ import {firebase} from './config';
 import {loginStyles} from './components/styles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
+const validLogin = [
+  {name: 'email', error: 'Fill email'},
+  {name: 'password', error: 'Fill password'},
+];  
+
 class Login extends Component {
   constructor(props) {
     super(props);
@@ -36,17 +41,27 @@ class Login extends Component {
     this._isMounted = false;
   }
 
+  isValid({name, error}) {
+    if (this.state[name].length === 0) {
+      this.setState({error});
+      return false;
+    }
+    return true;
+  }
+
   onLogin() {
     const {email, password} = this.state;
-    if (this._isMounted) {
-     this.setState({loading: true}) ;
+    if(!validLogin.find((item) => !this.isValid(item))) {
+      this.setState({error: ''});
+      if (this._isMounted) {
+       this.setState({loading: true});
+       firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(user => this.authSuccess(password))
+        .catch(err => this.authFailed());
+      }
     }
-
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(user => this.authSuccess(password))
-      .catch(err => this.authFailed());
   }
 
   authSuccess(password) {
@@ -59,7 +74,7 @@ class Login extends Component {
   authFailed() {
     if (this._isMounted) {
       this.setState({
-        loading: true,
+        loading: false,
         error: 'Authentication Failed',
       });
     }
