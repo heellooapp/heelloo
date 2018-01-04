@@ -1,3 +1,7 @@
+import {Platform, Dimensions} from 'react-native';
+
+const windowWidth = Dimensions.get('window').width;
+
 const sidemenuStyles = {
   menu: {
     flexDirection: 'column',
@@ -45,12 +49,12 @@ const sidemenuStyles = {
     marginBottom: 15,
   },
   userName: {
-    // fontSize: windowWidth <= 320 ? 16 : 18,
+    fontSize: windowWidth <= 320 ? 16 : 18,
     fontFamily: 'Montserrat-Regular',
     backgroundColor: 'transparent',
   },
   title: {
-    // fontSize: windowWidth <= 320 ? 14 : 15,
+    fontSize: windowWidth <= 320 ? 14 : 15,
     marginTop: 5,
     justifyContent: 'center',
     alignItems: 'center',
@@ -144,7 +148,7 @@ const sidemenuStyles = {
     borderColor: '#fff',
   },
   mInputStyle: {
-    // height: Platform.OS === 'android' ? 40 : 20,
+    height: Platform.OS === 'android' ? 40 : 20,
     color: '#555',
     marginLeft: 20,
     fontSize: 12,

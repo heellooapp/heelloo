@@ -2,47 +2,36 @@ import React, {Component} from 'react';
 import {
   Text,
   View,
-  Platform,
   ListView,
   DataSource,
   Alert,
-  TextInput,
   Image,
-  TouchableHighlight,
-  ScrollView,
   TouchableOpacity,
-  Dimensions,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
 import images from '../../images';
 import Icon from 'react-native-vector-icons/Ionicons';
-import Collapsible from 'react-native-collapsible';
-import {Spinner, Button, Header} from '../../components/common';
-import ActionSheet from '@yfuks/react-native-action-sheet';
 import {firebase} from '../../config';
-import {SwipeListView} from 'react-native-swipe-list-view';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import Collapsible from 'react-native-collapsible';
 import {structure, common} from '../styles';
 
-const ActionButtons = ['Edit', 'Delete', 'Cancel'];
 const styles = structure;
-const DESTRUCTIVE_INDEX = 1;
-const CANCEL_INDEX = 2;
 
-class CollapsibleWrapper extends Component {
+class StructureList extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       collapsed: true,
     };
+
     this.structureRef = this.getRef().child('structures');
     this.usersRef = this.getRef().child('users');
-
     this.manageCollapse = this.manageCollapse.bind(this);
     this.renderContacts = this.renderContacts.bind(this);
     this.handleContacts = this.handleContacts.bind(this);
     this.renderPerContact = this.renderPerContact.bind(this);
     this.showActions = this.showActions.bind(this);
+    console.log(this.props.children);
   }
 
   getRef() {
@@ -123,7 +112,7 @@ class CollapsibleWrapper extends Component {
             isAdmin: this.props.isAdmin,
           })
         }>
-        <View style={[styles.structureContainer, {backgroundColor: '#EDEDED'}]}>
+        <View style={styles.structureContainer}>
           {this.showAvatar(rowData.profileImg)}
           <View style={styles.contactList}>
             <Text style={styles.contactName}>
@@ -196,162 +185,4 @@ class CollapsibleWrapper extends Component {
   }
 }
 
-class Structure extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      department: '',
-      parent: 0,
-      error: '',
-    };
-
-    this.structureRef = this.getRef().child('structures');
-    this.renderStructures = this.renderStructures.bind(this);
-    this.onCreate = this.onCreate.bind(this);
-  }
-
-  componentDidMount() {
-    this.structureRef.on('value', this.handleQuery);
-  }
-
-  componentWillUnmount() {
-    this.structureRef.off('value', this.handleQuery);
-  }
-
-  getRef() {
-    return firebase.database().ref();
-  }
-
-  handleQuery = snapshot => {
-    val = snapshot.val();
-    var items = Object.keys(val).map((s, i) => {
-      var obj = {id: s, parent: val[s].parent, name: val[s].name};
-      return obj;
-    });
-    items.forEach(e => (e.subcats = items.filter(el => el.parent == e.id)));
-    items = items.filter(e => e.parent == 0);
-    this.setState({loading: false, structures: items});
-  };
-
-  saveStructure() {
-    if (this.state.department.length === 0) {
-      this.setState({error: 'Department name should not be empty.'});
-      return;
-    }
-
-    this.structureRef.push({
-      name: this.state.department,
-      parent: 0,
-    });
-
-    this.setState({department: '', parent: 0});
-  }
-
-  onCreate() {
-    Actions.newStructure();
-  }
-
-  /*
-  showError() {
-    if (this.state.error.length) {
-      return (
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={styles.error}>{this.state.error}</Text>
-        </View>
-      );
-    } else {
-      return null;
-    }
-  }
-  */
-
-  /*
-  showAddIcon() {
-    if (this.props.isAdmin) {
-      return (
-        <TouchableOpacity onPress={this.plusIconPressed}>
-          <Icon
-            name="md-create"
-            size={25}
-            color="#FFF"
-            style={styles.iconRight}
-          />
-        </TouchableOpacity>
-      );
-    } else {
-      return <View style={{height: 25, width: 25}} />;
-    }
-  }
-  */
-  header() {
-    return (
-      <Header
-        title="STRUCTURE"
-        onPress={this.props.isAdmin ? this.onCreate : null}
-      />
-    );
-  }
-
-  renderStructures(struct) {
-    arr = [];
-    arr.push(struct);
-    return (
-      <View key={struct.id}>
-        <CollapsibleWrapper structure={struct} isAdmin={this.props.isAdmin}>
-          {struct.subcats && struct.subcats.length
-            ? struct.subcats.map(this.renderStructures)
-            : null}
-        </CollapsibleWrapper>
-      </View>
-    );
-  }
-
-  /* showAddStructure() {
-    if (this.props.isAdmin) {
-      return (
-        <View style={styles.addStructure}>
-          <View style={styles.structureView}>
-            <Text style={styles.titleStyle}>Add head department</Text>
-            <Icon
-              name="ios-remove"
-              size={40}
-              color="#555"
-              style={styles.iconStructure}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <Text style={styles.labelStyle}>Department:</Text>
-            <TextInput
-              style={styles.inputStyle}
-              onChangeText={department => this.setState({department})}
-              value={this.state.department}
-              underlineColorAndroid="transparent"
-              multiline
-              autoCapitalize="words"
-            />
-          </View>
-          <Button onPress={this.saveStructure.bind(this)}>Add</Button>
-          {this.showError()}
-        </View>
-      );
-    } else {
-      return null;
-    }
-  }
-  */
-
-  render() {
-    if (this.state.loading) return <Spinner />;
-    return (
-      <View style={common.container}>
-        {this.header()}
-        <ScrollView>
-          {this.state.structures.map(this.renderStructures)}
-        </ScrollView>
-      </View>
-    );
-  }
-}
-
-export {Structure};
+export {StructureList};

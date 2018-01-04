@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert} from 'react-native';
+import {Alert, Keyboard} from 'react-native';
 import Drawer from 'react-native-drawer';
 import {Actions} from 'react-native-router-flux';
 import {Spinner} from './components/common';
@@ -17,8 +17,10 @@ class Root extends Component {
     return (
       <Drawer
         ref={ref => (this._drawer = ref)}
-        content={<Sidemenu />
-        }
+        content={<Sidemenu />}
+        onOpenStart={() => {
+          Keyboard.dismiss();
+        }}
         tweenHandler={Drawer.tweenPresets.parallax}
         openDrawerOffset={viewport => {
           return 50;

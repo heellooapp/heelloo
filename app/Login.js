@@ -1,5 +1,13 @@
 import React, {Component} from 'react';
-import {Text, View, Image, AsyncStorage, StatusBar} from 'react-native';
+import {
+  Text,
+  View,
+  Image,
+  AsyncStorage,
+  StatusBar,
+  ScrollView,
+  KeyboardAvoidingView,
+} from 'react-native';
 import {
   Card,
   CardSection,
@@ -14,10 +22,20 @@ import {firebase} from './config';
 import {loginStyles} from './components/styles';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-const validLogin = [
-  {name: 'email', error: 'Fill email'},
-  {name: 'password', error: 'Fill password'},
-];  
+let fields = [
+  {
+    placeholder: 'E-mail-Address',
+    name: 'email',
+    password: false,
+    error: 'Fill email',
+  },
+  {
+    placeholder: 'Password',
+    name: 'password',
+    password: true,
+    error: 'Fill Password',
+  },
+];
 
 class Login extends Component {
   constructor(props) {
@@ -27,18 +45,10 @@ class Login extends Component {
       email: '',
       password: '',
       error: '',
-      loading: false
+      loading: false,
     };
 
     this.onLogin = this.onLogin.bind(this);
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   isValid({name, error}) {
@@ -51,33 +61,27 @@ class Login extends Component {
 
   onLogin() {
     const {email, password} = this.state;
-    if(!validLogin.find((item) => !this.isValid(item))) {
+    if (!fields.find(item => !this.isValid(item))) {
       this.setState({error: ''});
-      if (this._isMounted) {
-       this.setState({loading: true});
-       firebase
+      this.setState({loading: true});
+      firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => this.authSuccess(password))
         .catch(err => this.authFailed());
-      }
     }
   }
 
   authSuccess(password) {
-    if (this._isMounted) {
-      this.setState({loading: false});
-      AsyncStorage.setItem('USER', password);
-    }
+    this.setState({loading: false});
+    AsyncStorage.setItem('USER', password);
   }
 
   authFailed() {
-    if (this._isMounted) {
-      this.setState({
-        loading: false,
-        error: 'Authentication Failed',
-      });
-    }
+    this.setState({
+      loading: false,
+      error: 'Authentication Failed',
+    });
   }
 
   renderButton() {
@@ -93,15 +97,15 @@ class Login extends Component {
     );
   }
 
-  renderField({placeholder, name, state, password}) {
+  renderField({placeholder, name, password}) {
     return (
       <CardSection>
         <Input
           placeholder={placeholder}
-          value={name}
+          value={this.state[name]}
           autoCapitalize={'none'}
           password={password}
-          onChangeText={value => this.setState({[state]: value})}
+          onChangeText={value => this.setState({[name]: value})}
         />
       </CardSection>
     );
@@ -109,29 +113,30 @@ class Login extends Component {
 
   render() {
     return (
-      <KeyboardAwareScrollView
-        behavior="padding"
-        contentContainerStyle={loginStyles.container}>
+      <ScrollView contentContainerStyle={loginStyles.container}>
         <BubbleScreen />
-        {this.renderLogo()}
-        <Card>
-          {this.renderField({
-            placeholder: 'E-mail Address',
-            name: this.state.email,
-            state: 'email',
-            password: false,
-          })}
-          {this.renderField({
-            placeholder: 'Password',
-            name: this.state.password,
-            state: 'password',
-            password: true,
-          })}
-          <Text style={loginStyles.errorText}>{this.state.error}</Text>
-          <View style={loginStyles.btn}>{this.renderButton()}</View>
-        </Card>
+        <KeyboardAvoidingView
+          behavior={'position'}
+          extraHeight={60}
+          keyboardVertiralOffset={-120}>
+          {this.renderLogo()}
+          <Card>
+            {this.renderField({
+              placeholder: 'Email-Address',
+              name: 'email',
+              password: false,
+            })}
+            {this.renderField({
+              placeholder: 'Password',
+              name: 'password',
+              password: true,
+            })}
+            <Text style={loginStyles.errorText}>{this.state.error}</Text>
+            <View style={loginStyles.btn}>{this.renderButton()}</View>
+          </Card>
+        </KeyboardAvoidingView>
         <Footer />
-      </KeyboardAwareScrollView>
+      </ScrollView>
     );
   }
 }

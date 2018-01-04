@@ -5,6 +5,7 @@ import {
   Image,
   Dimensions,
   ListView,
+  Keyboard,
   StyleSheet,
   Platform,
   TouchableOpacity,
@@ -16,7 +17,7 @@ import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {Spinner, Header} from './common';
+import {Spinner, Search} from './common';
 import images from '../images';
 import {firebase} from '../config';
 
@@ -40,6 +41,8 @@ class ContactList extends Component {
     };
 
     this.usersRef = this.getRef().child('users');
+    this.onSearch = this.onSearch.bind(this);
+    this.toggleSearch = this.toggleSearch.bind(this);
   }
 
   componentWillUnmount() {
@@ -319,8 +322,7 @@ class ContactList extends Component {
     if (this.state.loading) return <Spinner />;
     return (
       <View>
-        <Header
-          openDrawer={this.props.openDrawer}
+        <Search
           title="CONTACT"
           toggleSearchValue={this.state.toggleSearchValue}
           toggleSearch={this.toggleSearch}
@@ -328,7 +330,7 @@ class ContactList extends Component {
           onChangeText={searchValue => this.onSearch(searchValue)}
         />
         <SwipeListView
-          style={{marginBottom: Platform.os == 'ios' ? 70 : 50}}
+          style={{marginBottom: Platform.os == 'android' ? 50 : 70}}
           dataSource={this.state.contactList}
           renderRow={rowData => this._renderRow(rowData)}
           renderHiddenRow={(rowData, secdId, rowId, rowMap) =>

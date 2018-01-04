@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  Image
-} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import images from '../../images';
 
 const Footer = () => {
@@ -11,7 +7,11 @@ const Footer = () => {
     <View style={styles.wrapperStyle}>
       <View style={styles.containerStyle}>
         <Text style={styles.text}>powered by</Text>
-        <Image resizeMode={"contain"} source={images.logo} style={styles.logo}/>
+        <Image
+          resizeMode={'contain'}
+          source={images.logo}
+          style={styles.logo}
+        />
       </View>
     </View>
   );
@@ -21,7 +21,7 @@ const styles = {
   wrapperStyle: {
     backgroundColor: 'transparent',
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
   },
   containerStyle: {
     flexDirection: 'row',
@@ -30,13 +30,13 @@ const styles = {
   text: {
     fontSize: 10,
     // fontFamily: 'Montserrat-Light',
-    color: '#3486f9'
+    color: '#3486f9',
   },
   logo: {
     width: 50,
     height: 25,
-    marginLeft: 5
-  }
+    marginLeft: 5,
+  },
 };
 
-export { Footer };
+export {Footer};

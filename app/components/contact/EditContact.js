@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableHighlight,
   TouchableWithoutFeedback,
+  Keyboard,
   StyleSheet,
   ScrollView,
   TouchableOpacity,
@@ -22,7 +23,7 @@ import {firebase} from '../../config';
 import images from '../../images';
 import DatePicker from 'react-native-datepicker';
 import ActionSheet from '@yfuks/react-native-action-sheet';
-import Toast, {DURATION} from 'react-native-easy-toast'
+import Toast, {DURATION} from 'react-native-easy-toast';
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import {editContactStyles} from '../styles';
 import {ModalWrapper, ModalWrapperClose} from './modal';
@@ -35,10 +36,10 @@ const mValid = [
   {name: 'mFirstname', mError: 'Fill name'},
   {name: 'mRelation', mError: 'Fill relation'},
   {name: 'mBirthday', mError: 'Fill birthday'},
-  {name: 'mPhone', mError: 'Fill phone'}
-];  
+  {name: 'mPhone', mError: 'Fill phone'},
+];
 
- class EditContact extends Component {
+class EditContact extends Component {
   constructor(props) {
     super(props);
 
@@ -65,7 +66,7 @@ const mValid = [
       onEdit: false,
       mError: '',
       mUid: '',
-      imagePath: ''
+      imagePath: '',
     };
 
     this.userRef = this.getRef().child(`users/${this.props.uid}`);
@@ -90,7 +91,7 @@ const mValid = [
 
   componentWillUnmount() {
     this.userRef.off('value', this.handleUser);
-    this.structureRef.off('value', this.handleQuery); 
+    this.structureRef.off('value', this.handleQuery);
     this.userInfoRef.off('value', this.handleInfo);
   }
 
@@ -119,7 +120,7 @@ const mValid = [
         user.anniversary && user.anniversary.birthday
           ? user.anniversary.birthday
           : '',
-      loadingUser: false
+      loadingUser: false,
     });
   };
 
@@ -188,14 +189,18 @@ const mValid = [
     if (this.state.imagePath) {
       try {
         this.setState({loading: true});
-        Uploader.uploadImage(this.state.imagePath, 'image/jpeg', `${this.props.uid}.jpg`)
+        Uploader.uploadImage(
+          this.state.imagePath,
+          'image/jpeg',
+          `${this.props.uid}.jpg`,
+        )
           .then(responseData => {
             this.userRef.update({profileImg: responseData});
           })
           .done(() => {
             this.setState({
               loading: false,
-              isProfileImageVisible: false
+              isProfileImageVisible: false,
             });
           });
       } catch (error) {}
@@ -239,7 +244,7 @@ const mValid = [
   }
 
   validFamily = () => {
-    if(!mValid.find((item) => !this.isValid(item))) {
+    if (!mValid.find(item => !this.isValid(item))) {
       this.setState({mError: '', family: false});
       this.updateFamily();
     }
@@ -253,9 +258,9 @@ const mValid = [
       phone: this.state.mPhone,
     };
 
-    (!this.state.onEdit)
-    ? this.userInfoRef.child('family').push(obj)
-    : this.userInfoRef.child(`/family/${this.state.mUid}`).update(obj);
+    !this.state.onEdit
+      ? this.userInfoRef.child('family').push(obj)
+      : this.userInfoRef.child(`/family/${this.state.mUid}`).update(obj);
 
     this.setState({isFamilyVisible: false});
   }
@@ -291,17 +296,19 @@ const mValid = [
       mPhone: '',
       mBirthday: '',
       mError: '',
-      onEdit: false
+      onEdit: false,
     });
     this.setState({isFamilyVisible: !this.state.isFamilyVisible});
   };
 
   structurePicker() {
-    ActionSheet.showActionSheetWithOptions({
-      options: DepartmentButtons,
-      cancelButtonIndex: DepartmentButtons.lastIndexOf('Cancel'),
-      tintColor: '#2A8AED',
-      }, index => {
+    ActionSheet.showActionSheetWithOptions(
+      {
+        options: DepartmentButtons,
+        cancelButtonIndex: DepartmentButtons.lastIndexOf('Cancel'),
+        tintColor: '#2A8AED',
+      },
+      index => {
         this.state.structures.filter(obj => {
           if (obj.name == DepartmentButtons[index]) {
             this.setState({structure: obj});
@@ -310,26 +317,28 @@ const mValid = [
         });
       },
     );
-  };
+  }
 
   genderPicker() {
-    ActionSheet.showActionSheetWithOptions({
-      options: GenderButtons,
-      cancelButtonIndex: GENDER_CANCEL_INDEX,
-      tintColor: '#2A8AED',
-      }, index => {
+    ActionSheet.showActionSheetWithOptions(
+      {
+        options: GenderButtons,
+        cancelButtonIndex: GENDER_CANCEL_INDEX,
+        tintColor: '#2A8AED',
+      },
+      index => {
         if (index != 2) {
           this.setState({gender: GenderButtons[index]});
           this.updateField({
-            ref: this.userInfoRef, 
-            key: 'gender', 
+            ref: this.userInfoRef,
+            key: 'gender',
             name: 'gender',
-            label: 'Gender:'
-          })
+            label: 'Gender:',
+          });
         }
       },
     );
-  };
+  }
 
   toggleCollapse = name => {
     this.setState({
@@ -345,25 +354,26 @@ const mValid = [
 
   updateField = ({ref, key, name, label}) => {
     ref.update({
-      [key]: this.state[name]
+      [key]: this.state[name],
     });
-    this.refs.toast.show(label.slice(0, -1)+' updated', 800);
-  }
+    Keyboard.dismiss();
+    this.refs.toast.show(label.slice(0, -1) + ' updated', 800);
+  };
 
   updateDate = ({ref, key, date, name, label}) => {
     this.setState({[name]: date});
     ref.update({
-      [key]: date
+      [key]: date,
     });
-    this.refs.toast.show(label.slice(0, -1)+' updated', 800);
-  }
+    this.refs.toast.show(label.slice(0, -1) + ' updated', 800);
+  };
 
   updateStructure = structure => {
     this.userRef.update({
-      structure: structure
+      structure: structure,
     });
     this.refs.toast.show('Department updated', 800);
-  }
+  };
 
   renderWrappers() {
     return (
@@ -418,7 +428,7 @@ const mValid = [
                     marginBottom: 15,
                   },
                   dateText: styles.mInputDate,
-                  placeholderText: styles.mPlaceholder
+                  placeholderText: styles.mPlaceholder,
                 }}
                 date={this.state.mBirthday}
                 minDate="1900-01-01"
@@ -441,9 +451,7 @@ const mValid = [
 
   showError() {
     if (this.state.mError.length > 0) {
-      return (
-        <Text style={styles.error}>{this.state.mError}</Text>
-      );
+      return <Text style={styles.error}>{this.state.mError}</Text>;
     } else {
       return null;
     }
@@ -479,9 +487,7 @@ const mValid = [
             </View>
 
             <View style={styles.memberContainer}>
-              <Text style={styles.nameLabel}>
-                {this.state.members[s].name}
-              </Text>
+              <Text style={styles.nameLabel}>{this.state.members[s].name}</Text>
               <Text style={styles.birthdayLabel}>
                 {this.state.members[s].birthday}
               </Text>
@@ -503,7 +509,10 @@ const mValid = [
     if (this.state.loadingUser) return;
     if (this.state.profileImg) {
       return (
-        <Image source={{uri: this.state.profileImg}} style={styles.profileImg} />
+        <Image
+          source={{uri: this.state.profileImg}}
+          style={styles.profileImg}
+        />
       );
     } else {
       return <Image source={images.avatar} style={styles.profileImg} />;
@@ -535,8 +544,9 @@ const mValid = [
 
   renderSection({title, collapse, index}) {
     return (
-      <TouchableWithoutFeedback key={index} 
-       onPress={() => this.toggleCollapse(collapse)}>
+      <TouchableWithoutFeedback
+        key={index}
+        onPress={() => this.toggleCollapse(collapse)}>
         <View style={styles.accordionHeader}>
           <Text style={styles.accordianTitle}>{title}</Text>
           <TouchableOpacity onPress={() => this.toggleCollapse(collapse)}>
@@ -560,10 +570,10 @@ const mValid = [
             underlineColorAndroid="transparent"
             onSubmitEditing={() =>
               this.updateField({
-                ref: ref, 
-                key: key ? key : name, 
+                ref: ref,
+                key: key ? key : name,
                 name: name,
-                label: label
+                label: label,
               })
             }
             onChangeText={value => this.setState({[name]: value})}
@@ -585,12 +595,12 @@ const mValid = [
         <View style={styles.fieldContainer}>
           <Text style={styles.labelStyle}>{label}</Text>
           <Text style={styles.regularText}>
-          {name == 'structure'? this.state.structure.name : this.state.gender}
+            {name == 'structure'
+              ? this.state.structure.name
+              : this.state.gender}
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.circleEdit}
-          onPress={action}>
+        <TouchableOpacity style={styles.circleEdit} onPress={action}>
           <Icon name="md-create" color="#FFF" size={15} />
         </TouchableOpacity>
       </View>
@@ -621,13 +631,15 @@ const mValid = [
             maxDate={new Date().toISOString()}
             confirmBtnText="Confirm"
             cancelBtnText="Cancel"
-            onDateChange={(val) => this.updateDate({
-              ref: ref, 
-              date: val, 
-              name: name,
-              label: label, 
-              key: key
-            })}
+            onDateChange={val =>
+              this.updateDate({
+                ref: ref,
+                date: val,
+                name: name,
+                label: label,
+                key: key,
+              })
+            }
           />
         </View>
         <TouchableOpacity
@@ -647,11 +659,10 @@ const mValid = [
     });
     let sectionBody = (
       <Collapsible
-        key={i+1}
+        key={i + 1}
         align="center"
         style={styles.collapseView}
         collapsed={!this.state.basic}>
-        <ScrollView>
         {this.renderField({
           label: 'Last name:',
           name: 'lastname',
@@ -672,6 +683,11 @@ const mValid = [
           name: 'phone',
           ref: this.userRef,
         })}
+        {this.renderField({
+          label: 'Nickname:',
+          name: 'nickname',
+          ref: this.userInfoRef,
+        })}
         {this.renderPicker({
           label: 'Department:',
           name: 'structure',
@@ -682,12 +698,6 @@ const mValid = [
           name: 'gender',
           action: this.genderPicker,
         })}
-        {this.renderField({
-          label: 'Nickname:',
-          name: 'nickname',
-          ref: this.userInfoRef,
-        })}
-        </ScrollView>
       </Collapsible>
     );
     return [sectionTitle, sectionBody];
@@ -701,7 +711,7 @@ const mValid = [
     });
     let sectionBody = (
       <Collapsible
-        key={i+1} 
+        key={i + 1}
         align="center"
         style={styles.collapseView}
         collapsed={!this.state.anniversary}>
@@ -730,7 +740,7 @@ const mValid = [
     });
     let sectionBody = (
       <Collapsible
-        key={i+1} 
+        key={i + 1}
         align="center"
         style={styles.collapseView}
         collapsed={!this.state.family}>
@@ -753,7 +763,7 @@ const mValid = [
     });
     let sectionBody = (
       <Collapsible
-        key={i+1}
+        key={i + 1}
         align="center"
         collapsed={!this.state.favourite}
         style={styles.collapseView}>
@@ -761,31 +771,31 @@ const mValid = [
           label: 'Drinks:',
           name: 'drink',
           ref: this.userInfoRef,
-          key: 'favourite/drink'
+          key: 'favourite/drink',
         })}
         {this.renderField({
           label: 'Food:',
           name: 'food',
           ref: this.userInfoRef,
-          key: 'favourite/food'
+          key: 'favourite/food',
         })}
         {this.renderField({
           label: 'Snack:',
           name: 'snack',
           ref: this.userInfoRef,
-          key: 'favourite/snack'
+          key: 'favourite/snack',
         })}
         {this.renderField({
           label: 'Music:',
           name: 'music',
           ref: this.userInfoRef,
-          key: 'favourite/music'
+          key: 'favourite/music',
         })}
         {this.renderField({
           label: 'Sport:',
           name: 'sport',
           ref: this.userInfoRef,
-          key: 'favourite/sport'
+          key: 'favourite/sport',
         })}
       </Collapsible>
     );
@@ -800,7 +810,7 @@ const mValid = [
     });
     let sectionBody = (
       <Collapsible
-        key={i+1}
+        key={i + 1}
         align="center"
         collapsed={!this.state.hobby}
         style={styles.collapseView}>
@@ -812,7 +822,7 @@ const mValid = [
         {this.renderField({
           label: 'More Information:',
           name: 'info',
-          ref: this.userInfoRef
+          ref: this.userInfoRef,
         })}
       </Collapsible>
     );
@@ -827,7 +837,7 @@ const mValid = [
     });
     let sectionBody = (
       <Collapsible
-        key={i+1}
+        key={i + 1}
         align="center"
         collapsed={!this.state.social}
         style={styles.collapseView}>
@@ -835,31 +845,31 @@ const mValid = [
           label: 'Facebook ID:',
           name: 'facebook',
           ref: this.userInfoRef,
-          key: 'social/facebook'
+          key: 'social/facebook',
         })}
         {this.renderField({
           label: 'Instagram ID:',
           name: 'instagram',
           ref: this.userInfoRef,
-          key: 'social/instagram'
+          key: 'social/instagram',
         })}
         {this.renderField({
           label: 'LinkedIn ID:',
           name: 'linkedin',
           ref: this.userInfoRef,
-          key: 'social/linkedin'
+          key: 'social/linkedin',
         })}
         {this.renderField({
           label: 'Skype ID:',
           name: 'skype',
           ref: this.userInfoRef,
-          key: 'social/skype'
+          key: 'social/skype',
         })}
         {this.renderField({
           label: 'Twitter ID:',
           name: 'twitter',
           ref: this.userInfoRef,
-          key: 'social/twitter'
+          key: 'social/twitter',
         })}
       </Collapsible>
     );
@@ -880,18 +890,16 @@ const mValid = [
   }
 
   render() {
-    if (this.state.loading || this.state.loadingUser) return null;
+    if (this.state.loading || this.state.loadingUser) return <Spinner />;
     let sections = this.getSections();
     return (
-      <KeyboardAwareScrollView 
-        behavior="padding" 
-        style={styles.mainContainer}>
+      <KeyboardAwareScrollView behavior="padding" style={styles.mainContainer}>
         {this.renderHeader()}
         {!this.state.loading ? this.renderWrappers() : null}
         {sections}
         <Toast
-          ref="toast" 
-          style={styles.toast} 
+          ref="toast"
+          style={styles.toast}
           textStyle={styles.toastText}
           positionValue={60}
         />

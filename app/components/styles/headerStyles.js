@@ -1,3 +1,5 @@
+import {Platform} from 'react-native';
+
 const headerStyles = {
   viewStyle: {
     backgroundColor: '#2a8aed',
@@ -5,19 +7,19 @@ const headerStyles = {
     justifyContent: 'space-between',
     alignItems: 'center',
     height: 70,
-    // paddingTop: (Platform.OS === 'ios') ? 20 : 0,
+    paddingTop: Platform.OS === 'ios' ? 20 : 0,
   },
   titleSection: {
     flex: 1,
     flexDirection: 'row',
     backgroundColor: 'transparent',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   titleNavbar: {
     fontFamily: 'Montserrat-Light',
     color: '#FFF',
-    fontSize: 18
+    fontSize: 18,
   },
   searchSection: {
     flex: 1,
@@ -28,10 +30,10 @@ const headerStyles = {
     marginRight: 20,
   },
   iconLeft: {
-    marginLeft: 20
+    marginLeft: 20,
   },
   iconRight: {
-    marginRight: 20
+    marginRight: 20,
   },
   iconList: {
     marginRight: 20,
@@ -45,7 +47,7 @@ const headerStyles = {
     fontFamily: 'Montserrat-Light',
     paddingVertical: 0,
     justifyContent: 'flex-start',
-    fontSize: 15
+    fontSize: 15,
   },
   notification: {
     backgroundColor: '#84fc0b',

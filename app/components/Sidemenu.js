@@ -5,7 +5,6 @@ import {
   Platform,
   TextInput,
   Image,
-  Dimensions,
   Text,
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
@@ -17,9 +16,8 @@ import {Spinner, BubbleScreen, Button} from './common';
 import PropTypes from 'prop-types';
 import {sidemenuStyles} from './styles';
 import Utils from './utils';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
 const styles = sidemenuStyles;
 
 class ModalWrapper extends Component {
@@ -144,44 +142,73 @@ class Sidemenu extends Component {
     });
   };
 
-  savePassword = () => {
+  isValidPassword() {
     if (this.state.password.length === 0) {
-      this.setState({error: 'Password should not be null'});
-      return;
+      this.setState({
+        error: 'Password should not be null',
+      });
+      return false;
     }
 
     if (this.state.password !== this.state.newPassword) {
-      this.setState({error: 'Password does not match'});
-      return;
+      this.setState({
+        error: 'Password does not match',
+      });
+      return false;
     }
 
     if (this.state.password.length < 6) {
-      this.setState({error: 'Password must have at least 6 characters'});
-      return;
+      this.setState({
+        error: 'Password must have at least 6 characters',
+      });
+      return false;
     }
 
-    this.setState({loading: true});
-    let user = firebase.auth().currentUser;
-    user
-      .updatePassword(this.state.password)
-      .then(() => {
-        this.setState({
-          isPasswordVisible: false,
-          newPassword: '',
-          password: '',
-          error: '',
-          loading: false,
+    return true;
+  }
+
+  savePassword() {
+    let valid = this.isValidPassword();
+    if (valid) {
+      this.setState({loading: true});
+      let user = firebase.auth().currentUser;
+      user
+        .updatePassword(this.state.password)
+        .then(() => {
+          this.setState({
+            isPasswordVisible: false,
+            newPassword: '',
+            password: '',
+            error: '',
+            loading: false,
+          });
+        })
+        .catch(err => {
+          this.setState({
+            newPassword: '',
+            password: '',
+            error: err.message,
+            loading: false,
+          });
         });
-      })
-      .catch(err => {
-        this.setState({
-          newPassword: '',
-          password: '',
-          error: err.message,
-          loading: false,
-        });
-      });
-  };
+    }
+  }
+
+  renderField({label, name}) {
+    return (
+      <View style={styles.mContainer}>
+        <Text style={styles.mLabel}>{label}</Text>
+        <TextInput
+          autoFocus
+          style={styles.mInputStyle}
+          onChangeText={password => this.setState({[name]: password})}
+          value={this.state[name]}
+          underlineColorAndroid="transparent"
+          secureTextEntry
+        />
+      </View>
+    );
+  }
 
   renderWrappers() {
     return (
@@ -197,36 +224,19 @@ class Sidemenu extends Component {
               newPassword: '',
             })
           }>
-          <View style={styles.mFieldContainer}>
-            <View style={styles.mContainer}>
-              <Text style={styles.mLabel}>New password:</Text>
-              <TextInput
-                autoFocus
-                style={[
-                  styles.mInputStyle,
-                  {height: Platform.OS === 'android' ? 40 : 20},
-                ]}
-                onChangeText={password => this.setState({password})}
-                value={this.state.password}
-                underlineColorAndroid="transparent"
-                secureTextEntry
-              />
-            </View>
-            <View style={styles.mContainer}>
-              <Text style={styles.mLabel}>Repeat new password:</Text>
-              <TextInput
-                style={[
-                  styles.mInputStyle,
-                  {height: Platform.OS === 'android' ? 40 : 20},
-                ]}
-                onChangeText={newPassword => this.setState({newPassword})}
-                value={this.state.newPassword}
-                underlineColorAndroid="transparent"
-                secureTextEntry
-              />
-            </View>
+          <KeyboardAwareScrollView
+            scrollEnabled={false}
+            style={styles.mFieldContainer}>
+            {this.renderField({
+              label: 'New Password:',
+              name: 'password',
+            })}
+            {this.renderField({
+              label: 'Repeat new password',
+              name: 'newPassword',
+            })}
             {this.showError()}
-          </View>
+          </KeyboardAwareScrollView>
         </ModalWrapper>
       </View>
     );
@@ -238,6 +248,7 @@ class Sidemenu extends Component {
         <Image
           style={styles.ProfileImg}
           source={{uri: this.state.user.profileImg}}
+          resizeMode="contain"
         />
       );
     } else {
@@ -246,7 +257,7 @@ class Sidemenu extends Component {
   }
 
   render() {
-    if (this.state.loading) return null;
+    if (this.state.loading) return <Spinner />;
     return (
       <View style={styles.menu}>
         <BubbleScreen />
@@ -264,14 +275,10 @@ class Sidemenu extends Component {
           <TouchableOpacity onPress={this.profileOnPress}>
             {this.renderProfileImage()}
           </TouchableOpacity>
-          <Text
-            style={[styles.userName, {fontSize: windowWidth <= 320 ? 16 : 18}]}>
+          <Text style={styles.userName}>
             {this.state.user.firstName} {this.state.user.lastname}
           </Text>
-          <Text
-            style={[styles.title, {fontSize: windowWidth <= 320 ? 14 : 15}]}>
-            {this.state.user.position}
-          </Text>
+          <Text style={styles.title}>{this.state.user.position}</Text>
         </View>
         {!this.state.loading ? this.renderWrappers() : null}
         <View style={styles.mainPart}>

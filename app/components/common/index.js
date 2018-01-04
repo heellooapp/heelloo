@@ -11,3 +11,4 @@ export * from './Footer';
 export * from './BubbleScreen';
 export * from './FloatingLabel';
 export * from './BackBtn';
+export * from './Search';

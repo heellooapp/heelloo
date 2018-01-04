@@ -27,4 +27,4 @@ const loginStyles = {
   },
 };
 
-export { loginStyles };
+export {loginStyles};

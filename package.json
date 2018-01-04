@@ -21,6 +21,8 @@
 		"react-native-firebase": "^3.1.1",
 		"react-native-image-picker": "^0.26.7",
 		"react-native-keyboard-aware-scroll-view": "^0.4.1",
+		"react-native-keyboard-aware-scrollview": "^1.1.7",
+		"react-native-keyboard-aware-view": "0.0.14",
 		"react-native-linear-gradient": "^2.3.0",
 		"react-native-modal": "^4.1.1",
 		"react-native-modal-wrapper": "^3.1.0",

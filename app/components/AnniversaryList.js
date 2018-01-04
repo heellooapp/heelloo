@@ -7,12 +7,13 @@ import {
   Platform,
   ScrollView,
   FlatList,
+  Keyboard,
 } from 'react-native';
 import {anniversaryListStyles} from './styles';
 import {Actions} from 'react-native-router-flux';
 import Communications from 'react-native-communications';
 import {SwipeListView} from 'react-native-swipe-list-view';
-import {Spinner, Header} from './common';
+import {Spinner, Search} from './common';
 import images from '../images';
 import {firebase} from '../config';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -126,16 +127,20 @@ class AnniversaryList extends Component {
   sortContactsByDate(val) {
     contactList = JSON.parse(JSON.stringify(val));
 
-    let month = currentDate.getMonth() + 1;
+    let month = currentDate.getMonth();
     let day = currentDate.getDate();
     let year = currentDate.getFullYear();
 
     filteredData = contactList.filter(list => {
-
       let ad = new Date(list.anniversary.firstDay);
       let bd = new Date(list.anniversary.birthday);
 
-      if (ad.getFullYear() < year && (ad.getMonth() + 1) == month && ad.getDate() >= day || (bd.getMonth() + 1) == month && bd.getDate() >= day) {
+      if (
+        (ad.getFullYear() < year &&
+          ad.getMonth() == month &&
+          ad.getDate() >= day) ||
+        (bd.getMonth() == month && bd.getDate() >= day)
+      ) {
         return true;
       }
       return false;
@@ -215,11 +220,9 @@ class AnniversaryList extends Component {
                     {new Date(item.anniversary.birthday).getDate()}
                   </Text>
                   <Text style={styles.dateBirthtext}>
-                    {
-                      months[
+                    {months[
                       new Date(item.anniversary.birthday).getUTCMonth(months)
-                      ].slice(0, 3)
-                    }
+                    ].slice(0, 3)}
                   </Text>
                 </View>
               </LinearGradient>
@@ -250,11 +253,9 @@ class AnniversaryList extends Component {
                     {new Date(item.anniversary.firstDay).getDate()}
                   </Text>
                   <Text style={(styles.dateWorktext, styles.blueText)}>
-                    {
-                      months[
-                        new Date(item.anniversary.firstDay).getMonth(months)
-                      ].slice(0, 3)
-                    }
+                    {months[
+                      new Date(item.anniversary.firstDay).getMonth(months)
+                    ].slice(0, 3)}
                   </Text>
                 </View>
               </LinearGradient>
@@ -283,11 +284,9 @@ class AnniversaryList extends Component {
                     {new Date(item.anniversary.birthday).getDate()}
                   </Text>
                   <Text style={styles.dateBirthtext}>
-                    {
-                      months[
-                        new Date(item.anniversary.birthday).getUTCMonth(months)
-                      ].slice(0, 3)
-                    }
+                    {months[
+                      new Date(item.anniversary.birthday).getUTCMonth(months)
+                    ].slice(0, 3)}
                   </Text>
                 </View>
               </LinearGradient>
@@ -315,11 +314,9 @@ class AnniversaryList extends Component {
                   {new Date(item.anniversary.birthday).getDate()}
                 </Text>
                 <Text style={(styles.dateWorktext, styles.whiteText)}>
-                  {
-                    months[
-                      new Date(item.anniversary.birthday).getUTCMonth(months)
-                    ].slice(0, 3)
-                  }
+                  {months[
+                    new Date(item.anniversary.birthday).getUTCMonth(months)
+                  ].slice(0, 3)}
                 </Text>
               </View>
               <View style={styles.secondContainer}>
@@ -348,7 +345,11 @@ class AnniversaryList extends Component {
           data={this.state.anniversaryList}
           renderItem={item => this._renderRow(item)}
         />
-        <Text style={[anniversaryListStyles.centerText, {marginBottom: Platform.os == 'ios' ? 70 : 50}]}>
+        <Text
+          style={[
+            anniversaryListStyles.centerText,
+            {marginBottom: Platform.os == 'android' ? 50 : 70},
+          ]}>
           {months[currentDate.getMonth()].toUpperCase()} UPCOMING EVENTS
         </Text>
       </ScrollView>
@@ -358,8 +359,7 @@ class AnniversaryList extends Component {
   render() {
     return (
       <View>
-        <Header
-          openDrawer={this.props.openDrawer}
+        <Search
           title="ANNIVERSARY"
           toggleSearchValue={this.state.toggleSearchValue}
           toggleSearch={this.toggleSearch}

@@ -1,11 +1,9 @@
 import React from 'react';
-import { View } from 'react-native';
+import {View} from 'react-native';
 
-const CardSection = (props) => {
+const CardSection = props => {
   return (
-    <View style={[styles.containerStyle, props.style]}>
-      {props.children}
-    </View>
+    <View style={[styles.containerStyle, props.style]}>{props.children}</View>
   );
 };
 
@@ -27,7 +25,7 @@ const styles = {
     // shadowOpacity: 0.1,
     // shadowRadius: -5,
     // elevation: 1,
-  }
+  },
 };
 
-export { CardSection };
+export {CardSection};

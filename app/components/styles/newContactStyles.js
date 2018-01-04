@@ -1,9 +1,10 @@
 const newContactStyles = {
-	mainContainer: {
+  mainContainer: {
     flexDirection: 'column',
+    flex: 1,
   },
   alignCenter: {
-  	flexDirection: 'row',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -46,7 +47,7 @@ const newContactStyles = {
   labelStyle: {
     fontFamily: 'Montserrat-Light',
     color: '#858585',
-    fontSize: 13
+    fontSize: 13,
   },
   inputStyle: {
     textAlign: 'right',
@@ -67,7 +68,7 @@ const newContactStyles = {
   },
   iconLeft: {
     marginLeft: 20,
-  }
+  },
 };
 
 export {newContactStyles};

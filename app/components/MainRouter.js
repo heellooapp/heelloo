@@ -41,39 +41,6 @@ const TabIcon = ({focused, title, Iconname}) => {
 class MainRouter extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      isAdmin: false,
-      loading: true
-    };
-
-    this.uid = firebase.auth().currentUser.uid;
-    this.userRef = this.getRef().child('users');
-  }
-
-  getRef() {
-    return firebase.database().ref();
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-    this.userRef.orderByChild('uid').equalTo(this.uid);
-    this.userRef.on('value', this.handleUser);
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-    this.userRef.off('value', this.handleUser);
-  }
-
-  handleUser = snapshot => {
-    let val = snapshot.val() || {};
-    if (this._isMounted) {
-      this.setState({
-        isAdmin: val[this.uid].isAdmin,
-        loading: false
-      });
-    }
   }
 
   backBtn() {
@@ -92,7 +59,6 @@ class MainRouter extends Component {
   }
 
   render() {
-    if (this.state.loading) return null;
     return (
       <Router
         navigationBarStyle={routerStyles.navbarStyle}
@@ -117,7 +83,6 @@ class MainRouter extends Component {
                 title="CONTACT"
                 hideNavBar
                 component={Contact}
-                isAdmin={this.state.isAdmin}
                 openDrawer={this.props.openDrawer}
               />
             </Scene>
@@ -133,7 +98,6 @@ class MainRouter extends Component {
                 title="ANNIVERSARY"
                 hideNavBar
                 component={Anniversary}
-                isAdmin={this.state.isAdmin}
                 openDrawer={this.props.openDrawer}
               />
             </Scene>

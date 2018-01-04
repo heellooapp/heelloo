@@ -9,7 +9,6 @@ import {
   ScrollView,
   AsyncStorage,
   TouchableOpacity,
-  KeyboardAvoidingView,
 } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -43,6 +42,7 @@ class NewContact extends Component {
       repearPassword: '',
       position: '',
       picker: false,
+      isAdmin: false,
     };
 
     this.saveContact = this.saveContact.bind(this);
@@ -250,45 +250,52 @@ class NewContact extends Component {
       <View style={{flex: 1, backgroundColor: '#FFF'}}>
         {this.header()}
         <KeyboardAwareScrollView
-          behavior="padding"
-          style={styles.mainContainer}>
-          <TouchableOpacity
-            style={styles.department}
-            onPress={this.togglePicker}>
-            <Text style={styles.textStyle}>Choose Department</Text>
-            <Icon name="ios-add" size={40} color="#000" />
-          </TouchableOpacity>
-          {this.showPicker()}
-          {this.renderField({
-            label: 'First name:',
-            name: 'firstName',
-            secure: false,
-          })}
-          {this.renderField({
-            label: 'Last name:',
-            name: 'lastname',
-            secure: false,
-          })}
-          {this.renderField({label: 'Email:', name: 'email', secure: false})}
-          {this.renderField({
-            label: 'Password',
-            name: 'password',
-            secure: true,
-          })}
-          {this.renderField({
-            label: 'Repeat password',
-            name: 'repeatPassword',
-            secure: true,
-          })}
-          {this.renderField({
-            label: 'Position',
-            name: 'position',
-            secure: false,
-          })}
-          {this.showCheckBox()}
-          <Text style={styles.errorText}>{this.state.error}</Text>
-          <View style={styles.fieldContainer}>
-            <Button onPress={this.saveContact}>Add</Button>
+          enableResetScrollToCoords={false}
+          enableAutoAutomaticScroll={false}
+          style={{flex: 1}}>
+          <View style={styles.mainContainer}>
+            <TouchableOpacity
+              style={styles.department}
+              onPress={this.togglePicker}>
+              <Text style={styles.textStyle}>Choose Department</Text>
+              <Icon name="ios-add" size={40} color="#000" />
+            </TouchableOpacity>
+            {this.showPicker()}
+            {this.renderField({
+              label: 'First name:',
+              name: 'firstName',
+              secure: false,
+            })}
+            {this.renderField({
+              label: 'Last name:',
+              name: 'lastname',
+              secure: false,
+            })}
+            {this.renderField({
+              label: 'Email:',
+              name: 'email',
+              secure: false,
+            })}
+            {this.renderField({
+              label: 'Password',
+              name: 'password',
+              secure: true,
+            })}
+            {this.renderField({
+              label: 'Repeat password',
+              name: 'repeatPassword',
+              secure: true,
+            })}
+            {this.renderField({
+              label: 'Position',
+              name: 'position',
+              secure: false,
+            })}
+            {this.showCheckBox()}
+            <Text style={styles.errorText}>{this.state.error}</Text>
+            <View style={styles.fieldContainer}>
+              <Button onPress={this.saveContact}>Add</Button>
+            </View>
           </View>
         </KeyboardAwareScrollView>
       </View>

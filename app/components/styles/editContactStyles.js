@@ -1,10 +1,10 @@
 import {Platform} from 'react-native';
 
 const editContactStyles = {
-	mainContainer: {
+  mainContainer: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: '#FFF'
+    backgroundColor: '#FFF',
   },
   collapseView: {
     flex: 1,
@@ -76,7 +76,7 @@ const editContactStyles = {
   fieldContainer: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   inputStyle: {
     flex: 1,
@@ -240,7 +240,7 @@ const editContactStyles = {
   toastText: {
     color: '#FFF',
     fontFamily: 'Montserrat-Light',
-  }
+  },
 };
 
 export {editContactStyles};
