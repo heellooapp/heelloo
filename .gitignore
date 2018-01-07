@@ -51,3 +51,9 @@ buck-out/
 */fastlane/report.xml
 */fastlane/Preview.html
 */fastlane/screenshots
+
+# Firebase
+ios/GoogleService-Info.plist
+android/app/google-services.json
+# admin
+admin/functions/service.json
