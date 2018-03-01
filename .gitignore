@@ -57,3 +57,8 @@ ios/GoogleService-Info.plist
 android/app/google-services.json
 # admin
 admin/functions/service.json
+
+# globals
+*.un~
+*.swp
+
