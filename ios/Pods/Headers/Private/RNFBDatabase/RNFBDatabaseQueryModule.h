@@ -1,0 +1,1 @@
+../../../../../node_modules/@react-native-firebase/database/ios/RNFBDatabase/RNFBDatabaseQueryModule.h

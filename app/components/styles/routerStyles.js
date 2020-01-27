@@ -1,6 +1,6 @@
 const routerStyles = {
   tabBarStyle: {
-    backgroundColor: '#6fa8dc',
+    backgroundColor: 'transparent',
     height: 70,
     shadowColor: '#000',
     shadowOffset: {width: 0, height: -9},

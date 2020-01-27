@@ -1,4 +1,5 @@
 import {Platform} from 'react-native';
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 const headerStyles = {
   viewStyle: {
@@ -6,8 +7,13 @@ const headerStyles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 70,
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
+    ...ifIphoneX({
+        paddingTop: 30,
+        height: 80,
+    }, {
+        paddingTop: 15,
+        height: 70,
+    })
   },
   titleSection: {
     flex: 1,

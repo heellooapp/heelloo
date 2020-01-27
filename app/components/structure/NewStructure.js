@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -10,11 +10,11 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
-import {Spinner, Button, BackBtn} from '../common';
-import {firebase} from '../../config';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {newStructureStyles} from '../styles';
+import { Actions } from 'react-native-router-flux';
+import { Spinner, Button, BackBtn } from '../common';
+import { firebase } from '../../config';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { newStructureStyles } from '../styles';
 
 const styles = newStructureStyles;
 
@@ -27,6 +27,7 @@ class NewStructure extends Component {
       loading: true,
       parent: 0,
       error: '',
+      selectedItems: [],
     };
 
     this.structureRef = this.getRef().child('structures');
@@ -56,7 +57,7 @@ class NewStructure extends Component {
 
   saveStructure() {
     if (this.state.name.length === 0) {
-      this.setState({error: 'Department name should not be empty.'});
+      this.setState({ error: 'Department name should not be empty.' });
       return;
     }
 
@@ -77,7 +78,7 @@ class NewStructure extends Component {
     let error = this.state.error;
     if (error.length) {
       return (
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Text style={styles.error}>{this.state.error}</Text>
         </View>
       );
@@ -88,17 +89,19 @@ class NewStructure extends Component {
 
   renderPicker() {
     if (this.state.structures === null) return;
-    let items = Object.keys(this.state.structures).map((s, i) => {
-      return (
-        <Picker.Item key={i} label={this.state.structures[s].name} value={s} />
-      );
-    });
+    let items = Object.keys(this.state.structures)
+      .filter((s, i) => (this.state.structures[s].parent == 0))
+      .map((s, i) => {
+        return (
+          <Picker.Item key={i} label={this.state.structures[s].name} value={s} />
+        );
+      });
 
     items.unshift(<Picker.Item key={-1} label="" value={0} />);
     return (
       <Picker
         selectedValue={this.state.parent}
-        onValueChange={parent => this.setState({parent})}
+        onValueChange={parent => this.setState({ parent })}
         mode="dropdown">
         {items}
       </Picker>
@@ -106,9 +109,9 @@ class NewStructure extends Component {
   }
 
   header() {
-    const {viewStyle, iconLeft, iconRight, titleNavbar} = styles;
+    const { viewStyle, iconLeft, iconRight, titleNavbar } = styles;
     return (
-      <View style={[viewStyle, {paddingTop: Platform.OS === 'ios' ? 20 : 0}]}>
+      <View style={viewStyle}>
         <BackBtn />
         <Text style={titleNavbar}>ADD STRUCTURE</Text>
         <View style={iconRight} />
@@ -119,7 +122,7 @@ class NewStructure extends Component {
   render() {
     if (this.state.loading) return <Spinner />;
     return (
-      <View style={{flex: 1, backgroundColor: '#FFF'}}>
+      <View style={{ flex: 1, backgroundColor: '#FFF' }}>
         {this.header()}
         <KeyboardAwareScrollView
           behavior="padding"
@@ -128,7 +131,7 @@ class NewStructure extends Component {
             <Text style={styles.labelStyle}>Department:</Text>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={name => this.setState({name})}
+              onChangeText={name => this.setState({ name })}
               value={this.state.name}
               autoCorrect={false}
               multiline
@@ -140,7 +143,7 @@ class NewStructure extends Component {
             <Text style={styles.titleStyle}>Choose head department</Text>
           </View>
           {this.renderPicker()}
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <Button onPress={this.saveStructure}>Add</Button>
           </View>
           {this.showError()}
@@ -150,4 +153,4 @@ class NewStructure extends Component {
   }
 }
 
-export {NewStructure};
+export { NewStructure };

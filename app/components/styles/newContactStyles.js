@@ -1,3 +1,5 @@
+import { ifIphoneX } from 'react-native-iphone-x-helper'
+
 const newContactStyles = {
   mainContainer: {
     flexDirection: 'column',
@@ -13,7 +15,13 @@ const newContactStyles = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 70,
+    ...ifIphoneX({
+        paddingTop: 30,
+        height: 80,
+    }, {
+        paddingTop: 15,
+        height: 70,
+    })
   },
   titleNavbar: {
     fontFamily: 'Montserrat-Light',

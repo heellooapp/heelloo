@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   View,
   TouchableOpacity,
@@ -7,16 +7,16 @@ import {
   Image,
   Text,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import images from '../images/';
-import {firebase} from '../config';
-import {Spinner, BubbleScreen, Button} from './common';
+import { Spinner, BubbleScreen, Button } from './common';
 import PropTypes from 'prop-types';
-import {sidemenuStyles} from './styles';
+import { sidemenuStyles } from './styles';
 import Utils from './utils';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { firebase } from '@react-native-firebase/database';
 
 const styles = sidemenuStyles;
 
@@ -36,7 +36,7 @@ class ModalWrapper extends Component {
       onHide,
       children,
     } = this.props;
-    const {modal, modalTitle, btnContainer, btn, btntextStyle} = styles;
+    const { modal, modalTitle, btnContainer, btn, btntextStyle } = styles;
     return (
       <Modal isVisible={isVisible}>
         <View style={modal}>
@@ -96,7 +96,7 @@ class Sidemenu extends Component {
   handleUser = snapshot => {
     val = snapshot.val() || {};
     user = val[this.uid];
-    this.setState({user, loading: false});
+    this.setState({ user, loading: false });
   };
 
   // handleStructure = snapshot => {
@@ -116,12 +116,12 @@ class Sidemenu extends Component {
 
   structureOnPress() {
     this.context.drawer.close();
-    Actions.structure({isAdmin: this.state.user.isAdmin});
+    Actions.structure({ isAdmin: this.state.user.isAdmin });
   }
 
   profileOnPress() {
     this.context.drawer.close();
-    Actions.profile({uid: this.state.user.uid});
+    Actions.profile({ uid: this.state.user.uid });
   }
 
   showError() {
@@ -170,7 +170,7 @@ class Sidemenu extends Component {
   savePassword() {
     let valid = this.isValidPassword();
     if (valid) {
-      this.setState({loading: true});
+      this.setState({ loading: true });
       let user = firebase.auth().currentUser;
       user
         .updatePassword(this.state.password)
@@ -194,14 +194,14 @@ class Sidemenu extends Component {
     }
   }
 
-  renderField({label, name}) {
+  renderField({ label, name }) {
     return (
       <View style={styles.mContainer}>
         <Text style={styles.mLabel}>{label}</Text>
         <TextInput
           autoFocus
           style={styles.mInputStyle}
-          onChangeText={password => this.setState({[name]: password})}
+          onChangeText={password => this.setState({ [name]: password })}
           value={this.state[name]}
           underlineColorAndroid="transparent"
           secureTextEntry
@@ -243,11 +243,11 @@ class Sidemenu extends Component {
   }
 
   renderProfileImage() {
-    if (this.state.user.profileImg) {
+    if (this.state.user && this.state.user.profileImg) {
       return (
         <Image
           style={styles.ProfileImg}
-          source={{uri: this.state.user.profileImg}}
+          source={{ uri: this.state.user.profileImg }}
           resizeMode="contain"
         />
       );
@@ -269,16 +269,16 @@ class Sidemenu extends Component {
               name="md-arrow-back"
               size={25}
               color="#000"
-              style={{marginTop: 15, backgroundColor: 'transparent'}}
+              style={{ marginTop: 15, backgroundColor: 'transparent' }}
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={this.profileOnPress}>
             {this.renderProfileImage()}
           </TouchableOpacity>
           <Text style={styles.userName}>
-            {this.state.user.firstName} {this.state.user.lastname}
+            {this.state.user && this.state.user.firstName} {this.state.user && this.state.user.lastname}
           </Text>
-          <Text style={styles.title}>{this.state.user.position}</Text>
+          <Text style={styles.title}>{this.state.user && this.state.user.position}</Text>
         </View>
         {!this.state.loading ? this.renderWrappers() : null}
         <View style={styles.mainPart}>
@@ -292,12 +292,12 @@ class Sidemenu extends Component {
             <TouchableOpacity onPress={this.openPassword}>
               <View style={styles.container}>
                 <Icon
-                  name="ios-lock-outline"
+                  name="ios-lock"
                   size={20}
-                  style={{margin: 5}}
+                  style={{ margin: 5 }}
                   color="#555"
                 />
-                <Text style={[styles.menuText, {marginLeft: 5}]}>Password</Text>
+                <Text style={[styles.menuText, { marginLeft: 5 }]}>Password</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={this.structureOnPress}>

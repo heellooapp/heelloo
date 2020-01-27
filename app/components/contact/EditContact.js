@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -13,30 +13,31 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ImagePicker from 'react-native-image-picker';
 import Collapsible from 'react-native-collapsible';
-import {Spinner} from '../common';
+import { Spinner, Structure } from '../common';
 import Uploader from '../Uploader';
-import {firebase} from '../../config';
+import { firebase } from '@react-native-firebase/app';
+import database from '@react-native-firebase/database';
 import images from '../../images';
 import DatePicker from 'react-native-datepicker';
-import ActionSheet from '@yfuks/react-native-action-sheet';
-import Toast, {DURATION} from 'react-native-easy-toast';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {editContactStyles} from '../styles';
-import {ModalWrapper, ModalWrapperClose} from './modal';
+import ActionSheet from 'react-native-action-sheet';
+import Toast, { DURATION } from 'react-native-easy-toast';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { editContactStyles } from '../styles';
+import { ModalWrapper, ModalWrapperClose } from './modal';
 
 const styles = editContactStyles;
 const GenderButtons = ['Male', 'Female', 'Cancel'];
-const DepartmentButtons = [];
+let DepartmentButtons = [];
 const GENDER_CANCEL_INDEX = 2;
 const mValid = [
-  {name: 'mFirstname', mError: 'Fill name'},
-  {name: 'mRelation', mError: 'Fill relation'},
-  {name: 'mBirthday', mError: 'Fill birthday'},
-  {name: 'mPhone', mError: 'Fill phone'},
+  { name: 'mFirstname', mError: 'Fill name' },
+  { name: 'mRelation', mError: 'Fill relation' },
+  { name: 'mBirthday', mError: 'Fill birthday' },
+  { name: 'mPhone', mError: 'Fill phone' },
 ];
 
 class EditContact extends Component {
@@ -67,8 +68,8 @@ class EditContact extends Component {
       mError: '',
       mUid: '',
       imagePath: '',
+      selectedItems: [],
     };
-
     this.userRef = this.getRef().child(`users/${this.props.uid}`);
     this.userInfoRef = this.getRef().child(`/userInfo/${this.props.uid}`);
     this.structureRef = this.getRef().child(`structures`);
@@ -96,7 +97,7 @@ class EditContact extends Component {
   }
 
   getRef() {
-    return firebase.database().ref();
+    return database().ref();
   }
 
   handleUser = snapshot => {
@@ -150,9 +151,9 @@ class EditContact extends Component {
 
   handleQuery = snapshot => {
     val = snapshot.val();
-
+    this.setState({ test: val });
     var items = Object.keys(val).map((s, i) => {
-      var obj = {id: s, parent: val[s].parent, name: val[s].name};
+      var obj = { id: s, parent: val[s].parent, name: val[s].name };
       return obj;
     });
 
@@ -172,7 +173,7 @@ class EditContact extends Component {
   };
 
   closeComponent() {
-    Actions.pop({refresh: {structure: this.state.structure}});
+    Actions.pop({ refresh: { structure: this.state.structure } });
   }
 
   profileImgVisible() {
@@ -188,14 +189,14 @@ class EditContact extends Component {
   saveProfileImage() {
     if (this.state.imagePath) {
       try {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         Uploader.uploadImage(
           this.state.imagePath,
           'image/jpeg',
           `${this.props.uid}.jpg`,
         )
           .then(responseData => {
-            this.userRef.update({profileImg: responseData});
+            this.userRef.update({ profileImg: responseData });
           })
           .done(() => {
             this.setState({
@@ -203,7 +204,7 @@ class EditContact extends Component {
               isProfileImageVisible: false,
             });
           });
-      } catch (error) {}
+      } catch (error) { }
     }
   }
 
@@ -235,9 +236,9 @@ class EditContact extends Component {
     this.refs[ref].onPressDate();
   }
 
-  isValid({name, mError}) {
+  isValid({ name, mError }) {
     if (this.state[name].length === 0 || !this.state[name]) {
-      this.setState({mError});
+      this.setState({ mError });
       return false;
     }
     return true;
@@ -245,7 +246,7 @@ class EditContact extends Component {
 
   validFamily = () => {
     if (!mValid.find(item => !this.isValid(item))) {
-      this.setState({mError: '', family: false});
+      this.setState({ mError: '', family: false });
       this.updateFamily();
     }
   };
@@ -262,7 +263,7 @@ class EditContact extends Component {
       ? this.userInfoRef.child('family').push(obj)
       : this.userInfoRef.child(`/family/${this.state.mUid}`).update(obj);
 
-    this.setState({isFamilyVisible: false});
+    this.setState({ isFamilyVisible: false });
   }
 
   onEdit = (member, uid) => {
@@ -298,7 +299,7 @@ class EditContact extends Component {
       mError: '',
       onEdit: false,
     });
-    this.setState({isFamilyVisible: !this.state.isFamilyVisible});
+    this.setState({ isFamilyVisible: !this.state.isFamilyVisible });
   };
 
   structurePicker() {
@@ -311,7 +312,7 @@ class EditContact extends Component {
       index => {
         this.state.structures.filter(obj => {
           if (obj.name == DepartmentButtons[index]) {
-            this.setState({structure: obj});
+            this.setState({ structure: obj });
             this.updateStructure(obj.id);
           }
         });
@@ -328,7 +329,7 @@ class EditContact extends Component {
       },
       index => {
         if (index != 2) {
-          this.setState({gender: GenderButtons[index]});
+          this.setState({ gender: GenderButtons[index] });
           this.updateField({
             ref: this.userInfoRef,
             key: 'gender',
@@ -349,10 +350,11 @@ class EditContact extends Component {
       hobby: false,
       social: false,
     });
-    this.setState({[name]: !this.state[name]});
+    this.setState({ [name]: !this.state[name] });
   };
 
-  updateField = ({ref, key, name, label}) => {
+  updateField = ({ ref, key, name, label }) => {
+    console.log('test')
     ref.update({
       [key]: this.state[name],
     });
@@ -360,8 +362,8 @@ class EditContact extends Component {
     this.refs.toast.show(label.slice(0, -1) + ' updated', 800);
   };
 
-  updateDate = ({ref, key, date, name, label}) => {
-    this.setState({[name]: date});
+  updateDate = ({ ref, key, date, name, label }) => {
+    this.setState({ [name]: date });
     ref.update({
       [key]: date,
     });
@@ -383,7 +385,7 @@ class EditContact extends Component {
           title="Profile Image"
           onSave={this.saveProfileImage}
           onHide={() =>
-            this.setState({isProfileImageVisible: false, profileImg: ''})
+            this.setState({ isProfileImageVisible: false, profileImg: '' })
           }>
           <TouchableOpacity
             onPress={() => this.openPicker()}
@@ -391,17 +393,17 @@ class EditContact extends Component {
             {this.state.imagePath ? (
               <Image
                 style={styles.profileImageDetail}
-                source={{uri: this.state.imagePath}}
+                source={{ uri: this.state.imagePath }}
                 value={this.state.imagePath}
-                onChangeImage={profileImg => this.setState({profileImg})}
+                onChangeImage={profileImg => this.setState({ profileImg })}
               />
             ) : (
-              <View style={styles.ProfileImageContainer}>
-                <Text style={styles.profileImageText}>
-                  Click here to upload image
+                <View style={styles.ProfileImageContainer}>
+                  <Text style={styles.profileImageText}>
+                    Click here to upload image
                 </Text>
-              </View>
-            )}
+                </View>
+              )}
           </TouchableOpacity>
         </ModalWrapper>
 
@@ -411,15 +413,15 @@ class EditContact extends Component {
           onSave={this.validFamily}
           onDelete={this.deleteFamily}
           onEdit={this.state.onEdit}
-          onHide={() => this.setState({isFamilyVisible: false})}>
+          onHide={() => this.setState({ isFamilyVisible: false })}>
           <View style={styles.mFieldContainer}>
-            {this.mField({label: 'Name:', name: 'mFirstname'})}
-            {this.mField({label: 'Relation:', name: 'mRelation'})}
-            {this.mField({label: 'Phone:', name: 'mPhone'})}
+            {this.mField({ label: 'Name:', name: 'mFirstname' })}
+            {this.mField({ label: 'Relation:', name: 'mRelation' })}
+            {this.mField({ label: 'Phone:', name: 'mPhone' })}
             <View style={styles.mContainer}>
               <Text style={styles.mLabel}>Birthday:</Text>
               <DatePicker
-                style={{height: 30}}
+                style={{ height: 30 }}
                 customStyles={{
                   dateInput: {
                     alignItems: 'flex-start',
@@ -439,7 +441,7 @@ class EditContact extends Component {
                 format="YYYY-MM-DD"
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
-                onDateChange={mBirthday => this.setState({mBirthday})}
+                onDateChange={mBirthday => this.setState({ mBirthday })}
               />
             </View>
             {this.showError()}
@@ -457,14 +459,14 @@ class EditContact extends Component {
     }
   }
 
-  mField({label, name}) {
+  mField({ label, name }) {
     return (
       <View style={styles.mContainer}>
         <Text style={styles.mLabel}>{label}</Text>
         <TextInput
           style={styles.mInputStyle}
           autoCorrect={false}
-          onChangeText={val => this.setState({[name]: val})}
+          onChangeText={val => this.setState({ [name]: val })}
           underlineColorAndroid="transparent"
           value={this.state[name]}
         />
@@ -510,7 +512,7 @@ class EditContact extends Component {
     if (this.state.profileImg) {
       return (
         <Image
-          source={{uri: this.state.profileImg}}
+          source={{ uri: this.state.profileImg }}
           style={styles.profileImg}
         />
       );
@@ -542,7 +544,7 @@ class EditContact extends Component {
     return <Icon name={icon} size={30} color="#555" />;
   }
 
-  renderSection({title, collapse, index}) {
+  renderSection({ title, collapse, index }) {
     return (
       <TouchableWithoutFeedback
         key={index}
@@ -557,7 +559,7 @@ class EditContact extends Component {
     );
   }
 
-  renderField({label, name, ref, key}) {
+  renderField({ label, name, ref, key }) {
     return (
       <View style={styles.accordianContent}>
         <View style={styles.fieldContainer}>
@@ -576,7 +578,7 @@ class EditContact extends Component {
                 label: label,
               })
             }
-            onChangeText={value => this.setState({[name]: value})}
+            onChangeText={value => this.setState({ [name]: value })}
             value={this.state[name]}
           />
         </View>
@@ -588,8 +590,19 @@ class EditContact extends Component {
       </View>
     );
   }
-
-  renderPicker({label, name, action}) {
+  onSelectedItemsChange = (selectedItems) => {
+    // this.state.structures.filter(obj => {
+    //   if (obj.name == DepartmentButtons[index]) {
+    //     this.setState({ structure: obj });
+    //     this.updateStructure(obj.id);
+    //   }
+    // });
+    if (selectedItems.length > 0) {
+      let structure = this.state.structures.filter(e => e.id == selectedItems[0]);
+      this.setState({ structure: structure[0], selectedItems: selectedItems });
+    }
+  }
+  renderPicker({ label, name, action }) {
     return (
       <View style={styles.accordianContent}>
         <View style={styles.fieldContainer}>
@@ -607,7 +620,7 @@ class EditContact extends Component {
     );
   }
 
-  renderDate({label, name, ref, key}) {
+  renderDate({ label, name, ref, key }) {
     return (
       <View style={styles.accordianContent}>
         <View style={styles.fieldContainer}>
@@ -908,4 +921,4 @@ class EditContact extends Component {
   }
 }
 
-export {EditContact};
+export { EditContact };

@@ -1,47 +1,66 @@
 {
-	"name": "TeamOn",
-	"version": "0.0.1",
-	"private": true,
-	"scripts": {
-		"start": "node node_modules/react-native/local-cli/cli.js start",
-		"test": "jest"
-	},
-	"dependencies": {
-		"@yfuks/react-native-action-sheet": "^0.0.4",
-		"firebase-functions": "^0.7.3",
-		"react": "16.0.0",
-		"react-native": "0.51.0",
-		"react-native-action-button": "^2.8.3",
-		"react-native-collapsible": "^0.9.0",
-		"react-native-communications": "^2.2.1",
-		"react-native-datepicker": "^1.6.0",
-		"react-native-drawer": "^2.5.0",
-		"react-native-easy-toast": "^1.0.9",
-		"react-native-fetch-blob": "^0.10.8",
-		"react-native-firebase": "^3.1.1",
-		"react-native-image-picker": "^0.26.7",
-		"react-native-keyboard-aware-scroll-view": "^0.4.1",
-		"react-native-keyboard-aware-scrollview": "^1.1.7",
-		"react-native-keyboard-aware-view": "0.0.14",
-		"react-native-linear-gradient": "^2.3.0",
-		"react-native-modal": "^4.1.1",
-		"react-native-modal-wrapper": "^3.1.0",
-		"react-native-router-flux": "^4.0.0-beta.24",
-		"react-native-swipe-list-view": "^0.4.7",
-		"react-native-vector-icons": "^4.4.2"
-	},
-	"devDependencies": {
-		"babel-jest": "21.2.0",
-		"babel-preset-react-native": "4.0.0",
-		"jest": "21.2.1",
-		"react-test-renderer": "16.0.0"
-	},
-	"jest": {
-		"preset": "react-native"
-	},
-	"rnpm": {
-		"assets": [
-			"./assets/fonts"
-		]
-	}
+  "name": "TeamON",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "@react-native-firebase/app": "^6.2.0",
+    "@react-native-firebase/auth": "^6.2.0",
+    "@react-native-firebase/database": "^6.2.0",
+    "@react-native-firebase/firestore": "^6.2.0",
+    "@react-native-firebase/functions": "^6.2.0",
+    "@react-native-firebase/messaging": "^6.2.0",
+    "@react-native-firebase/storage": "^6.2.0",
+    "deprecated-react-native-listview": "^0.0.6",
+    "lodash": "^4.17.15",
+    "react": "16.9.0",
+    "react-native": "0.61.5",
+    "react-native-action-button": "^2.8.5",
+    "react-native-action-sheet": "^2.2.0",
+    "react-native-collapsible": "^1.5.1",
+    "react-native-communications": "^2.2.1",
+    "react-native-datepicker": "^1.7.2",
+    "react-native-drawer": "^2.5.1",
+    "react-native-easy-toast": "^1.2.0",
+    "react-native-fast-image": "^7.0.2",
+    "react-native-image-picker": "^1.1.0",
+    "react-native-iphone-x-helper": "^1.2.1",
+    "react-native-keyboard-aware-scroll-view": "^0.9.1",
+    "react-native-keyboard-aware-scrollview": "^2.1.0",
+    "react-native-keyboard-aware-view": "^0.0.14",
+    "react-native-linear-gradient": "^2.5.6",
+    "react-native-modal": "^11.5.3",
+    "react-native-modal-wrapper": "^3.1.1",
+    "react-native-picker-select": "^6.3.3",
+    "react-native-router-flux": "^4.0.6",
+    "react-native-sectioned-multi-select": "^0.7.6",
+    "react-native-spinner-button": "^1.0.3",
+    "react-native-swipe-list-view": "^2.1.1",
+    "react-native-vector-icons": "^6.6.0",
+    "rn-fetch-blob": "^0.11.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.5",
+    "@babel/runtime": "^7.7.6",
+    "@react-native-community/eslint-config": "^0.0.5",
+    "babel-jest": "^24.9.0",
+    "eslint": "^6.7.2",
+    "jest": "^24.9.0",
+    "metro-react-native-babel-preset": "^0.57.0",
+    "react-test-renderer": "16.9.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "rnpm": {
+    "assets": [
+      "./assets/fonts"
+    ]
+  }
 }

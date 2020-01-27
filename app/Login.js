@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -18,9 +18,9 @@ import {
   BubbleScreen,
 } from './components/common';
 import images from './images';
-import {firebase} from './config';
-import {loginStyles} from './components/styles';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import auth from '@react-native-firebase/auth';
+import { loginStyles } from './components/styles';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 let fields = [
   {
@@ -51,21 +51,20 @@ class Login extends Component {
     this.onLogin = this.onLogin.bind(this);
   }
 
-  isValid({name, error}) {
+  isValid({ name, error }) {
     if (this.state[name].length === 0) {
-      this.setState({error});
+      this.setState({ error });
       return false;
     }
     return true;
   }
 
   onLogin() {
-    const {email, password} = this.state;
+    const { email, password } = this.state;
     if (!fields.find(item => !this.isValid(item))) {
-      this.setState({error: ''});
-      this.setState({loading: true});
-      firebase
-        .auth()
+      this.setState({ error: '' });
+      this.setState({ loading: true });
+      auth()
         .signInWithEmailAndPassword(email, password)
         .then(user => this.authSuccess(password))
         .catch(err => this.authFailed());
@@ -73,7 +72,7 @@ class Login extends Component {
   }
 
   authSuccess(password) {
-    this.setState({loading: false});
+    this.setState({ loading: false });
     AsyncStorage.setItem('USER', password);
   }
 
@@ -97,7 +96,7 @@ class Login extends Component {
     );
   }
 
-  renderField({placeholder, name, password}) {
+  renderField({ placeholder, name, password }) {
     return (
       <CardSection>
         <Input
@@ -105,7 +104,7 @@ class Login extends Component {
           value={this.state[name]}
           autoCapitalize={'none'}
           password={password}
-          onChangeText={value => this.setState({[name]: value})}
+          onChangeText={value => this.setState({ [name]: value })}
         />
       </CardSection>
     );

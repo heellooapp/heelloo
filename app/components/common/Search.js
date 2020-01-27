@@ -11,12 +11,18 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 import {headerStyles} from '../styles';
 
-const name = '';
+
 
 class Search extends Component {
   static contextTypes = {
     drawer: PropTypes.object.isRequired,
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+    };
+  }
 
   field() {
     return (
@@ -46,10 +52,10 @@ class Search extends Component {
 
   renderField() {
     if (this.props.toggleSearchValue) {
-      name = 'ios-close-outline';
+      name = 'ios-close';
       return this.field();
     } else {
-      name = 'ios-search-outline';
+      name = 'ios-search';
       return this.headerTitle();
     }
   }

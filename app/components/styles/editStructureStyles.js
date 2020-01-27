@@ -1,10 +1,19 @@
+import { ifIphoneX } from 'react-native-iphone-x-helper'
+
 const editStructureStyles = {
-	viewStyle: {
+  viewStyle: {
     backgroundColor: '#2a8aed',
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 70,
+
+    ...ifIphoneX({
+      paddingTop: 30,
+      height: 80,
+    }, {
+      paddingTop: 15,
+      height: 70,
+    })
   },
   titleNavbar: {
     fontFamily: 'Montserrat-Light',
@@ -65,4 +74,4 @@ const editStructureStyles = {
   }
 };
 
-export {editStructureStyles};
+export { editStructureStyles };

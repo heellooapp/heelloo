@@ -1,19 +1,21 @@
-import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, Dimensions, Image} from 'react-native';
-import {Router, Scene, Actions} from 'react-native-router-flux';
+import React, { Component } from 'react';
+import { View, Text, TouchableOpacity, Dimensions, Image } from 'react-native';
+import { Router, Scene, Actions, ActionConst } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Contact, Anniversary} from './tabs';
-import {NewContact, EditContact, Profile} from './contact';
-import {NewStructure, EditStructure, Structure} from './structure';
+import { Contact, Anniversary } from './tabs';
+import { NewContact, EditContact, Profile } from './contact';
+import { NewStructure, EditStructure, Structure } from './structure';
+import Chat from './conversations/chat';
+
 import images from '../images';
-import {firebase} from '../config';
-import {routerStyles} from './styles';
+import { firebase } from '../config';
+import { routerStyles, iphoneX } from './styles';
 import Login from '../Login';
 import Utils from './utils';
 
 const width = Dimensions.get('window').width;
 
-const TabIcon = ({focused, title, Iconname}) => {
+const TabIcon = ({ focused, title, Iconname }) => {
   return (
     <View
       style={[
@@ -27,11 +29,11 @@ const TabIcon = ({focused, title, Iconname}) => {
         source={Iconname}
         style={[
           routerStyles.tabIconStyle,
-          {tintColor: focused ? '#FFF' : '#000'},
+          { tintColor: focused ? '#FFF' : '#000' },
         ]}
       />
       <Text
-        style={[routerStyles.tabTitle, {color: focused ? '#FFF' : '#C9C9C9'}]}>
+        style={[routerStyles.tabTitle, { color: focused ? '#FFF' : '#C9C9C9' }]}>
         {title}
       </Text>
     </View>
@@ -63,7 +65,7 @@ class MainRouter extends Component {
       <Router
         navigationBarStyle={routerStyles.navbarStyle}
         titleStyle={routerStyles.titleStyle}>
-        <Scene key="root">
+        <Scene key="root" hideNavBar>
           <Scene
             key="tabbar"
             tabBarPosition="bottom"
@@ -80,8 +82,8 @@ class MainRouter extends Component {
               initial={true}>
               <Scene
                 key="contact"
-                title="CONTACT"
-                hideNavBar
+                title="Contact"
+                hideNavBar={true}
                 component={Contact}
                 openDrawer={this.props.openDrawer}
               />
@@ -119,25 +121,31 @@ class MainRouter extends Component {
           <Scene
             key="profile"
             component={Profile}
-            renderBackButton={this.backBtn}
+            title="mongolia"
+          // renderBackButton={this.backBtn}
+          // hideNavBar
+          />
+
+          <Scene
+            key="newStructure"
+            component={NewStructure}
             hideNavBar
           />
 
-          <Scene 
-            key="newStructure" 
-            component={NewStructure} 
-            hideNavBar 
-          />
-
-          <Scene 
-            key="editStructure" 
-            component={EditStructure} 
-            hideNavBar 
+          <Scene
+            key="editStructure"
+            component={EditStructure}
+            hideNavBar
           />
 
           <Scene
             key="structure"
             component={Structure}
+            hideNavBar
+          />
+          <Scene
+            key="chat"
+            component={Chat}
             hideNavBar
           />
         </Scene>

@@ -1,9 +1,10 @@
-import React, { Component } from 'react'; 
+import React, { Component } from 'react';
 import { Text, View, Image, Dimensions, StatusBar } from 'react-native';
-import {firebase} from './app/config';
 import { Card, CardSection, Input, Button, Spinner } from './app/components/common';
 import Login from './app/Login';
 import Root from './app/index';
+import auth from '@react-native-firebase/auth';
+import messaging from '@react-native-firebase/messaging';
 
 class TeamOn extends Component {
 
@@ -12,10 +13,9 @@ class TeamOn extends Component {
   };
 
   componentWillMount() {
-    // firebase.auth().signOut();
-    firebase.auth().onAuthStateChanged((user) => {
+    auth().onAuthStateChanged((user) => {
       if (user) {
-        this.setState({loggedIn: true});
+        this.setState({ loggedIn: true });
       } else {
         this.setState({ loggedIn: false });
       }
@@ -23,7 +23,20 @@ class TeamOn extends Component {
   }
 
   componentDidMount() {
-    console.disableYellowBox= true;
+    // console.disableYellowBox= true;
+    messaging().requestPermission().then(() => {
+      messaging().getToken()
+        .then(fcmToken => {
+          if (fcmToken) {
+            console.log(fcmToken);
+            // user has a device token
+          } else {
+            console.log('error');
+            // user doesn't have a device token yet
+          }
+        });
+    });
+
   }
 
   renderContent() {
@@ -39,7 +52,7 @@ class TeamOn extends Component {
 
   render() {
     return (
-      <View style={{flex: 1, justifyContent: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center' }}>
         <StatusBar
           backgroundColor="#2676EC"
           barStyle="light-content"

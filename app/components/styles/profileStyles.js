@@ -93,8 +93,8 @@ const profileStyles = {
     justifyContent: 'center',
   },
   btnGreen: {
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: 15,
+    marginRight: 15,
     marginBottom: 20,
     width: Width <= 320 ? 60 : 70,
     height: Width <= 320 ? 60 : 70,

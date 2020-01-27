@@ -67,7 +67,6 @@ const editContactStyles = {
   accordianContent: {
     backgroundColor: '#f1f0f0',
     padding: 20,
-    flex: 1,
     flexDirection: 'row',
     borderColor: '#e2e2e2',
     borderBottomWidth: 1,
@@ -79,7 +78,6 @@ const editContactStyles = {
     justifyContent: 'space-between',
   },
   inputStyle: {
-    flex: 1,
     height: Platform.OS === 'android' ? 40 : 20,
     fontSize: 14,
     fontFamily: 'Montserrat-Regular',

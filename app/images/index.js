@@ -27,6 +27,8 @@ const images = {
   favourite: require('./favourite.png'),
   hobby: require('./hobby.png'),
   burgerMenu: require('./burgerMenu.png'),
+  chat: require('./chat.png'),
+
 };
 
 export default images;

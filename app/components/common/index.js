@@ -12,3 +12,5 @@ export * from './BubbleScreen';
 export * from './FloatingLabel';
 export * from './BackBtn';
 export * from './Search';
+export * from './Structure';
+

@@ -1,5 +1,5 @@
-import React, {Component} from 'react';
-import {Actions} from 'react-native-router-flux';
+import React, { Component } from 'react';
+import { Actions } from 'react-native-router-flux';
 import Communications from 'react-native-communications';
 import {
   View,
@@ -9,9 +9,9 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {Spinner} from '../common';
+import { Spinner } from '../common';
 import images from '../../images';
-import {firebase} from '../../config';
+import { firebase } from '../../config';
 import {
   InfoTab,
   AnniversaryTab,
@@ -19,7 +19,7 @@ import {
   FavouriteTab,
   HobbyTab,
 } from './tabs';
-import {profileStyles} from '../styles';
+import { profileStyles, iphoneX } from '../styles';
 
 const styles = profileStyles;
 
@@ -81,34 +81,34 @@ class Profile extends Component {
   handleStructure = snapshot => {
     val = snapshot.val();
     let items = Object.keys(val).map((s, i) => {
-      let obj = {id: s, parent: val[s].parent, name: val[s].name};
+      let obj = { id: s, parent: val[s].parent, name: val[s].name };
       return obj;
     });
     items = items.filter(e => e.id == this.state.user.structure);
     structure = Object.assign({}, ...items);
-    this.setState({structure});
+    this.setState({ structure });
   };
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.structure) {
-      this.setState({structure: nextProps.structure});
+      this.setState({ structure: nextProps.structure });
     }
   }
 
   OnPhonePress() {
-    const {phone} = this.state.user;
+    const { phone } = this.state.user;
     phone && Communications.phonecall(phone.toString(), false);
   }
 
   OnTextPress() {
-    const {phone, firstName} = this.state.user;
+    const { phone, firstName } = this.state.user;
     phone &&
       firstName &&
       Communications.text(phone.toString(), `Hi, ${firstName}`);
   }
 
   OnEmailPress() {
-    const {email} = this.state.user;
+    const { email } = this.state.user;
     email &&
       Communications.email(
         [email.toString()],
@@ -118,6 +118,13 @@ class Profile extends Component {
         'My body text',
       );
   }
+  OnChatPress = () => {
+    console.log(this.props.uid);
+    Actions.chat({
+      uid: this.props.uid,
+    });
+  }
+
 
   OnEditPress() {
     Actions.editContact({
@@ -140,13 +147,13 @@ class Profile extends Component {
         </TouchableOpacity>
       );
     } else {
-      return <View style={{height: 25, width: 25}} />;
+      return <View style={{ height: 25, width: 25 }} />;
     }
   }
 
   header() {
     if (this.state.loadingUser || this.state.loadingInfo) return;
-    const {user, info} = this.state;
+    const { user, info } = this.state;
     return (
       <View style={styles.viewStyle}>
         <View style={styles.headerStyle}>
@@ -178,31 +185,31 @@ class Profile extends Component {
   }
 
   renderProfileImg() {
-    let {user} = this.state;
+    let { user } = this.state;
     if (user.profileImg) {
       return (
-        <Image style={styles.profileImage} source={{uri: user.profileImg}} />
+        <Image style={styles.profileImage} source={{ uri: user.profileImg }} />
       );
     } else {
       return <Image source={images.avatar} style={styles.profileImage} />;
     }
   }
 
-  renderBtn({img, color, action}) {
+  renderBtn({ img, color, action }) {
     return (
       <TouchableOpacity
         onPress={action}
-        style={[styles.btnGreen, {backgroundColor: color}]}>
+        style={[styles.btnGreen, { backgroundColor: color }]}>
         <Image source={img} style={styles.btnStyle} />
       </TouchableOpacity>
     );
   }
 
   setTab = name => {
-    this.setState({tabs: name});
+    this.setState({ tabs: name });
   };
 
-  tabItem({name, img, title}) {
+  tabItem({ name, img, title }) {
     let item,
       text,
       icon = null;
@@ -253,7 +260,7 @@ class Profile extends Component {
 
   renderContent() {
     if (this.state.loadingUser || this.state.loadingInfo) return <Spinner />;
-    let {user, info, structure} = this.state;
+    let { user, info, structure } = this.state;
 
     return (
       <View style={styles.mainContainer}>
@@ -281,21 +288,26 @@ class Profile extends Component {
             color: '#5498F4',
             action: this.OnEmailPress,
           })}
+          {this.renderBtn({
+            img: images.chat,
+            color: '#5498F4',
+            action: this.OnChatPress,
+          })}
         </View>
         <View style={styles.tabContainer}>
-          {this.tabItem({name: 'info', img: images.info, title: 'Contact'})}
+          {this.tabItem({ name: 'info', img: images.info, title: 'Contact' })}
           {this.tabItem({
             name: 'anniversary',
             img: images.anniversary,
             title: 'Anniversary',
           })}
-          {this.tabItem({name: 'family', img: images.family, title: 'Family'})}
+          {this.tabItem({ name: 'family', img: images.family, title: 'Family' })}
           {this.tabItem({
             name: 'favourite',
             img: images.favourite,
             title: 'Favourite',
           })}
-          {this.tabItem({name: 'hobby', img: images.hobby, title: 'Hobby'})}
+          {this.tabItem({ name: 'hobby', img: images.hobby, title: 'Hobby' })}
         </View>
         <ScrollView style={styles.tabView}>
           {this.renderTabContent(user, info)}
@@ -306,7 +318,7 @@ class Profile extends Component {
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1, ...iphoneX.space }}>
         {this.header()}
         {this.renderContent()}
       </View>
@@ -314,4 +326,4 @@ class Profile extends Component {
   }
 }
 
-export {Profile};
+export { Profile };

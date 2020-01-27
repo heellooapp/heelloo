@@ -1,4 +1,4 @@
-import firebase from 'react-native-firebase';
+import { firebase } from '@react-native-firebase/app'
 
 // const configurationOptions = {
 //   debug: false,
@@ -10,4 +10,4 @@ import firebase from 'react-native-firebase';
 // 
 // const firebase = Firebase.initializeApp(configurationOptions);
 
-export {firebase};
+export { firebase };

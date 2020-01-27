@@ -6,12 +6,13 @@ import {
   Picker,
   ScrollView,
   Platform,
-  ListView,
   TextInput,
   Dimensions,
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import { ListView } from 'deprecated-react-native-listview';
+
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../../images';
@@ -140,9 +141,9 @@ class EditStructure extends Component {
     if (structures === null) return;
     let items = Object.keys(structures).map((s, i) => {
       return (
-        <Picker.Item 
-          key={i} 
-          label={structures[s].name} 
+        <Picker.Item
+          key={i}
+          label={structures[s].name}
           value={s}
         />
       );
@@ -163,7 +164,7 @@ class EditStructure extends Component {
   header() {
     const { viewStyle, iconRight, titleNavbar } = styles;
     return (
-    <View style={[viewStyle, {paddingTop: Platform.OS === 'ios' ? 20 : 0}]}>
+    <View style={viewStyle}>
       <BackBtn />
       <Text style={titleNavbar}>EDIT STRUCTURE</Text>
       <TouchableOpacity onPress={this.saveStructure}>

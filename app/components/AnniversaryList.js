@@ -113,7 +113,7 @@ class AnniversaryList extends Component {
     ) {
       return [true, currentDate.getFullYear() - ad.getFullYear()];
     }
-    return [false, 0];
+    return [false, currentDate.getFullYear() - ad.getFullYear()];
   }
 
   checkBirthday(bd) {
@@ -126,7 +126,6 @@ class AnniversaryList extends Component {
 
   sortContactsByDate(val) {
     contactList = JSON.parse(JSON.stringify(val));
-
     let month = currentDate.getMonth();
     let day = currentDate.getDate();
     let year = currentDate.getFullYear();
@@ -236,8 +235,7 @@ class AnniversaryList extends Component {
                 </Text>
                 <Text style={styles.subText}>
                   Say to happy{' '}
-                  {new Date().getYear() -
-                    new Date(item.anniversary.birthday).getYear()}th birthday!
+                  {item.isAge}th birthday! and {item.anniversary.firstDay} year work anniversary!
                 </Text>
               </View>
             </View>
@@ -284,7 +282,7 @@ class AnniversaryList extends Component {
                     {new Date(item.anniversary.birthday).getDate()}
                   </Text>
                   <Text style={styles.dateBirthtext}>
-                    {months[
+                    {item.anniversary.birthday&&months[
                       new Date(item.anniversary.birthday).getUTCMonth(months)
                     ].slice(0, 3)}
                   </Text>
@@ -300,7 +298,7 @@ class AnniversaryList extends Component {
                 </Text>
                 <Text style={styles.subText}>
                   Say to happy{' '}
-                  {new Date().getYear() -
+                  {item.anniversary.birthday&&new Date().getYear() -
                     new Date(item.anniversary.birthday).getYear()}th birthday!
                 </Text>
               </View>
@@ -311,11 +309,11 @@ class AnniversaryList extends Component {
             <View style={styles.mainContainer}>
               <View style={styles.blueCircle}>
                 <Text style={(styles.dateWorkBold, styles.whiteTextBold)}>
-                  {new Date(item.anniversary.birthday).getDate()}
+                  {new Date(item.anniversary.firstDay).getDate()}
                 </Text>
                 <Text style={(styles.dateWorktext, styles.whiteText)}>
-                  {months[
-                    new Date(item.anniversary.birthday).getUTCMonth(months)
+                  {item.anniversary.firstDay&&months[
+                    new Date(item.anniversary.firstDay).getUTCMonth(months)
                   ].slice(0, 3)}
                 </Text>
               </View>
@@ -327,7 +325,7 @@ class AnniversaryList extends Component {
                   ]}>
                   {item.firstName} {item.lastname}
                 </Text>
-                <Text style={styles.subText}>{item.isAge} years old</Text>
+                <Text style={styles.subText}>{item.isWorkYears} year work anniversary!</Text>
               </View>
             </View>
           </View>
@@ -359,13 +357,13 @@ class AnniversaryList extends Component {
   render() {
     return (
       <View>
-        <Search
-          title="ANNIVERSARY"
-          toggleSearchValue={this.state.toggleSearchValue}
-          toggleSearch={this.toggleSearch}
-          searchValue={this.state.searchValue}
-          onChangeText={searchValue => this.onSearch(searchValue)}
-        />
+      <Search
+        title="ANNIVERSARY"
+        toggleSearchValue={this.state.toggleSearchValue}
+        toggleSearch={this.toggleSearch}
+        searchValue={this.state.searchValue}
+        onChangeText={searchValue => this.onSearch(searchValue)}
+      />
         {this.renderContent()}
       </View>
     );

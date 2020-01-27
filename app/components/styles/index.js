@@ -15,3 +15,4 @@ export * from './editStructureStyles';
 export * from './componentStyle';
 export * from './modalWrapperStyles';
 export * from './common';
+export * from './iphoneX'

@@ -1,6 +1,6 @@
 import {firebase} from '../config';
 import {Platform} from 'react-native';
-import RNFetchBlob from 'react-native-fetch-blob';
+import RNFetchBlob from 'rn-fetch-blob'
 
 const Blob = RNFetchBlob.polyfill.Blob;
 const fs = RNFetchBlob.fs;
@@ -41,7 +41,3 @@ class Uploader {
 }
 
 export default Uploader;
-
-
-
-

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -10,23 +10,23 @@ import {
   AsyncStorage,
   TouchableOpacity,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ActionButton from 'react-native-action-button';
-import {Spinner, Button, BackBtn} from '../../components/common';
-import {firebase} from '../../config';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {newContactStyles} from '../styles';
+import { Spinner, Button, BackBtn, Structure } from '../../components/common';
+import { firebase } from '../../config';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { newContactStyles } from '../styles';
 
 const createUserURL =
   'https://us-central1-teamon-68ca0.cloudfunctions.net/createUser';
 const styles = newContactStyles;
 const obj = [
-  {name: 'firstName', error: 'Fill First name'},
-  {name: 'lastname', error: 'Fill Last name'},
-  {name: 'email', error: 'Fill Email'},
-  {name: 'password', error: 'Fill Password'},
-  {name: 'position', error: 'Fill Position'},
+  { name: 'firstName', error: 'Fill First name' },
+  { name: 'lastname', error: 'Fill Last name' },
+  { name: 'email', error: 'Fill Email' },
+  { name: 'password', error: 'Fill Password' },
+  { name: 'position', error: 'Fill Position' },
 ];
 class NewContact extends Component {
   constructor(props) {
@@ -52,7 +52,7 @@ class NewContact extends Component {
   componentDidMount() {
     this.structureRef.on('value', this.handleQuery);
     AsyncStorage.getItem('USER', (err, val) => {
-      this.setState({currentPassword: val});
+      this.setState({ currentPassword: val });
     });
   }
 
@@ -72,31 +72,31 @@ class NewContact extends Component {
   };
 
   updateParent(parent) {
-    this.setState({parent});
+    this.setState({ parent });
   }
 
   getRef() {
     return firebase.database().ref();
   }
 
-  isValid({name, error}) {
+  isValid({ name, error }) {
     if (this.state[name].length === 0 || !this.state[name]) {
-      this.setState({error});
+      this.setState({ error });
       return false;
     }
 
     if (this.state.password.length < 5) {
-      this.setState({error: 'Password must be at least 6 characters'});
+      this.setState({ error: 'Password must be at least 6 characters' });
       return false;
     }
 
     if (!this.state.picker) {
-      this.setState({error: 'Choose department'});
+      this.setState({ error: 'Choose department' });
       return false;
     }
 
     if (this.state.password !== this.state.repeatPassword) {
-      this.setState({error: "Password doesn't match"});
+      this.setState({ error: "Password doesn't match" });
       return false;
     }
 
@@ -109,23 +109,23 @@ class NewContact extends Component {
       arr.push(this.isValid(obj[i]));
     }
     if (arr.indexOf(false) === -1) {
-      this.setState({error: ''});
+      this.setState({ error: '' });
       this.createUser();
     }
   }
 
   createUser() {
-    this.setState({loading: true});
+    this.setState({ loading: true });
     currentUser = firebase.auth().currentUser;
     email = currentUser.email;
     firebase
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(user => {
+      .then(({ user }) => {
         this.signInBack(email, user.uid);
       })
       .catch(err => {
-        this.setState({error: err.message});
+        this.setState({ error: err.message, loading: false });
       });
   }
 
@@ -153,27 +153,27 @@ class NewContact extends Component {
         Actions.pop();
       })
       .catch(err => {
-        this.setState({err: err.message});
+        this.setState({ err: err.message });
       });
   }
 
   header() {
-    const {viewStyle, titleNavbar} = styles;
+    const { viewStyle, titleNavbar } = styles;
     return (
-      <View style={[viewStyle, {paddingTop: Platform.OS === 'ios' ? 20 : 0}]}>
+      <View style={viewStyle}>
         <BackBtn />
         <Text style={titleNavbar}>ADD CONTACT</Text>
-        <View style={{width: 25, height: 25}} />
+        <View style={{ width: 25, height: 25 }} />
       </View>
     );
   }
 
   togglePicker = () => {
-    this.setState({picker: !this.state.picker});
+    this.setState({ picker: !this.state.picker });
   };
 
   toggleAdmin = () => {
-    this.setState({isAdmin: !this.state.isAdmin});
+    this.setState({ isAdmin: !this.state.isAdmin });
   };
 
   showPicker() {
@@ -184,7 +184,7 @@ class NewContact extends Component {
   }
 
   showCheckBox() {
-    const {fieldContainer, alignCenter, labelStyle} = styles;
+    const { fieldContainer, alignCenter, labelStyle } = styles;
 
     return (
       <TouchableOpacity
@@ -193,8 +193,8 @@ class NewContact extends Component {
         {this.state.isAdmin ? (
           <Icon name="ios-checkbox-outline" size={25} color="#000" />
         ) : (
-          <Icon name="ios-square-outline" size={25} color="#000" />
-        )}
+            <Icon name="ios-square-outline" size={25} color="#000" />
+          )}
         <Text
           style={[
             labelStyle,
@@ -209,23 +209,21 @@ class NewContact extends Component {
     );
   }
 
-  renderPicker() {
-    let {structures, parent} = this.state;
-    if (structures === null) return;
-    let items = Object.keys(structures).map((s, i) => {
-      return <Picker.Item key={i} label={structures[s].name} value={s} />;
-    });
-    return (
-      <Picker
-        selectedValue={parent}
-        onValueChange={parent => this.setState({parent})}>
-        {items}
-      </Picker>
-    );
-  }
+  onSelectedItemsChange = (selectedItems) => {
+    if (selectedItems.length > 0)
+      this.setState({ parent: selectedItems[0], selectedItems: selectedItems });
+  };
 
-  renderField({label, name, secure}) {
-    const {fieldContainer, inputContainer, labelStyle, inputStyle} = styles;
+  renderPicker() {
+    return (
+      <Structure
+        onSelectedItemsChange={this.onSelectedItemsChange}
+        selectedItems={this.state.selectedItems}
+        structures={this.state.structures}
+      />)
+  }
+  renderField({ label, name, secure }) {
+    const { fieldContainer, inputContainer, labelStyle, inputStyle } = styles;
 
     return (
       <View style={fieldContainer}>
@@ -235,7 +233,7 @@ class NewContact extends Component {
             style={inputStyle}
             autoCorrect={false}
             underlineColorAndroid="transparent"
-            onChangeText={value => this.setState({[name]: value})}
+            onChangeText={value => this.setState({ [name]: value })}
             secureTextEntry={secure}
             value={this.state[name]}
           />
@@ -247,12 +245,12 @@ class NewContact extends Component {
   render() {
     if (this.state.loading) return <Spinner />;
     return (
-      <View style={{flex: 1, backgroundColor: '#FFF'}}>
+      <View style={{ flex: 1, backgroundColor: '#FFF' }}>
         {this.header()}
         <KeyboardAwareScrollView
           enableResetScrollToCoords={false}
           enableAutoAutomaticScroll={false}
-          style={{flex: 1}}>
+          style={{ flex: 1 }}>
           <View style={styles.mainContainer}>
             <TouchableOpacity
               style={styles.department}
@@ -303,4 +301,4 @@ class NewContact extends Component {
   }
 }
 
-export {NewContact};
+export { NewContact };

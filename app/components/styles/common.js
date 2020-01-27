@@ -1,4 +1,5 @@
 import {Platform, Dimensions} from 'react-native';
+import { ifIphoneX } from 'react-native-iphone-x-helper'
 
 const common = {
   container: {
@@ -10,8 +11,13 @@ const common = {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    height: 70,
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
+    ...ifIphoneX({
+        paddingTop: 30,
+        height: 80,
+    }, {
+        paddingTop: 10,
+        height: 70,
+    })
   },
   title: {
     fontFamily: 'Montserrat-Light',

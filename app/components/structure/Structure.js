@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
   Platform,
-  ListView,
   DataSource,
+  FlatList,
   Alert,
   TextInput,
   Image,
@@ -13,16 +13,19 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import {Actions} from 'react-native-router-flux';
+import { Actions } from 'react-native-router-flux';
 import images from '../../images';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Collapsible from 'react-native-collapsible';
-import {Spinner, Button, Header} from '../../components/common';
-import ActionSheet from '@yfuks/react-native-action-sheet';
-import {firebase} from '../../config';
-import {SwipeListView} from 'react-native-swipe-list-view';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
-import {structure, common} from '../styles';
+import { Spinner, Button, Header } from '../../components/common';
+import ActionSheet from 'react-native-action-sheet';
+import { firebase } from '../../config';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import LinearGradient from 'react-native-linear-gradient';
+
+import FastImage from 'react-native-fast-image'
+import { structure, common } from '../styles';
 
 const ActionButtons = ['Edit', 'Delete', 'Cancel'];
 const styles = structure;
@@ -63,11 +66,10 @@ class CollapsibleWrapper extends Component {
 
   handleContacts(snapshot) {
     val = snapshot.val() || {};
-    contacts = Object.keys(val).map(function(key) {
+    contacts = Object.keys(val).map(function (key) {
       return val[key];
     });
-    listView = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    this.setState({contactList: listView.cloneWithRows(contacts)});
+    this.setState({ contactList: contacts });
   }
 
   manageCollapse() {
@@ -77,7 +79,7 @@ class CollapsibleWrapper extends Component {
   }
 
   showActions = () => {
-    const {structure, children} = this.props;
+    const { structure, children } = this.props;
     ActionSheet.showActionSheetWithOptions(
       {
         options: ActionButtons,
@@ -98,7 +100,7 @@ class CollapsibleWrapper extends Component {
             this.showAlert();
             return;
           }
-          this.setState({error: ''});
+          this.setState({ error: '' });
           this.structureRef.child(structure.id).remove();
         }
       },
@@ -109,8 +111,8 @@ class CollapsibleWrapper extends Component {
     Alert.alert(
       '',
       'This structure contains sub structure or contact.',
-      [{text: 'Close', onPress: () => null, style: 'cancel'}],
-      {cancelable: false},
+      [{ text: 'Close', onPress: () => null, style: 'cancel' }],
+      { cancelable: false },
     );
   }
 
@@ -123,7 +125,7 @@ class CollapsibleWrapper extends Component {
             isAdmin: this.props.isAdmin,
           })
         }>
-        <View style={[styles.structureContainer, {backgroundColor: '#EDEDED'}]}>
+        <View style={[styles.structureContainer, { backgroundColor: '#EDEDED' }]}>
           {this.showAvatar(rowData.profileImg)}
           <View style={styles.contactList}>
             <Text style={styles.contactName}>
@@ -137,9 +139,9 @@ class CollapsibleWrapper extends Component {
   }
 
   showAvatar(profileImg) {
-    const {avatar} = styles;
+    const { avatar } = styles;
     if (profileImg) {
-      return <Image source={{uri: profileImg}} style={avatar} />;
+      return <FastImage source={{ uri: profileImg }} style={avatar} />;
     } else {
       return <Image source={images.avatar} style={avatar} />;
     }
@@ -147,9 +149,9 @@ class CollapsibleWrapper extends Component {
 
   renderContacts() {
     return (
-      <ListView
-        dataSource={this.state.contactList}
-        renderRow={rowData => this.renderPerContact(rowData)}
+      <FlatList
+        data={this.state.contactList}
+        renderItem={({ item }) => this.renderPerContact(item)}
         enableEmptySections={true}
         scrollEnabled={false}
       />
@@ -166,7 +168,7 @@ class CollapsibleWrapper extends Component {
   }
 
   render() {
-    const {structure, children} = this.props;
+    const { structure, children } = this.props;
     return (
       <TouchableOpacity
         onLongPress={this.props.isAdmin ? this.showActions : null}
@@ -176,11 +178,22 @@ class CollapsibleWrapper extends Component {
             <Text
               style={[
                 styles.titleStyle,
-                {paddingLeft: structure.parent == 0 ? 0 : 25},
+                { paddingLeft: structure.parent == 0 ? 0 : 25 }
               ]}>
               {structure.name}
             </Text>
-            {this.showIcon()}
+            {
+              (structure.subcats.length > 0 || (this.state.contactList && this.state.contactList.length > 0))
+              &&
+              <LinearGradient
+                colors={structure.subcats.length > 0 ? ['yellow', 'red'] : ['yellow', '#6600cc']}
+                style={styles.circle}>
+                <Text style={styles.numberOf}>
+                  {structure.subcats.length > 0 ? structure.subcats.length : (this.state.contactList ? this.state.contactList.length : '0')}
+                </Text>
+              </LinearGradient>
+
+            }
           </View>
         </View>
         <Collapsible collapsed={this.state.collapsed}>
@@ -191,7 +204,7 @@ class CollapsibleWrapper extends Component {
               : null}
           </View>
         </Collapsible>
-      </TouchableOpacity>
+      </TouchableOpacity >
     );
   }
 }
@@ -226,17 +239,17 @@ class Structure extends Component {
   handleQuery = snapshot => {
     val = snapshot.val();
     var items = Object.keys(val).map((s, i) => {
-      var obj = {id: s, parent: val[s].parent, name: val[s].name};
+      var obj = { id: s, parent: val[s].parent, name: val[s].name };
       return obj;
     });
     items.forEach(e => (e.subcats = items.filter(el => el.parent == e.id)));
     items = items.filter(e => e.parent == 0);
-    this.setState({loading: false, structures: items});
+    this.setState({ loading: false, structures: items });
   };
 
   saveStructure() {
     if (this.state.department.length === 0) {
-      this.setState({error: 'Department name should not be empty.'});
+      this.setState({ error: 'Department name should not be empty.' });
       return;
     }
 
@@ -245,7 +258,7 @@ class Structure extends Component {
       parent: 0,
     });
 
-    this.setState({department: '', parent: 0});
+    this.setState({ department: '', parent: 0 });
   }
 
   onCreate() {
@@ -354,4 +367,4 @@ class Structure extends Component {
   }
 }
 
-export {Structure};
+export { Structure };
