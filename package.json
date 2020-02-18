@@ -1,5 +1,5 @@
 {
-  "name": "TeamON",
+  "name": "app",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/masked-view": "^0.1.6",
     "@react-native-firebase/app": "^6.2.0",
     "@react-native-firebase/auth": "^6.2.0",
     "@react-native-firebase/database": "^6.2.0",
@@ -29,6 +30,7 @@
     "react-native-drawer": "^2.5.1",
     "react-native-easy-toast": "^1.2.0",
     "react-native-fast-image": "^7.0.2",
+    "react-native-gesture-handler": "^1.5.6",
     "react-native-image-picker": "^1.1.0",
     "react-native-iphone-x-helper": "^1.2.1",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
@@ -38,11 +40,15 @@
     "react-native-modal": "^11.5.3",
     "react-native-modal-wrapper": "^3.1.1",
     "react-native-picker-select": "^6.3.3",
-    "react-native-router-flux": "^4.0.6",
+    "react-native-reanimated": "^1.7.0",
+    "react-native-router-flux": "^4.2.0",
+    "react-native-safe-area-context": "^0.7.2",
+    "react-native-screens": "^2.0.0-beta.1",
     "react-native-sectioned-multi-select": "^0.7.6",
     "react-native-spinner-button": "^1.0.3",
     "react-native-swipe-list-view": "^2.1.1",
     "react-native-vector-icons": "^6.6.0",
+    "react-navigation-stack": "^2.1.1",
     "rn-fetch-blob": "^0.11.2"
   },
   "devDependencies": {
