@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Image} from 'react-native';
-import images from '../../images';
+import images from '../images';
 import ActionButton from 'react-native-action-button';
 
 const FloatButton = props => {

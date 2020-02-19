@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {modalWrapperStyle} from '../../styles';
+import {modalWrapperStyle} from '../../../styles';
 
 const styles = modalWrapperStyle;
 

@@ -4,7 +4,7 @@ import { firebase } from '@react-native-firebase/app'
 import { firebaseService } from '../services'
 // import { UserContext } from '../../contexts'
 import { unionWith } from 'lodash'
-import { BackBtn } from '../../common';
+import { BackBtn } from '../../../common';
 import Input from '../Input'
 import Message from '../Message'
 import FastImage from 'react-native-fast-image'

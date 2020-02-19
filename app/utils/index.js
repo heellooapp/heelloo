@@ -1,4 +1,4 @@
-import {firebase} from '../../config';
+import {firebase} from '../config';
 
 class Utils {
   static getRef() {

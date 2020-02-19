@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Text, View, Image, Dimensions, StatusBar } from 'react-native';
-import { Card, CardSection, Input, Button, Spinner } from './app/components/common';
-import Login from './app/Login';
-import Root from './app/index';
+import { Card, CardSection, Input, Button, Spinner } from './common';
+import Login from './screens/unauth/Login';
+import Root from './screens/root/Root';
 import auth from '@react-native-firebase/auth';
 import messaging from '@react-native-firebase/messaging';
 
@@ -42,7 +42,7 @@ class TeamOn extends Component {
 
   renderContent() {
     switch (this.state.loggedIn) {
-      case true:
+      case true: 
         return <Root />;
       case false:
         return <Login />;

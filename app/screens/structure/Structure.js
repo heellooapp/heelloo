@@ -17,15 +17,12 @@ import { Actions } from 'react-native-router-flux';
 import images from '../../images';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Collapsible from 'react-native-collapsible';
-import { Spinner, Button, Header } from '../../components/common';
+import { Spinner, Button, Header } from '../../common';
 import ActionSheet from 'react-native-action-sheet';
 import { firebase } from '../../config';
-import { SwipeListView } from 'react-native-swipe-list-view';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import LinearGradient from 'react-native-linear-gradient';
-
 import FastImage from 'react-native-fast-image'
-import { structure, common } from '../styles';
+import { structure, common } from '../../styles';
 
 const ActionButtons = ['Edit', 'Delete', 'Cancel'];
 const styles = structure;

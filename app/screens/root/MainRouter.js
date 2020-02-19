@@ -2,17 +2,17 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, Image } from 'react-native';
 import { Router, Scene, Actions, ActionConst } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Contact, Anniversary } from './tabs';
-import { NewContact, EditContact, Profile } from './contact';
-import { NewStructure, EditStructure, Structure } from './structure';
-import Chat from './conversations/chat';
-import ForgetPassword from './resetpassword';
+import { Contact, Anniversary } from '../tabs';
+import { NewContact, EditContact, Profile } from '../contact';
+import { NewStructure, EditStructure, Structure } from '../structure';
+import Chat from '../conversations/chat';
+import { Login, ForgetPassword } from '../unauth';
 
-import images from '../images';
-import { firebase } from '../config';
-import { routerStyles, iphoneX } from './styles';
-import Login from './Login';
-import Utils from './utils';
+// import images from '../../images';
+// import { firebase } from '../config';
+import { routerStyles, iphoneX } from '../../styles';
+
+// import Utils from './utils';
 
 const width = Dimensions.get('window').width;
 
@@ -23,7 +23,7 @@ const TabIcon = ({ focused, title, Iconname }) => {
         routerStyles.tabItemStyle,
         {
           backgroundColor: focused ? '#2a8aed' : '#FFF',
-          width: width * 0.5,
+          width: width * 0.25,
         },
       ]}>
       <Image
@@ -77,8 +77,7 @@ class MainRouter extends Component {
             tabBarStyle={routerStyles.tabBarStyle}>
             <Scene
               key="tabContact"
-              title="Contact"
-              Iconname={require('../images/contact.png')}
+              Iconname={require('../../images/contact.png')}
               icon={TabIcon}
               {...this.props}
               wrap={false}
@@ -86,8 +85,19 @@ class MainRouter extends Component {
               initial={true} />
             <Scene
               key="tabAnniversary"
-              title="Anniversary"
-              Iconname={require('../images/anniversary.png')}
+              Iconname={require('../../images/anniversary.png')}
+              icon={TabIcon}
+              component={Anniversary}
+              {...this.props} />
+            <Scene
+              key="tabBravo"
+              Iconname={require('../../images/tabclap.png')}
+              icon={TabIcon}
+              component={Anniversary}
+              {...this.props} />
+            <Scene
+              key="tabChat"
+              Iconname={require('../../images/tabchat.png')}
               icon={TabIcon}
               component={Anniversary}
               {...this.props} />
@@ -140,7 +150,7 @@ class MainRouter extends Component {
             component={Chat}
             hideNavBar
           />
-           <Scene
+          <Scene
             key="forgetPassword"
             component={ForgetPassword}
             hideNavBar

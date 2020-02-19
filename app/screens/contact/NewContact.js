@@ -13,10 +13,10 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import ActionButton from 'react-native-action-button';
-import { Spinner, Button, BackBtn, Structure } from '../../components/common';
+import { Spinner, Button, BackBtn, Structure } from '../../common';
 import { firebase } from '../../config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { newContactStyles } from '../styles';
+import { newContactStyles } from '../../styles';
 
 const createUserURL =
   'https://us-central1-teamon-68ca0.cloudfunctions.net/createUser';

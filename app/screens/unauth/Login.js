@@ -16,10 +16,10 @@ import {
   Spinner,
   Footer,
   BubbleScreen,
-} from './components/common';
-import images from '../images';
+} from '../../common';
+import images from '../../images';
 import auth from '@react-native-firebase/auth';
-import { loginStyles } from './components/styles';
+import { loginStyles } from '../../styles';
 import { Actions } from 'react-native-router-flux';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 

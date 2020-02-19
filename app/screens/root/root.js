@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
-import { Alert, Keyboard } from 'react-native';
+import { Alert, Keyboard, View } from 'react-native';
 import Drawer from 'react-native-drawer';
-import { Actions } from 'react-native-router-flux';
-import { Spinner } from './components/common';
-import { firebase } from '../../config';
-import Sidemenu from './components/Sidemenu';
-import MainRouter from './components/MainRouter';
 
+import Sidemenu from './Sidemenu';
+import MainRouter from './MainRouter';
 class Root extends Component {
 
   constructor(props) {

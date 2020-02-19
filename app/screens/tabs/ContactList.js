@@ -12,14 +12,14 @@ import {
   TouchableHighlight,
   FlatList,
 } from 'react-native';
-import { contactListStyles } from './styles';
+import { contactListStyles } from '../../styles';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { Spinner, Search } from './common';
-import images from '../images';
-import { firebase } from '../config';
+import { Spinner, Search } from '../../common';
+import images from '../../images';
+import { firebase } from '../../config';
 import FastImage from 'react-native-fast-image';
 
 const deleteUserURL =

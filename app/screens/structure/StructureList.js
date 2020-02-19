@@ -12,7 +12,7 @@ import images from '../../images';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {firebase} from '../../config';
 import Collapsible from 'react-native-collapsible';
-import {structure, common} from '../styles';
+import {structure, common} from '../../styles';
 
 const styles = structure;
 

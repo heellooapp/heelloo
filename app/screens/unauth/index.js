@@ -1,2 +1,7 @@
-export * from './ForgetPassword';
-export * from './Login';
+import ForgetPassword from './ForgetPassword';
+import Login from './Login';
+
+export {
+    ForgetPassword,
+    Login,
+}

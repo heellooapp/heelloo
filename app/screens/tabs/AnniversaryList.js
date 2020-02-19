@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Text,
   View,
@@ -9,13 +9,13 @@ import {
   FlatList,
   Keyboard,
 } from 'react-native';
-import {anniversaryListStyles} from './styles';
-import {Actions} from 'react-native-router-flux';
+import { anniversaryListStyles } from '../../styles';
+import { Actions } from 'react-native-router-flux';
 import Communications from 'react-native-communications';
-import {SwipeListView} from 'react-native-swipe-list-view';
-import {Spinner, Search} from './common';
-import images from '../images';
-import {firebase} from '../config';
+import { SwipeListView } from 'react-native-swipe-list-view';
+import { Spinner, Search } from '../../common';
+import images from '../../images';
+import { firebase } from '../../config';
 import Icon from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -89,7 +89,7 @@ class AnniversaryList extends Component {
   };
 
   onSearch(searchValue) {
-    this.setState({searchValue});
+    this.setState({ searchValue });
     let filteredData = this.filterNotes(searchValue, this.state.db);
 
     this.setState({
@@ -119,7 +119,7 @@ class AnniversaryList extends Component {
   checkBirthday(bd) {
     return [
       bd.getMonth() === currentDate.getMonth() &&
-        bd.getDate() === currentDate.getDate(),
+      bd.getDate() === currentDate.getDate(),
       currentDate.getFullYear() - bd.getFullYear(),
     ];
   }
@@ -195,7 +195,7 @@ class AnniversaryList extends Component {
   }
 
   isLoading = loading => {
-    this.setState({loading});
+    this.setState({ loading });
   };
 
   setUsersArray(val) {
@@ -205,7 +205,7 @@ class AnniversaryList extends Component {
     return usersArray;
   }
 
-  _renderRow({item}) {
+  _renderRow({ item }) {
     return (
       <View>
         {item.isBirthday && item.isWork ? (
@@ -229,7 +229,7 @@ class AnniversaryList extends Component {
                 <Text
                   style={[
                     styles.name,
-                    {fontSize: windowWidth <= 320 ? 14 : 15},
+                    { fontSize: windowWidth <= 320 ? 14 : 15 },
                   ]}>
                   {item.firstName} {item.lastname}
                 </Text>
@@ -261,7 +261,7 @@ class AnniversaryList extends Component {
                 <Text
                   style={[
                     styles.name,
-                    {fontSize: windowWidth <= 320 ? 14 : 15},
+                    { fontSize: windowWidth <= 320 ? 14 : 15 },
                   ]}>
                   {item.firstName} {item.lastname}
                 </Text>
@@ -282,7 +282,7 @@ class AnniversaryList extends Component {
                     {new Date(item.anniversary.birthday).getDate()}
                   </Text>
                   <Text style={styles.dateBirthtext}>
-                    {item.anniversary.birthday&&months[
+                    {item.anniversary.birthday && months[
                       new Date(item.anniversary.birthday).getUTCMonth(months)
                     ].slice(0, 3)}
                   </Text>
@@ -292,44 +292,44 @@ class AnniversaryList extends Component {
                 <Text
                   style={[
                     styles.name,
-                    {fontSize: windowWidth <= 320 ? 14 : 15},
+                    { fontSize: windowWidth <= 320 ? 14 : 15 },
                   ]}>
                   {item.firstName} {item.lastname}
                 </Text>
                 <Text style={styles.subText}>
                   Say to happy{' '}
-                  {item.anniversary.birthday&&new Date().getYear() -
+                  {item.anniversary.birthday && new Date().getYear() -
                     new Date(item.anniversary.birthday).getYear()}th birthday!
                 </Text>
               </View>
             </View>
           </View>
         ) : (
-          <View style={styles.cardContainer}>
-            <View style={styles.mainContainer}>
-              <View style={styles.blueCircle}>
-                <Text style={(styles.dateWorkBold, styles.whiteTextBold)}>
-                  {new Date(item.anniversary.firstDay).getDate()}
-                </Text>
-                <Text style={(styles.dateWorktext, styles.whiteText)}>
-                  {item.anniversary.firstDay&&months[
-                    new Date(item.anniversary.firstDay).getUTCMonth(months)
-                  ].slice(0, 3)}
-                </Text>
-              </View>
-              <View style={styles.secondContainer}>
-                <Text
-                  style={[
-                    styles.name,
-                    {fontSize: windowWidth <= 320 ? 14 : 15},
-                  ]}>
-                  {item.firstName} {item.lastname}
-                </Text>
-                <Text style={styles.subText}>{item.isWorkYears} year work anniversary!</Text>
-              </View>
-            </View>
-          </View>
-        )}
+                <View style={styles.cardContainer}>
+                  <View style={styles.mainContainer}>
+                    <View style={styles.blueCircle}>
+                      <Text style={(styles.dateWorkBold, styles.whiteTextBold)}>
+                        {new Date(item.anniversary.firstDay).getDate()}
+                      </Text>
+                      <Text style={(styles.dateWorktext, styles.whiteText)}>
+                        {item.anniversary.firstDay && months[
+                          new Date(item.anniversary.firstDay).getUTCMonth(months)
+                        ].slice(0, 3)}
+                      </Text>
+                    </View>
+                    <View style={styles.secondContainer}>
+                      <Text
+                        style={[
+                          styles.name,
+                          { fontSize: windowWidth <= 320 ? 14 : 15 },
+                        ]}>
+                        {item.firstName} {item.lastname}
+                      </Text>
+                      <Text style={styles.subText}>{item.isWorkYears} year work anniversary!</Text>
+                    </View>
+                  </View>
+                </View>
+              )}
       </View>
     );
   }
@@ -346,7 +346,7 @@ class AnniversaryList extends Component {
         <Text
           style={[
             anniversaryListStyles.centerText,
-            {marginBottom: Platform.os == 'android' ? 50 : 70},
+            { marginBottom: Platform.os == 'android' ? 50 : 70 },
           ]}>
           {months[currentDate.getMonth()].toUpperCase()} UPCOMING EVENTS
         </Text>
@@ -357,13 +357,13 @@ class AnniversaryList extends Component {
   render() {
     return (
       <View>
-      {/* <Search
-        title="ANNIVERSARY"
-        toggleSearchValue={this.state.toggleSearchValue}
-        toggleSearch={this.toggleSearch}
-        searchValue={this.state.searchValue}
-        onChangeText={searchValue => this.onSearch(searchValue)}
-      /> */}
+        <Search
+          title="ANNIVERSARY"
+          toggleSearchValue={this.state.toggleSearchValue}
+          toggleSearch={this.toggleSearch}
+          searchValue={this.state.searchValue}
+          onChangeText={searchValue => this.onSearch(searchValue)}
+        />
         {this.renderContent()}
       </View>
     );

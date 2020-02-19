@@ -2,19 +2,14 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  Image,
   Picker,
-  ScrollView,
-  Platform,
   TextInput,
-  Dimensions,
-  TouchableOpacity,
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
-import { Spinner, Button, BackBtn } from '../common';
+import { Spinner, Button, BackBtn } from '../../common';
 import { firebase } from '../../config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { newStructureStyles } from '../styles';
+import { newStructureStyles } from '../../styles';
 
 const styles = newStructureStyles;
 

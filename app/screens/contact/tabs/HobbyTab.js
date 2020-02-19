@@ -8,7 +8,7 @@ import {
   Linking
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import {componentStyle} from '../../styles';
+import {componentStyle} from '../../../styles';
 
 const HobbyTab = (props) => {
   return (

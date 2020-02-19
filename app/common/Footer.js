@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
-import images from '../../images';
+import images from '../images';
 
 const Footer = () => {
   return (

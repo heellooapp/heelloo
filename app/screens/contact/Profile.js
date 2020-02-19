@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Spinner } from '../common';
+import { Spinner } from '../../common';
 import images from '../../images';
 import { firebase } from '../../config';
 import {
@@ -19,7 +19,7 @@ import {
   FavouriteTab,
   HobbyTab,
 } from './tabs';
-import { profileStyles, iphoneX } from '../styles';
+import { profileStyles, iphoneX } from '../../styles';
 
 const styles = profileStyles;
 

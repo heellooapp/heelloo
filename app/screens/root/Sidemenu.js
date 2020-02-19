@@ -10,11 +10,11 @@ import {
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
-import images from '../images/';
-import { Spinner, BubbleScreen, Button } from './common';
+import images from '../../images';
+import { Spinner, BubbleScreen, Button } from '../../common';
 import PropTypes from 'prop-types';
-import { sidemenuStyles } from './styles';
-import Utils from './utils';
+import { sidemenuStyles } from '../../styles';
+// import Utils from '../../utils';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { firebase } from '@react-native-firebase/database';
 

@@ -2,7 +2,6 @@ import React from 'react'
 import { View, Text, Image, StyleSheet } from 'react-native'
 import FastImage from 'react-native-fast-image'
 import { styles, flattenedStyles } from './styles'
-import images from '../../../index';
 
 export default function Message({ side, data, targetUser }) {
   const isLeftSide = side === 'left'

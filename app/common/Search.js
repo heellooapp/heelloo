@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { headerStyles } from '../styles';
-import { UserContext } from '../../contexts';
 
 
 class Search extends Component {

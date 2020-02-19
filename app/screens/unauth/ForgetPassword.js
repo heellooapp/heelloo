@@ -16,12 +16,11 @@ import {
   Spinner,
   Footer,
   BubbleScreen,
-} from '../common';
+  BackBtn,
+} from '../../common';
 import images from '../../images';
 import auth from '@react-native-firebase/auth';
-import styles from './styles';
-import { BackBtn } from '../common/BackBtn';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import styles from '../../styles';
 
 let fields = [
   {

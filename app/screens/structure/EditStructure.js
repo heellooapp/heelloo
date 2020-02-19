@@ -11,15 +11,13 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { ListView } from 'deprecated-react-native-listview';
-
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../../images';
-import { Spinner, Button, BackBtn } from '../common';
+import { Spinner, Button, BackBtn } from '../../common';
 import {firebase} from '../../config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {editStructureStyles} from '../styles';
+import {editStructureStyles} from '../../styles';
 
 const styles = editStructureStyles;
 
