@@ -18,6 +18,10 @@ export default class FirebaseService {
   }
 
   async createMessage({ message, conversationId, sender }) {
+    await this.messageRef.doc(conversationId).set({
+      last_update: new Date(),
+      last_message: message,
+    }, { merge: true });
     await this.messageRef.doc(conversationId).collection('messages').add({
       message,
       sender,

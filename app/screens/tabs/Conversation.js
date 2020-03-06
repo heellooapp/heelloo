@@ -3,10 +3,10 @@ import { View } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { Spinner, FloatButton } from '../../common';
 import { contactStyles } from '../../styles';
-import ContactList from './ContactList';
+import ConversationList from './ConversationList';
 import Utils from '../../utils';
 
-class Contact extends Component {
+class Conversation extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -29,7 +29,7 @@ class Contact extends Component {
   render() {
     return (
       <View style={contactStyles.container}>
-        <ContactList
+        <ConversationList
           openDrawer={this.props.openDrawer}
           isAdmin={this.state.isAdmin}
         />
@@ -44,4 +44,4 @@ class Contact extends Component {
   }
 }
 
-export { Contact };
+export { Conversation };

@@ -2,7 +2,7 @@ import { StyleSheet } from 'react-native'
 
 // import { COLORS } from '../../styles'
 
-const styles = StyleSheet.create({
+const leftStyles = StyleSheet.create({
   container: {
     width: '100%',
     paddingVertical: 3,
@@ -12,45 +12,64 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   textContainer: {
-    maxWidth: 160,
-    // backgroundColor: COLORS.GREY,
-    backgroundColor:'#2A8AED',
-    borderRadius: 40,
+    maxWidth: 300,
+    backgroundColor: '#F8F8F8',
     paddingHorizontal: 15,
     paddingVertical: 12,
-    marginLeft: 10
-  },
-  rightContainer: {
-    justifyContent: 'flex-end',
-    alignItems:'flex-end',
-    flexDirection:'column',
-    paddingVertical: 3,
-  },
-  rightTextContainer: {
-    // backgroundColor: COLORS.PRIMARY,
-    marginRight: 10,
+    minWidth:120,
+
   },
   leftText: {
     textAlign: 'left',
-    color:'white',
+    color: 'black',
   },
   rightText: {
-    textAlign: 'right',
-    color:'white',
+    textAlign: 'left',
+    color: 'black',
   },
   text: {
-    fontSize: 12
+    fontSize: 14
+  },
+  time: {
+    fontSize:10,
+    alignSelf: 'center',
+    marginLeft: 10,
+    color: '#C0C0C0',
   }
+
 })
 
-const flattenedStyles = {
-  container: StyleSheet.flatten([styles.container, styles.rightContainer]),
-  textContainer: StyleSheet.flatten([styles.textContainer, styles.rightTextContainer]),
-  leftText: StyleSheet.flatten([styles.leftText, styles.text]),
-  rightText: StyleSheet.flatten([styles.rightText, styles.text])
+const rightStyles = {
+  container: {
+    width: '100%',
+    paddingVertical: 3,
+    paddingHorizontal: 10,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+    paddingVertical: 3,
+  },
+  textContainer: {
+    maxWidth: 160,
+    backgroundColor: '#F8F8F8',
+    paddingHorizontal: 15,
+    paddingVertical: 12,
+    minWidth:120,
+  },
+  rightText: {
+    textAlign: 'left',
+    color: 'black',
+  },
+  time: {
+    fontSize:10,
+    alignSelf: 'center',
+    marginRight: 10,
+    color: '#C0C0C0',
+  }
 }
 
 export {
-  styles,
-  flattenedStyles
+  leftStyles,
+  rightStyles
 }

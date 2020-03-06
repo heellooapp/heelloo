@@ -20,6 +20,7 @@ import {
   HobbyTab,
 } from './tabs';
 import { profileStyles, iphoneX } from '../../styles';
+import FastImage from 'react-native-fast-image';
 
 const styles = profileStyles;
 
@@ -187,7 +188,7 @@ class Profile extends Component {
     let { user } = this.state;
     if (user.profileImg) {
       return (
-        <Image style={styles.profileImage} source={{ uri: user.profileImg }} />
+        <FastImage style={styles.profileImage} source={{ uri: user.profileImg }} />
       );
     } else {
       return <Image source={images.avatar} style={styles.profileImage} />;
@@ -287,11 +288,11 @@ class Profile extends Component {
             color: '#5498F4',
             action: this.OnEmailPress,
           })}
-          {this.renderBtn({
+          {/* {this.renderBtn({
             img: images.chat,
             color: '#5498F4',
             action: this.OnChatPress,
-          })}
+          })} */}
         </View>
         <View style={styles.tabContainer}>
           {this.tabItem({ name: 'info', img: images.info, title: 'Contact' })}

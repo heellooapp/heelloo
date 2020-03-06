@@ -3,10 +3,9 @@ import {
   Text,
   View,
   Image,
-  AsyncStorage,
-  StatusBar,
   ScrollView,
   KeyboardAvoidingView,
+  TouchableOpacity,
 } from 'react-native';
 import {
   Card,
@@ -15,12 +14,12 @@ import {
   Button,
   Spinner,
   Footer,
-  BubbleScreen,
-  BackBtn,
 } from '../../common';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 import images from '../../images';
 import auth from '@react-native-firebase/auth';
-import styles from '../../styles';
+import styles from './styles';
 
 let fields = [
   {
@@ -105,8 +104,17 @@ class ForgetPassword extends Component {
     const { viewStyle, titleNavbar } = styles;
     return (
       <View style={viewStyle}>
-        <BackBtn />
-        <Text style={titleNavbar}>ADD CONTACT</Text>
+        <TouchableOpacity
+          style={{ padding: 4 }}
+          onPress={() => this.props.change('login') }>
+          <Icon
+            name="md-arrow-back"
+            size={25}
+            color="#FFF"
+            style={{ marginLeft: 15, alignSelf: 'center' }}
+          />
+        </TouchableOpacity>
+        <Text style={titleNavbar}>FORGET PASSWORD</Text>
         <View style={{ width: 25, height: 25 }} />
       </View>
     );
@@ -115,6 +123,8 @@ class ForgetPassword extends Component {
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
+        {this.header()}
+
         <KeyboardAvoidingView
           behavior={'padding'}>
           <View style={{ flex: 1 }}></View>

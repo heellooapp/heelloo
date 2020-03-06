@@ -52,6 +52,13 @@ class Login extends Component {
     this.onLogin = this.onLogin.bind(this);
 
   }
+  componentDidMount() {
+    this._ismounted = true;
+  }
+
+  componentWillUnmount() {
+    this._ismounted = false;
+  }
 
   isValid({ name, error }) {
     if (this.state[name].length === 0) {
@@ -73,19 +80,21 @@ class Login extends Component {
   }
 
   authSuccess(password) {
-    this.setState({ loading: false });
+    if (this._ismounted)
+      this.setState({ loading: false });
     AsyncStorage.setItem('USER', password);
   }
 
   forgotPassword = () => {
-    Actions.forgetPassword({});
+    this.props.change('forgetpassword');
   }
 
   authFailed() {
-    this.setState({
-      loading: false,
-      error: 'Authentication Failed',
-    });
+    if (this._ismounted)
+      this.setState({
+        loading: false,
+        error: 'Authentication Failed',
+      });
   }
 
   renderButton() {

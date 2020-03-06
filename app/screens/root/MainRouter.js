@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, Image } from 'react-native';
 import { Router, Scene, Actions, ActionConst } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Contact, Anniversary } from '../tabs';
+import { Contact, Anniversary, Conversation, Bravo } from '../tabs';
 import { NewContact, EditContact, Profile } from '../contact';
 import { NewStructure, EditStructure, Structure } from '../structure';
 import Chat from '../conversations/chat';
@@ -93,13 +93,13 @@ class MainRouter extends Component {
               key="tabBravo"
               Iconname={require('../../images/tabclap.png')}
               icon={TabIcon}
-              component={Anniversary}
+              component={Bravo}
               {...this.props} />
             <Scene
               key="tabChat"
               Iconname={require('../../images/tabchat.png')}
               icon={TabIcon}
-              component={Anniversary}
+              component={Conversation}
               {...this.props} />
           </Scene>
 

@@ -337,9 +337,9 @@ class AnniversaryList extends Component {
   renderContent() {
     if (this.state.loading) return <Spinner />;
     return (
-      <ScrollView>
+      <View>
         <FlatList
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
           data={this.state.anniversaryList}
           renderItem={item => this._renderRow(item)}
         />
@@ -350,7 +350,7 @@ class AnniversaryList extends Component {
           ]}>
           {months[currentDate.getMonth()].toUpperCase()} UPCOMING EVENTS
         </Text>
-      </ScrollView>
+      </View>
     );
   }
 

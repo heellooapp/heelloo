@@ -8,8 +8,6 @@ import { BackBtn } from '../../../common';
 import Input from '../Input'
 import Message from '../Message'
 import FastImage from 'react-native-fast-image'
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview'
 
 import { chatRoomStyles as styles } from '../styles'
 
@@ -31,9 +29,15 @@ export default class Chat extends Component {
   async componentDidMount() {
     const user = await firebase.auth().currentUser;
     this.setState({ user: user });
-    firebase.database().ref().child('users').child(this.props.uid).once('value').then((snapshot) => {
-      this.setState({ targetUser: snapshot.val() });
-    });
+
+    firebase.database().ref()
+      .child('users')
+      .child(this.props.uid)
+      .once('value').then((snapshot) => {
+        this.setState({ targetUser: snapshot.val() });
+      });
+
+    this.users_array = [user.uid, this.props.uid];
 
     if (user.uid > this.props.uid) {
       this.conversationId = this.props.uid + user.uid;
@@ -41,6 +45,7 @@ export default class Chat extends Component {
     else {
       this.conversationId = user.uid + this.props.uid;
     }
+
     this.listen();
   }
 
@@ -49,6 +54,14 @@ export default class Chat extends Component {
   }
 
   listen = () => {
+
+    firebaseService.messageRef.doc(this.conversationId)
+      .set({
+        users: this.users_array
+      }, {
+        merge: true
+      });
+
     this.unsubscribe = firebaseService.messageRef
       .doc(this.conversationId)
       .collection('messages')
@@ -69,7 +82,6 @@ export default class Chat extends Component {
   }
 
   showAvatar = () => {
-    // const { listProfileImage } = contactListStyles;
     const { targetUser } = this.state;
     if (targetUser && targetUser.profileImg) {
       return <FastImage source={{ uri: targetUser.profileImg }} style={styles.profileHeader} />;

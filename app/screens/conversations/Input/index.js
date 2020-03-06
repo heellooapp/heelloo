@@ -29,15 +29,14 @@ export default function Input(props) {
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.input} value={message} onChangeText={setMessage} placeholder="Aa" />
+        <TextInput style={styles.input} value={message} onChangeText={setMessage} placeholder="Type a message..." />
       </View>
       <SpinnerButton
         buttonStyle={styles.spinnerButton}
         onPress={handlePress}
         isLoading={isLoading}
         indicatorCount={10}
-        spinnerType='PacmanIndicator'
-      >
+        spinnerType='PulseIndicator'>
         <Button text="Send" onPress={handlePress} disabled={isLoading} />
       </SpinnerButton>
     </View>

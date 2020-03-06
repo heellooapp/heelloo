@@ -1,2 +1,2 @@
-export COLORS from './colors'
-export chatRoomStyles from './chat-room'
+export COLORS from './colors';
+export chatRoomStyles from './chat-room';

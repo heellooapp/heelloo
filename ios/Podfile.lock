@@ -502,7 +502,7 @@ PODS:
   - React-jsinspector (0.61.5)
   - react-native-image-picker (1.1.0):
     - React
-  - react-native-safe-area-context (0.7.2):
+  - react-native-safe-area-context (0.7.3):
     - React
   - React-RCTActionSheet (0.61.5):
     - React-Core/RCTActionSheetHeaders (= 0.61.5)
@@ -547,42 +547,42 @@ PODS:
     - React
     - SDWebImage (~> 5.0)
     - SDWebImageWebPCoder (~> 0.2.3)
-  - RNFBApp (6.2.0):
+  - RNFBApp (6.3.4):
     - Firebase/Core (~> 6.13.0)
     - React
-  - RNFBAuth (6.2.0):
+  - RNFBAuth (6.3.4):
     - Firebase/Auth (~> 6.13.0)
     - Firebase/Core (~> 6.13.0)
     - React
     - RNFBApp
-  - RNFBDatabase (6.2.0):
+  - RNFBDatabase (6.3.4):
     - Firebase/Core (~> 6.13.0)
     - Firebase/Database (~> 6.13.0)
     - React
     - RNFBApp
-  - RNFBFirestore (6.2.0):
+  - RNFBFirestore (6.3.4):
     - Firebase/Core (~> 6.13.0)
     - Firebase/Firestore (~> 6.13.0)
     - React
     - RNFBApp
-  - RNFBFunctions (6.2.0):
+  - RNFBFunctions (6.3.4):
     - Firebase/Functions (~> 6.13.0)
     - React
     - RNFBApp
-  - RNFBMessaging (6.2.0):
+  - RNFBMessaging (6.3.4):
     - Firebase/Messaging (~> 6.13.0)
     - React
     - RNFBApp
-  - RNFBStorage (6.2.0):
+  - RNFBStorage (6.3.4):
     - Firebase/Core (~> 6.13.0)
     - Firebase/Storage (~> 6.13.0)
     - React
     - RNFBApp
-  - RNGestureHandler (1.5.6):
+  - RNGestureHandler (1.6.0):
     - React
   - RNReanimated (1.7.0):
     - React
-  - RNScreens (2.0.0-beta.1):
+  - RNScreens (2.0.0-beta.6):
     - React
   - RNVectorIcons (6.6.0):
     - React
@@ -807,7 +807,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
   react-native-image-picker: 7a85cf7b0a53845f03ae52fb4592a2748ded069b
-  react-native-safe-area-context: 4b3d1b9ebb040a4814a222703e7434b20c95fcf5
+  react-native-safe-area-context: e200d4433aba6b7e60b52da5f37af11f7a0b0392
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
   React-RCTBlob: d89293cc0236d9cb0933d85e430b0bbe81ad1d72
@@ -821,16 +821,16 @@ SPEC CHECKSUMS:
   rn-fetch-blob: f525a73a78df9ed5d35e67ea65e79d53c15255bc
   RNCMaskedView: a88953beefbd347a29072d9eba90e42945fe291e
   RNFastImage: 9b0c22643872bb7494c8d87bbbb66cc4c0d9e7a2
-  RNFBApp: 5b215aacc09105a1761de31b9a0eb2abcce06253
-  RNFBAuth: 61673c0d38ce225c315e7be13a1b494904baedd2
-  RNFBDatabase: 267f476097111054553ecb99208201945961efa5
-  RNFBFirestore: 5de4ae898df51a3ecc16a45db15019836c5cec87
-  RNFBFunctions: 04ab4f777106d8a20ed1c9c2116f24014c23d61a
-  RNFBMessaging: be0b936394416ec5503add603f2c0a641c353063
-  RNFBStorage: 336c47daa7ba460fcac8b61054f68130c618cfaa
-  RNGestureHandler: 911d3b110a7a233a34c4f800e7188a84b75319c6
+  RNFBApp: 7d4006751de8bb5cafa2e8d2e7d94ee250df81db
+  RNFBAuth: ed8b865db45f7ded9dbf535e390cba2ba672aede
+  RNFBDatabase: 1201eb94eff3ab457d3e898fb5c347ddc67e00db
+  RNFBFirestore: 04c1eb90463c208ee072988d463c74bec09d08c1
+  RNFBFunctions: 6975565f0abcc68d9731d05b78778f003db0eca5
+  RNFBMessaging: 51cc7f6beaf4c4feac6f18ea941bba5854e3d9c6
+  RNFBStorage: 3628afb1f3dd0b3395fc15c95967b9f080897aec
+  RNGestureHandler: dde546180bf24af0b5f737c8ad04b6f3fa51609a
   RNReanimated: 031fe8d9ea93c2bd689a40f05320ef9d96f74d7f
-  RNScreens: 9d9519aa32b6bc9c4a3ab8ea4d3d86932aa29588
+  RNScreens: c2c8bdde0146f16eb6bf092dd7485534851f2711
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   SDWebImage: 29c340dbdcef342bb13125553f4e19ce056b07a7
   SDWebImageWebPCoder: 947093edd1349d820c40afbd9f42acb6cdecd987

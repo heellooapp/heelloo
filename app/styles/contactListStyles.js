@@ -63,6 +63,12 @@ const contactListStyles = {
     resizeMode: 'cover',
     borderRadius: 55 / 2,
   },
+  chatProfileImage: {
+    width: 40,
+    height: 40,
+    resizeMode: 'cover',
+    borderRadius: 40 / 2,
+  },
   middleSectionStyle: {
     marginLeft: 12,
     justifyContent: 'center',
@@ -108,4 +114,4 @@ const contactListStyles = {
   }
 };
 
-export {contactListStyles};
+export { contactListStyles };

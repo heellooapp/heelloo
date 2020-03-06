@@ -16,9 +16,15 @@ class Anniversary extends Component {
   }
 
   componentDidMount() {
+    this._mounted = true;
     Utils.isAdmin((err, val) => {
-      this.setState({isAdmin: val});
+      if (this._mounted)
+        this.setState({ isAdmin: val });
     });
+  }
+  componentWillUnmount() {
+    this._mounted = false;
+    this.unsubscribe();
   }
 
   render() {

@@ -17,8 +17,8 @@ export default StyleSheet.create({
     paddingVertical: 10,
     paddingLeft: 20,
 
-    borderTopWidth: 1,
-    borderTopColor: COLORS.GREY
+    // borderTopWidth: 1,
+    // borderTopColor: COLORS.GREY,
   },
   viewStyle: {
     backgroundColor: '#2a8aed',
