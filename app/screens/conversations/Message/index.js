@@ -17,8 +17,13 @@ export default function Message({ side, data, targetUser }) {
 
   let dateToFormat = (new Date(data.created_at._seconds * 1000));
   // let ago = moment(dateToFormat).fromNow();
-  let ago = moment(dateToFormat).format('LT');
-
+  let ago;
+  if (moment(dateToFormat).isSame(new Date(), 'day'))
+    ago = moment(dateToFormat).format('LT');
+  else if (moment(dateToFormat).isSame(new Date(), 'month'))
+    ago = moment(dateToFormat).fromNow() + ', ' + moment(dateToFormat).format('LT');
+  else
+    ago = moment(dateToFormat).format('lll');
   if (isLeftSide)
     return (
       <View style={leftStyles.container}>

@@ -24,7 +24,7 @@ class Anniversary extends Component {
   }
   componentWillUnmount() {
     this._mounted = false;
-    this.unsubscribe();
+    // this.unsubscribe();
   }
 
   render() {

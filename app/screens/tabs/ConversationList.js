@@ -77,10 +77,7 @@ class ConversationList extends Component {
           this.setState({ lastchats: lastchats });
         });
     }
-
     this.usersRef.on('value', this.handleUsers);
-
-
   }
 
   handleUsers = snapshot => {
