@@ -124,10 +124,7 @@ class Sidemenu extends Component {
 
   profileOnPress() {
     this.context.drawer.close();
-    if (this.state.user)
-      Actions.profile({ uid: this.state.user.uid });
-    else
-      Actions.profile({ uid: this.uid });
+    Actions.profile({ uid: this.uid });
   }
 
   showError() {

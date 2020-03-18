@@ -83,11 +83,13 @@ class Search extends Component {
           {/* <View style={headerStyles.notification} /> */}
         </TouchableOpacity>
         {this.renderField()}
-        <TouchableOpacity
-          style={headerStyles.menuContainer}
-          onPress={this.props.toggleSearch}>
-          {this.renderIcon()}
-        </TouchableOpacity>
+        {!this.props.hide &&
+          < TouchableOpacity
+            style={headerStyles.menuContainer}
+            onPress={this.props.toggleSearch}>
+            {this.renderIcon()}
+          </TouchableOpacity>
+        }
       </View>
     );
   }

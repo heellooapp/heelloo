@@ -16,7 +16,10 @@ const leftStyles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
     paddingHorizontal: 15,
     paddingVertical: 12,
-    minWidth:120,
+    minWidth: 120,
+    borderWidth: 1,
+    borderColor: '#D3D3D3',
+    borderRadius: 5,
 
   },
   leftText: {
@@ -31,7 +34,7 @@ const leftStyles = StyleSheet.create({
     fontSize: 14
   },
   time: {
-    fontSize:10,
+    fontSize: 10,
     alignSelf: 'center',
     marginLeft: 10,
     color: '#C0C0C0',
@@ -39,7 +42,7 @@ const leftStyles = StyleSheet.create({
 
 })
 
-const rightStyles = {
+const rightStyles = StyleSheet.create({
   container: {
     width: '100%',
     paddingVertical: 3,
@@ -52,22 +55,25 @@ const rightStyles = {
   },
   textContainer: {
     maxWidth: 160,
-    backgroundColor: '#F8F8F8',
+    // backgroundColor: '#F8F8F8',
+    backgroundColor: '#7DB6F3',
     paddingHorizontal: 15,
     paddingVertical: 12,
-    minWidth:120,
+    minWidth: 120,
+    borderRadius: 5,
+    borderTopRightRadius: 0,
   },
   rightText: {
     textAlign: 'left',
-    color: 'black',
+    color: 'white',
   },
   time: {
-    fontSize:10,
+    fontSize: 10,
     alignSelf: 'center',
     marginRight: 10,
     color: '#C0C0C0',
   }
-}
+});
 
 export {
   leftStyles,

@@ -18,8 +18,6 @@ import { firebase } from '../../config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { newContactStyles } from '../../styles';
 
-const createUserURL =
-  'https://us-central1-teamon-68ca0.cloudfunctions.net/createUser';
 const styles = newContactStyles;
 const obj = [
   { name: 'firstName', error: 'Fill First name' },

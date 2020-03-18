@@ -131,8 +131,8 @@ class AnniversaryList extends Component {
     let year = currentDate.getFullYear();
 
     filteredData = contactList.filter(list => {
-      let ad = new Date(list.anniversary.firstDay);
-      let bd = new Date(list.anniversary.birthday);
+      let ad = new Date(list.anniversary ? list.anniversary.firstDay : null);
+      let bd = new Date(list.anniversary ? list.anniversary.birthday : null);
 
       if (
         (ad.getFullYear() < year &&
@@ -309,7 +309,7 @@ class AnniversaryList extends Component {
                   <View style={styles.mainContainer}>
                     <View style={styles.blueCircle}>
                       <Text style={(styles.dateWorkBold, styles.whiteTextBold)}>
-                        {new Date(item.anniversary.firstDay).getDate()}
+                        {item.anniversary && new Date(item.anniversary.firstDay).getDate()}
                       </Text>
                       <Text style={(styles.dateWorktext, styles.whiteText)}>
                         {item.anniversary.firstDay && months[

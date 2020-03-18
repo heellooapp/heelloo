@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, Dimensions, Image } from 'react-native';
 import { Router, Scene, Actions, ActionConst } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { Icon as MaterialIcon } from 'react-native-vector-icons/MaterialIcons';
+
 import { Contact, Anniversary, Conversation, Bravo } from '../tabs';
 import { NewContact, EditContact, Profile } from '../contact';
 import { NewStructure, EditStructure, Structure } from '../structure';
@@ -11,6 +13,7 @@ import { Login, ForgetPassword } from '../unauth';
 // import images from '../../images';
 // import { firebase } from '../config';
 import { routerStyles, iphoneX } from '../../styles';
+import { AddBravo } from '../bravo';
 
 // import Utils from './utils';
 
@@ -26,11 +29,14 @@ const TabIcon = ({ focused, title, Iconname }) => {
           width: width * 0.25,
         },
       ]}>
-      <Image
-        source={Iconname}
+      <Icon
+        name={Iconname}
+        size={40}
         style={[
           routerStyles.tabIconStyle,
           { tintColor: focused ? '#FFF' : '#000' },
+          { color: focused ? '#FFF' : '#000' },
+
         ]}
       />
       <Text
@@ -77,7 +83,7 @@ class MainRouter extends Component {
             tabBarStyle={routerStyles.tabBarStyle}>
             <Scene
               key="tabContact"
-              Iconname={require('../../images/contact.png')}
+              Iconname="ios-contacts"
               icon={TabIcon}
               {...this.props}
               wrap={false}
@@ -85,19 +91,19 @@ class MainRouter extends Component {
               initial={true} />
             <Scene
               key="tabAnniversary"
-              Iconname={require('../../images/anniversary.png')}
+              Iconname={'ios-happy'}
               icon={TabIcon}
               component={Anniversary}
               {...this.props} />
             <Scene
               key="tabBravo"
-              Iconname={require('../../images/tabclap.png')}
+              Iconname={'ios-medal'}
               icon={TabIcon}
               component={Bravo}
               {...this.props} />
             <Scene
               key="tabChat"
-              Iconname={require('../../images/tabchat.png')}
+              Iconname={'ios-chatboxes'}
               icon={TabIcon}
               component={Conversation}
               {...this.props} />
@@ -153,6 +159,11 @@ class MainRouter extends Component {
           <Scene
             key="forgetPassword"
             component={ForgetPassword}
+            hideNavBar
+          />
+          <Scene
+            key="bravo"
+            component={AddBravo}
             hideNavBar
           />
         </Scene>

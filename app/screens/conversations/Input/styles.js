@@ -23,6 +23,7 @@ export default StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 20,
     backgroundColor:'#F8F8F8',
+    color:'black'
   },
   spinnerButton: {
     height: 40,

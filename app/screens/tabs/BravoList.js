@@ -26,21 +26,7 @@ class BravoList extends Component {
       toggleSearchValue: false,
     };
 
-    // firebase.database().ref().child('bravo').on('value', (snapshot) => {
-    //   console.log(snapshot);
-    // });
-
-    // firestore().collection("bravo").get().then(querySnapshot => {
-    //   querySnapshot.docs.map(doc => {
-    //     doc.data().user.get().then((res) => {
-    //       console.log(res.data());
-    //     });
-    //     // console.log('LOG 1', doc.data());
-    //     return doc.data();
-    //   });
-    // });
     this.usersRef = this.getRef().child('users');
-
   }
 
   componentWillUnmount() {
@@ -51,8 +37,11 @@ class BravoList extends Component {
     return firebase.database().ref();
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.usersRef.on('value', this.handleUsers);
+    const user = await firebase.auth().currentUser;
+    this.setState({ user: user });
+
   }
 
   handleUsers = snapshot => {
@@ -77,15 +66,16 @@ class BravoList extends Component {
   render() {
     // if (this.state.loading) return <Spinner />;
     return (
-      <View style={{ flex: 1, backgroundColor: 'red' }}>
+      <View style={{ flex: 1 }}>
         <Search
+          hide
           title="Bravo"
           toggleSearchValue={this.state.toggleSearchValue}
           toggleSearch={this.toggleSearch}
           searchValue={this.state.searchValue}
           onChangeText={searchValue => this.onSearch(searchValue)}
         />
-        <TabBravo users={this.state.contactList} />
+        <TabBravo users={this.state.contactList} currentUser={this.state.user} />
       </View>
     );
   }

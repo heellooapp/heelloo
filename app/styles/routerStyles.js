@@ -5,7 +5,6 @@ const routerStyles = {
     backgroundColor: 'transparent',
     height: 70,
     shadowColor: '#000',
-    backgroundColor: 'red',
     shadowOffset: { width: 1, height: 4 },
     shadowOpacity: 0.4,
     ...ifIphoneX({

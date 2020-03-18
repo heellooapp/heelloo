@@ -13,6 +13,7 @@ import {
   FlatList,
 } from 'react-native';
 import { contactListStyles } from '../../styles';
+import { conversationListStyles } from '../../styles';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
@@ -144,7 +145,7 @@ class ConversationList extends Component {
       nameStyle,
       positionStyle,
       listIconStyle,
-    } = contactListStyles;
+    } = conversationListStyles;
     let ago = '';
     if (rowData.item.last_update) {
       dateToFormat = (new Date(rowData.item.last_update._seconds * 1000));
@@ -159,11 +160,11 @@ class ConversationList extends Component {
           <View style={listItemName}>
             <View style={middleSectionStyle}>
               <Text style={nameStyle}>
-                {rowData.item.firstName} {rowData.item.lastname}
+                {rowData.item.firstName}
               </Text>
-              <Text style={positionStyle}>{rowData.item.last_message}</Text>
+              <Text style={positionStyle}>{ago}</Text>
             </View>
-            <Text style={positionStyle}>{ago}</Text>
+            <Text style={positionStyle}>{rowData.item.last_message}</Text>
           </View>
         </View>
       </TouchableHighlight>
@@ -230,7 +231,7 @@ class ConversationList extends Component {
       <View>
         <Search
           title="Conversation"
-          toggleSearchValue={toggleSearchValue}
+          toggleSearchValue={true}
           toggleSearch={this.toggleSearch}
           searchValue={this.state.searchValue}
           onChangeText={searchValue => this.onSearch(searchValue)}
@@ -241,13 +242,6 @@ class ConversationList extends Component {
           style={{ marginBottom: Platform.os == 'android' ? 50 : 70 }}
           data={mergedData}
           renderItem={rowData => this._renderRow(rowData)}
-        // closeOnRowPress={true}
-        // enableEmptySections={true}
-        // disableLeftSwipe={this.requireAdmin()}
-        // stopLeftSwipe={this.leftSwipeSize()}
-        // stopRightSwipe={this.rightSwipeSize()}
-        // leftOpenValue={this.leftSwipeSize()}
-        // rightOpenValue={this.rightSwipeSize()}
         />
       </View>
     );

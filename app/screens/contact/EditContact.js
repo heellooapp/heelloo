@@ -12,6 +12,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
+  KeyboardAvoidingView
 } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -25,7 +26,7 @@ import images from '../../images';
 import DatePicker from 'react-native-datepicker';
 import ActionSheet from 'react-native-action-sheet';
 import Toast, { DURATION } from 'react-native-easy-toast';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { editContactStyles } from '../../styles';
 import { ModalWrapper, ModalWrapperClose } from './modal';
 
@@ -99,7 +100,20 @@ class EditContact extends Component {
   getRef() {
     return database().ref();
   }
-
+  saveAll = () => {
+    const { firstName, lastname, phone, position, firstDay, birthday } = this.state;
+    this.setState({ loading: true });
+    this.userRef.update({
+      firstName,
+      lastname,
+      phone,
+      position,
+      'anniversary/firstDay': firstDay,
+      'anniversary/birthday': birthday,
+    }, (error) => {
+      this.saveInfo();
+    });
+  }
   handleUser = snapshot => {
     val = snapshot.val() || {};
     user = val;
@@ -113,6 +127,7 @@ class EditContact extends Component {
       lastname: user.lastname,
       position: user.position,
       parent: user.structure,
+      selectedItems: [user.structure],
       firstDay:
         user.anniversary && user.anniversary.firstDay
           ? user.anniversary.firstDay
@@ -125,6 +140,31 @@ class EditContact extends Component {
     });
   };
 
+  saveInfo = () => {
+    const { nickname, drink, snack, food,
+      music, sport,
+      facebook, instagram,
+      linkedin, twitter, skype, gender, info, interest } = this.state;
+
+    this.userInfoRef.update({
+      nickname,
+      'favourite/drink': drink,
+      'favourite/snack': snack,
+      'favourite/food': food,
+      'favourite/music': music,
+      'favourite/sport': sport,
+      gender,
+      info,
+      interest,
+      'social/facebook': facebook,
+      'social/instagram': instagram,
+      'social/linkedin': linkedin,
+      'social/twitter': twitter,
+      'social/skype': skype,
+    }, (error) => {
+      this.setState({ loading: false });
+    });
+  }
   handleInfo = snapshot => {
     val = snapshot.val() || {};
     info = val;
@@ -539,9 +579,13 @@ class EditContact extends Component {
             <Icon name="md-create" color="#FFF" size={15} />
           </TouchableOpacity>
         </View>
+        <TouchableOpacity onPress={this.saveAll} style={styles.close}>
+          <Icon name="md-checkmark" size={30} color="#000" />
+        </TouchableOpacity>
       </View>
     );
   }
+
 
   showArrowIcon(collapse) {
     let icon = collapse ? 'ios-arrow-up' : 'ios-arrow-down';
@@ -598,6 +642,9 @@ class EditContact extends Component {
   onSelectedItemsChange = (selectedItems) => {
     if (selectedItems.length > 0)
       this.setState({ parent: selectedItems[0], selectedItems: selectedItems });
+    console.log(selectedItems[0]);
+    this.updateStructure(selectedItems[0]);
+
   };
 
   renderPicker({ label, name, action }) {
@@ -912,17 +959,19 @@ class EditContact extends Component {
     if (this.state.loading || this.state.loadingUser) return <Spinner />;
     let sections = this.getSections();
     return (
-      <KeyboardAwareScrollView behavior="padding" style={styles.mainContainer}>
+      <KeyboardAvoidingView behavior="padding" style={styles.mainContainer}>
         {this.renderHeader()}
         {!this.state.loading ? this.renderWrappers() : null}
-        {sections}
+        <ScrollView>
+          {sections}
+        </ScrollView>
         <Toast
           ref="toast"
           style={styles.toast}
           textStyle={styles.toastText}
           positionValue={60}
         />
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingView>
     );
   }
 }

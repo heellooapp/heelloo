@@ -62,6 +62,7 @@ const newContactStyles = {
     flex: 1,
     fontFamily: 'Montserrat-Light',
     fontSize: 13,
+    color:'black',
   },
   errorText: {
     textAlign: 'center',

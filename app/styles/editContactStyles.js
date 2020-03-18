@@ -7,20 +7,24 @@ const editContactStyles = {
     backgroundColor: '#FFF',
   },
   collapseView: {
-    flex: 1,
+    // flex: 1,
+    backgroundColor:'red',
   },
   header: {
     marginTop: 35,
     marginBottom: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection:'row'
+    // alignItems: 'center',
+    // alignItems:''
   },
   close: {
-    position: 'absolute',
+    // position: 'absolute',
     padding: 4,
     top: 0,
     left: 0,
     marginLeft: 15,
+    marginRight:15,
   },
   profileImg: {
     width: 90,
@@ -81,6 +85,7 @@ const editContactStyles = {
     height: Platform.OS === 'android' ? 40 : 20,
     fontSize: 14,
     fontFamily: 'Montserrat-Regular',
+    color:'black',
   },
   labelStyle: {
     fontFamily: 'Montserrat-Light',

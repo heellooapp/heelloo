@@ -34,12 +34,12 @@ class Bravo extends Component {
           openDrawer={this.props.openDrawer}
           isAdmin={this.state.isAdmin}
         />
-        {this.state.isAdmin && (
-          <FloatButton
-            onContactPress={() => Actions.newContact()}
-            onStructurePress={() => Actions.newStructure()}
-          />
-        )}
+        <FloatButton
+          isAdmin={this.state.isAdmin}
+          onBravoPress={() => Actions.bravo()}
+          onContactPress={() => Actions.newContact()}
+          onStructurePress={() => Actions.newStructure()}
+        />
       </View>
     );
   }

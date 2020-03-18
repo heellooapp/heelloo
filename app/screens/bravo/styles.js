@@ -17,10 +17,12 @@ export default StyleSheet.create({
     row1: {
         flexDirection: 'row',
         flex: 1,
-        justifyContent: 'space-between',
+        // justifyContent: 'space-between',
+        // alignSelf:'center',
+        marginTop: 8,
     },
     row2: {
-        marginTop: 10,
+        marginTop: 5,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
@@ -29,33 +31,40 @@ export default StyleSheet.create({
         justifyContent: 'space-between',
     },
     honor: {
-        borderRadius: 25,
-        width: 50,
-        height: 50,
+        borderRadius: 10,
+        width: 44,
+        height: 44,
+        // padding: 10,
+        backgroundColor: 'white',
+        // marginRight: 10,
     },
     col1: {
         flex: 1,
         paddingLeft: 20,
-
     },
     smallTitle: {
         color: '#2a8aed',
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
+        textTransform: 'uppercase',
+        fontFamily: 'Montserrat-Medium',
+
     },
     bigTitle: {
         color: '#353A3E',
-        fontSize: 18,
+        fontSize: 14,
         fontWeight: '500',
-
+        // maxWidth: 150,
+        // alignSelf:'stretch',
+        fontFamily: 'Montserrat-Medium',
     },
     description: {
         color: 'grey',
         fontSize: 16,
-        marginTop: 10,
+        // marginTop: 2,
     },
     from: {
         color: 'grey',
-        marginRight: 10,
+        marginRight: 5,
         fontStyle: 'italic'
     },
     fromName: {
@@ -64,7 +73,7 @@ export default StyleSheet.create({
     },
     time: {
         color: 'grey',
-        fontSize: 16,
+        fontSize: 12,
     }
 
 });

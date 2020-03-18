@@ -35,6 +35,8 @@ class Conversation extends Component {
         />
         {this.state.isAdmin && (
           <FloatButton
+            isAdmin={this.state.isAdmin}
+            onBravoPress={() => Actions.bravo()}
             onContactPress={() => Actions.newContact()}
             onStructurePress={() => Actions.newStructure()}
           />

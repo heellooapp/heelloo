@@ -6958,7 +6958,7 @@ react-native-modal-wrapper@^3.1.1:
   dependencies:
     react-native-keyboard-spacer "^0.4.1"
 
-react-native-modal@^11.5.3:
+react-native-modal@^11.5.4:
   version "11.5.4"
   resolved "https://registry.yarnpkg.com/react-native-modal/-/react-native-modal-11.5.4.tgz#96252895cd10f96a42d3f4884feddda8a9652dde"
   integrity sha512-3wPBtba2maa4TczV1MeBv/M/8qcipxfOr+HG5pKF7qHmH5MlfaF22OmRhg1ioSN7+rkRkF/gvYIGQOufpI7emQ==

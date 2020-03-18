@@ -1,9 +1,9 @@
-import React, {Component} from 'react';
-import {View} from 'react-native';
-import {Actions} from 'react-native-router-flux';
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 import ActionButton from 'react-native-action-button';
-import {Spinner, FloatButton} from '../../common';
-import {anniversaryStyles} from '../../styles';
+import { Spinner, FloatButton } from '../../common';
+import { anniversaryStyles } from '../../styles';
 import AnniversaryList from './AnniversaryList';
 import Utils from '../../utils';
 
@@ -28,21 +28,23 @@ class Anniversary extends Component {
   }
 
   render() {
-    if (this.state.loading) return <Spinner/>;
+    if (this.state.loading) return <Spinner />;
     return (
       <View style={anniversaryStyles.container}>
-        <AnniversaryList 
+        <AnniversaryList
           openDrawer={this.props.openDrawer}
           isAdmin={this.state.isAdmin} />
-        {this.state.isAdmin && (
+        {this.state.isAdmin &&
           <FloatButton
+            isAdmin={this.state.isAdmin}
+            onBravoPress={() => Actions.bravo()}
             onContactPress={() => Actions.newContact()}
             onStructurePress={() => Actions.newStructure()}
           />
-        )}
+        }
       </View>
     );
   }
 }
 
-export {Anniversary};
+export { Anniversary };

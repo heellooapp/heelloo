@@ -36,7 +36,7 @@ class Profile extends Component {
       loadingInfo: true,
       tabs: 'info',
     };
-
+    console.log(this.props.uid);
     this.userRef = this.getRef().child(`/users/${this.props.uid}`);
     this.infoRef = this.getRef().child(`/userInfo/${this.props.uid}`);
     this.structureRef = this.getRef().child(`/structures/`);
@@ -133,9 +133,8 @@ class Profile extends Component {
   }
 
   showEditBtn() {
-    let user = this.state.user;
     let uid = firebase.auth().currentUser.uid;
-    if (user.uid == uid || this.props.isAdmin) {
+    if (this.props.uid == uid || this.props.isAdmin) {
       return (
         <TouchableOpacity onPress={this.OnEditPress} style={styles.editBtn}>
           <Icon
@@ -288,11 +287,11 @@ class Profile extends Component {
             color: '#5498F4',
             action: this.OnEmailPress,
           })}
-          {/* {this.renderBtn({
+          {this.renderBtn({
             img: images.chat,
             color: '#5498F4',
             action: this.OnChatPress,
-          })} */}
+          })}
         </View>
         <View style={styles.tabContainer}>
           {this.tabItem({ name: 'info', img: images.info, title: 'Contact' })}

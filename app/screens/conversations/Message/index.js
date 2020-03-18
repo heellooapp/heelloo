@@ -27,9 +27,9 @@ export default function Message({ side, data, targetUser }) {
   if (isLeftSide)
     return (
       <View style={leftStyles.container}>
-        <View style={styles_.triangleLeft}></View>
+        {/* <View style={styles_.triangleLeft}></View> */}
         <View style={leftStyles.textContainer}>
-          <Text style={styles_.name}>{targetUser.firstName}</Text>
+          <Text style={styles_.nameleft}>{targetUser.firstName}</Text>
           <Text style={leftStyles.leftText}>
             {data.message}
           </Text>
@@ -67,7 +67,7 @@ const styles_ = StyleSheet.create({
     borderRightWidth: 20,
     borderTopWidth: 30,
     borderRightColor: 'transparent',
-    borderTopColor: '#F8F8F8',
+    borderTopColor: '#7DB6F3',
   },
   triangleLeft: {
     width: 0,
@@ -77,9 +77,16 @@ const styles_ = StyleSheet.create({
     borderLeftWidth: 20,
     borderTopWidth: 30,
     borderLeftColor: 'transparent',
-    borderTopColor: '#F8F8F8',
+    borderTopColor: '#D3D3D3',
+    // borderWidth: 1,
   },
   name: {
+    fontSize: 12,
+    color: '#B8B8B8',
+    color: 'white',
+    marginBottom: 10
+  },
+  nameleft: {
     fontSize: 12,
     color: '#B8B8B8',
     marginBottom: 10

@@ -5,6 +5,7 @@ export * from './profileStyles';
 export * from './newContactStyles';
 export * from './editContactStyles';
 export * from './contactListStyles';
+export * from './conversationListStyles'
 export * from './anniversaryStyles';
 export * from './anniversaryListStyles';
 export * from './headerStyles';
