@@ -29,6 +29,7 @@ import Toast, { DURATION } from 'react-native-easy-toast';
 // import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { editContactStyles } from '../../styles';
 import { ModalWrapper, ModalWrapperClose } from './modal';
+import FastImage from 'react-native-fast-image';
 
 const styles = editContactStyles;
 const GenderButtons = ['Male', 'Female', 'Cancel'];
@@ -555,7 +556,7 @@ class EditContact extends Component {
     if (this.state.loadingUser) return;
     if (this.state.profileImg) {
       return (
-        <Image
+        <FastImage
           source={{ uri: this.state.profileImg }}
           style={styles.profileImg}
         />

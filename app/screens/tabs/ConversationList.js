@@ -17,16 +17,14 @@ import { conversationListStyles } from '../../styles';
 import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
-import { SwipeListView } from 'react-native-swipe-list-view';
+// import { SwipeListView } from 'react-native-swipe-list-view';
 import { Spinner, Search } from '../../common';
 import images from '../../images';
 import { firebase } from '../../config';
 import FastImage from 'react-native-fast-image';
-import Moment from 'react-moment';
 import moment from "moment";
 
-const deleteUserURL =
-  'https://us-central1-teamon-68ca0.cloudfunctions.net/deleteUser';
+
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
@@ -78,7 +76,7 @@ class ConversationList extends Component {
           this.setState({ lastchats: lastchats });
         });
     }
-    this.usersRef.on('value', this.handleUsers);
+    this.usersRef.once('value').then(this.handleUsers);
   }
 
   handleUsers = snapshot => {
@@ -96,19 +94,19 @@ class ConversationList extends Component {
   };
 
   toggleSearch = () => {
-    this.setState({
-      searchValue: '',
-      toggleSearchValue: !this.state.toggleSearchValue,
-    });
-    this.onSearch('');
+    // this.setState({
+    //   searchValue: '',
+    //   toggleSearchValue: !this.state.toggleSearchValue,
+    // });
+    // this.onSearch('');
   };
 
   onSearch = (searchValue) => {
-    this.setState({ searchValue });
-    let filteredData = this.filterNotes(searchValue, this.state.db);
-    this.setState({
-      contactList: filteredData,
-    });
+    // this.setState({ searchValue });
+    // let filteredData = this.filterNotes(searchValue, this.state.db);
+    // this.setState({
+    //   contactList: filteredData,
+    // });
   }
 
   filterNotes(searchValue, notes) {
@@ -236,8 +234,8 @@ class ConversationList extends Component {
           searchValue={this.state.searchValue}
           onChangeText={searchValue => this.onSearch(searchValue)}
         />
-        <SwipeListView
-          ref={ref => this.swipeRowRef = ref}
+       
+        <FlatList
           useFlatList={true}
           style={{ marginBottom: Platform.os == 'android' ? 50 : 70 }}
           data={mergedData}

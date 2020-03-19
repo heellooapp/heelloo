@@ -21,7 +21,6 @@ class Search extends Component {
     this.state = {
       name: '',
     };
-    console.log(this.context)
   }
 
   field() {
@@ -36,7 +35,7 @@ class Search extends Component {
           autoFocus
           underlineColorAndroid="transparent"
           value={this.props.searchValue}
-          onChangeText={this.props.onChangeText}
+          // onChangeText={this.props.onChangeText}
           autoCapitalize="words"
         />
       </View>

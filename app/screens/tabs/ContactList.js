@@ -90,8 +90,11 @@ class ContactList extends Component {
   filterNotes(searchValue, notes) {
     let text = searchValue.toString().toLowerCase();
     return notes.filter((n, i) => {
-      let note = n.firstName.toString().toLowerCase();
-      return note.match(text);
+      if ('firstName' in n) {
+        let note = n.firstName.toString().toLowerCase();
+        return note.match(text);
+      }
+      return false;
     });
   }
 

@@ -410,12 +410,12 @@
 				CODE_SIGN_ENTITLEMENTS = TeamOn/TeamOn.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.8;
+				CURRENT_PROJECT_VERSION = 1.2.10;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 994F5XNXMN;
 				INFOPLIST_FILE = TeamON/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2.6;
+				MARKETING_VERSION = 0.2.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -437,11 +437,11 @@
 				CODE_SIGN_ENTITLEMENTS = TeamOn/TeamOn.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1.2.8;
+				CURRENT_PROJECT_VERSION = 1.2.10;
 				DEVELOPMENT_TEAM = 994F5XNXMN;
 				INFOPLIST_FILE = TeamON/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				MARKETING_VERSION = 0.2.6;
+				MARKETING_VERSION = 0.2.7;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",

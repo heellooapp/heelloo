@@ -9,13 +9,10 @@ import { NewContact, EditContact, Profile } from '../contact';
 import { NewStructure, EditStructure, Structure } from '../structure';
 import Chat from '../conversations/chat';
 import { Login, ForgetPassword } from '../unauth';
-
-// import images from '../../images';
-// import { firebase } from '../config';
-import { routerStyles, iphoneX } from '../../styles';
 import { AddBravo } from '../bravo';
 
-// import Utils from './utils';
+import { routerStyles, iphoneX } from '../../styles';
+
 
 const width = Dimensions.get('window').width;
 
@@ -71,8 +68,10 @@ class MainRouter extends Component {
     return (
       <Router
         navigationBarStyle={routerStyles.navbarStyle}
-        titleStyle={routerStyles.titleStyle}>
+        titleStyle={routerStyles.titleStyle}
+      >
         <Scene key="root" hideNavBar>
+
           <Scene
             key="tabbar"
             tabBarPosition="bottom"
@@ -86,7 +85,6 @@ class MainRouter extends Component {
               Iconname="ios-contacts"
               icon={TabIcon}
               {...this.props}
-              wrap={false}
               component={Contact}
               initial={true} />
             <Scene
@@ -95,6 +93,7 @@ class MainRouter extends Component {
               icon={TabIcon}
               component={Anniversary}
               {...this.props} />
+
             <Scene
               key="tabBravo"
               Iconname={'ios-medal'}
@@ -103,6 +102,7 @@ class MainRouter extends Component {
               {...this.props} />
             <Scene
               key="tabChat"
+              type={ActionConst.RESET}
               Iconname={'ios-chatboxes'}
               icon={TabIcon}
               component={Conversation}
@@ -129,7 +129,6 @@ class MainRouter extends Component {
           <Scene
             key="profile"
             component={Profile}
-            title="mongolia"
           // renderBackButton={this.backBtn}
           // hideNavBar
           />
