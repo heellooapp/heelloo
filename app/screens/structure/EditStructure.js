@@ -11,13 +11,12 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import images from '../../images';
 import { Spinner, Button, BackBtn } from '../../common';
-import {firebase} from '../../config';
+import { firebase } from '../../config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import {editStructureStyles} from '../../styles';
+import { editStructureStyles } from '../../styles';
 
 const styles = editStructureStyles;
 
@@ -74,7 +73,7 @@ class EditStructure extends Component {
     let error = this.state.error;
     if (error.length) {
       return (
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <View style={{ justifyContent: 'center', alignItems: 'center' }}>
           <Text style={styles.error}>{this.state.error}</Text>
         </View>
       );
@@ -110,15 +109,15 @@ class EditStructure extends Component {
   saveStructure() {
     val = this.isValidToSave();
     if (val) {
-      let {id, name, parent} = this.state;
+      let { id, name, parent } = this.state;
       this.structureRef.child(id).update({
         name: name,
         parent: parent
       })
-      .then(() => {
-        this.setState({name: '', parent: 0});
-        Actions.pop();
-      });
+        .then(() => {
+          this.setState({ name: '', parent: 0 });
+          this.props.navigation.goBack()
+        });
     }
   }
 
@@ -126,16 +125,16 @@ class EditStructure extends Component {
     val = this.isValidToDelete();
     if (val) {
       this.structureRef.child(this.state.id).remove();
-      Actions.pop();
+      this.props.navigation.goBack()
     }
   }
 
   setError(error) {
-    this.setState({error});
+    this.setState({ error });
   }
 
   renderPicker() {
-    let {structures, parent} = this.state;
+    let { structures, parent } = this.state;
     if (structures === null) return;
     let items = Object.keys(structures).map((s, i) => {
       return (
@@ -147,7 +146,7 @@ class EditStructure extends Component {
       );
     });
     items.unshift(
-      <Picker.Item key={-1} label='' value={0}/>
+      <Picker.Item key={-1} label='' value={0} />
     );
     return (
       <Picker
@@ -162,19 +161,20 @@ class EditStructure extends Component {
   header() {
     const { viewStyle, iconRight, titleNavbar } = styles;
     return (
-    <View style={viewStyle}>
-      <BackBtn />
-      <Text style={titleNavbar}>EDIT STRUCTURE</Text>
-      <TouchableOpacity onPress={this.saveStructure}>
-        <Icon name="md-checkmark" size={30} color="#FFF" style={iconRight}/>
-      </TouchableOpacity>
-    </View>
-  )}
+      <View style={viewStyle}>
+        <BackBtn />
+        <Text style={titleNavbar}>EDIT STRUCTURE</Text>
+        <TouchableOpacity onPress={this.saveStructure}>
+          <Icon name="md-checkmark" size={30} color="#FFF" style={iconRight} />
+        </TouchableOpacity>
+      </View>
+    )
+  }
 
   render() {
     if (this.state.loading) return <Spinner />;
     return (
-      <View style={{flex: 1, backgroundColor: '#FFF'}}>
+      <View style={{ flex: 1, backgroundColor: '#FFF' }}>
         {this.header()}
         <KeyboardAwareScrollView
           behavior="padding"
@@ -185,7 +185,7 @@ class EditStructure extends Component {
             </Text>
             <TextInput
               style={styles.inputStyle}
-              onChangeText={name=> this.setState({name})}
+              onChangeText={name => this.setState({ name })}
               value={this.state.name}
               autoCorrect={false}
               multiline
@@ -197,7 +197,7 @@ class EditStructure extends Component {
             <Text style={styles.titleStyle}>Head department</Text>
           </View>
           {this.renderPicker()}
-          <View style={{flexDirection: 'row'}}>
+          <View style={{ flexDirection: 'row' }}>
             <Button btnColor="#f9536c" onPress={this.deleteStructure}>
               Delete
             </Button>
@@ -209,4 +209,4 @@ class EditStructure extends Component {
   }
 }
 
-export {EditStructure};
+export { EditStructure };

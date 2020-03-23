@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import images from '../../images';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Collapsible from 'react-native-collapsible';

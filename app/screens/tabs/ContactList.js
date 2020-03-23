@@ -13,7 +13,6 @@ import {
   FlatList,
 } from 'react-native';
 import { contactListStyles } from '../../styles';
-import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Communications from 'react-native-communications';
 import { SwipeListView } from 'react-native-swipe-list-view';
@@ -21,6 +20,7 @@ import { Spinner, Search } from '../../common';
 import images from '../../images';
 import { firebase } from '../../config';
 import FastImage from 'react-native-fast-image';
+import { NavigationContext } from '@react-navigation/native';
 
 const deleteUserURL =
   'https://us-central1-teamon-68ca0.cloudfunctions.net/deleteUser';
@@ -28,6 +28,8 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 class ContactList extends Component {
+  static contextType = NavigationContext;
+
   constructor(props) {
     super(props);
 
@@ -116,12 +118,12 @@ class ContactList extends Component {
   }
 
   onPhonePress(rowData) {
-    const { phone, firstName } = rowData;
+    const { phone, firstName } = rowData.item;
     phone && Communications.phonecall(phone.toString(), false);
   }
 
   onEmailPress(rowData) {
-    const email = rowData.email;
+    const email = rowData.item.email;
     email &&
       Communications.email(
         [email.toString()],
@@ -132,15 +134,15 @@ class ContactList extends Component {
       );
   }
 
-  onMessagePress() {
-    const { phone, firstName } = this.state.user;
+  onMessagePress(rowData) {
+    const { phone, firstName } = rowData.item;
     phone &&
       firstName &&
       Communications.text(phone.toString(), `Hi, ${firstName}`);
   }
 
   onEditPress(rowData) {
-    Actions.editContact({ uid: rowData.item.uid });
+    this.context.navigate('EditContact', { uid: rowData.item.uid })
   }
 
   onDeletePress({ rowData, rowMap }) {
@@ -299,7 +301,7 @@ class ContactList extends Component {
   }
 
   onPressListItem(rowData) {
-    Actions.profile({
+    this.context.navigate('Profile', {
       uid: rowData.item.uid,
       isAdmin: this.props.isAdmin,
     });

@@ -83,10 +83,11 @@ class Login extends Component {
     if (this._ismounted)
       this.setState({ loading: false });
     AsyncStorage.setItem('USER', password);
+    // this.props.navigation.navigate('Root');
   }
 
   forgotPassword = () => {
-    this.props.change('forgetpassword');
+    this.props.navigation.navigate('ForgetPassword');
   }
 
   authFailed() {
@@ -128,31 +129,35 @@ class Login extends Component {
     return (
       <ScrollView contentContainerStyle={loginStyles.container}>
         <BubbleScreen />
-        <KeyboardAvoidingView
-          behavior={'position'}
-          extraHeight={60}
-          keyboardVertiralOffset={-120}>
-          {this.renderLogo()}
-          <Card>
-            {this.renderField({
-              placeholder: 'Email-Address',
-              name: 'email',
-              password: false,
-            })}
-            {this.renderField({
-              placeholder: 'Password',
-              name: 'password',
-              password: true,
-            })}
-            <Text style={loginStyles.errorText}>{this.state.error}</Text>
-            <View style={loginStyles.btn}>{this.renderButton()}</View>
-            <TouchableOpacity onPress={this.forgotPassword}>
-              <Text style={loginStyles.forgetPassword}>Forget password</Text>
-            </TouchableOpacity>
 
-          </Card>
+        <KeyboardAvoidingView
+          behavior={'padding'}
+          style={{ flex: 1 }}
+          extraHeight={60}>
+          <View style={{ flex: 1, justifyContent: 'space-between' }}>
+            {this.renderLogo()}
+
+            <Card>
+              {this.renderField({
+                placeholder: 'Email-Address',
+                name: 'email',
+                password: false,
+              })}
+              {this.renderField({
+                placeholder: 'Password',
+                name: 'password',
+                password: true,
+              })}
+              <Text style={loginStyles.errorText}>{this.state.error}</Text>
+              <View style={loginStyles.btn}>{this.renderButton()}</View>
+              <TouchableOpacity onPress={this.forgotPassword}>
+                <Text style={loginStyles.forgetPassword}>Forget password</Text>
+              </TouchableOpacity>
+            </Card>
+
+            <Footer />
+          </View>
         </KeyboardAvoidingView>
-        <Footer />
       </ScrollView>
     );
   }

@@ -1,13 +1,15 @@
-import {Platform, Dimensions} from 'react-native';
+import { Platform, Dimensions, StyleSheet } from 'react-native';
 
 const windowWidth = Dimensions.get('window').width;
+const windowHeight = Dimensions.get('window').height;
 
-const sidemenuStyles = {
+const sidemenuStyles = StyleSheet.create({
   menu: {
     flexDirection: 'column',
     flex: 1,
     justifyContent: 'space-around',
-    paddingBottom: 15,
+    paddingBottom: 50,
+    height: windowHeight,
   },
   container: {
     flexDirection: 'row',
@@ -162,6 +164,6 @@ const sidemenuStyles = {
     textAlign: 'center',
     margin: 10,
   },
-};
+});
 
-export {sidemenuStyles};
+export { sidemenuStyles };

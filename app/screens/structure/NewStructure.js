@@ -5,7 +5,6 @@ import {
   Picker,
   TextInput,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import { Spinner, Button, BackBtn } from '../../common';
 import { firebase } from '../../config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -66,7 +65,7 @@ class NewStructure extends Component {
       parent: 0,
     });
 
-    Actions.pop();
+    this.props.navigation.goBack()
   }
 
   showError() {

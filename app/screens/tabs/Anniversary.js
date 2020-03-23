@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import { Actions } from 'react-native-router-flux';
-import ActionButton from 'react-native-action-button';
 import { Spinner, FloatButton } from '../../common';
 import { anniversaryStyles } from '../../styles';
 import AnniversaryList from './AnniversaryList';
@@ -13,6 +11,7 @@ class Anniversary extends Component {
     this.state = {
       isAdmin: false,
     };
+    // console.log(props.navigation);
   }
 
   componentDidMount() {
@@ -37,9 +36,9 @@ class Anniversary extends Component {
         {this.state.isAdmin &&
           <FloatButton
             isAdmin={this.state.isAdmin}
-            onBravoPress={() => Actions.bravo()}
-            onContactPress={() => Actions.newContact()}
-            onStructurePress={() => Actions.newStructure()}
+            onBravoPress={() => this.props.navigation.navigate('AddBravo')}
+            onContactPress={() => this.props.navigation.navigate('NewContact')}
+            onStructurePress={() => this.props.navigation.navigate('NewStructure')}
           />
         }
       </View>

@@ -7,9 +7,7 @@ import {
     TouchableOpacity,
     Image,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
-import ActionButton from 'react-native-action-button';
 import { Spinner, Button, BackBtn, Structure } from '../../common';
 import { firebase } from '../../config';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
@@ -106,23 +104,10 @@ class AddBravo extends Component {
 
 
     createBadge = () => {
-        // this.setState({ loading: true });
-        // currentUser = firebase.auth().currentUser;
-        // email = currentUser.email;
-        // firebase
-        //     .auth()
-        //     .createUserWithEmailAndPassword(this.state.email, this.state.password)
-        //     .then(({ user }) => {
-        //         this.signInBack(email, user.uid);
-        //     })
-        //     .catch(err => {
-        //         this.setState({ error: err.message, loading: false });
-        //     });
         if (this.isValid()) {
             this.setState({ loading: 1 });
             currentUser = firebase.auth().currentUser;
             const { title, description, user, badge } = this.state;
-            // console.log(currentUser);
             firebase.firestore().collection("bravo").add({
                 date: new Date(),
                 description,
@@ -133,7 +118,7 @@ class AddBravo extends Component {
                 type_icon: badge,
             }).then(() => {
                 this.setState({ loading: 0 });
-                Actions.pop();
+                this.props.navigation.goBack();
             }).catch(() => {
                 console.error("Error writing document: ", error);
                 this.setState({ loading: 0 });

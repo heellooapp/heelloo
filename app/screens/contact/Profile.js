@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Actions } from 'react-native-router-flux';
 import Communications from 'react-native-communications';
 import {
   View,
@@ -36,9 +35,9 @@ class Profile extends Component {
       loadingInfo: true,
       tabs: 'info',
     };
-    console.log(this.props.uid);
-    this.userRef = this.getRef().child(`/users/${this.props.uid}`);
-    this.infoRef = this.getRef().child(`/userInfo/${this.props.uid}`);
+    const { uid } = this.props.route.params;
+    this.userRef = this.getRef().child(`/users/${uid}`);
+    this.infoRef = this.getRef().child(`/userInfo/${uid}`);
     this.structureRef = this.getRef().child(`/structures/`);
 
     this.OnPhonePress = this.OnPhonePress.bind(this);
@@ -120,21 +119,17 @@ class Profile extends Component {
       );
   }
   OnChatPress = () => {
-    Actions.chat({
-      uid: this.props.uid,
-    });
+    this.props.navigation.navigate('Chat', { uid: this.props.route.params.uid })
   }
 
 
   OnEditPress() {
-    Actions.editContact({
-      uid: this.props.uid,
-    });
+    this.props.navigation.navigate('EditContact', { uid: this.props.route.params.uid })
   }
 
   showEditBtn() {
     let uid = firebase.auth().currentUser.uid;
-    if (this.props.uid == uid || this.props.isAdmin) {
+    if (this.props.route.params.uid == uid || this.props.route.params.isAdmin) {
       return (
         <TouchableOpacity onPress={this.OnEditPress} style={styles.editBtn}>
           <Icon
@@ -157,7 +152,7 @@ class Profile extends Component {
       <View style={styles.viewStyle}>
         <View style={styles.headerStyle}>
           <TouchableOpacity
-            onPress={() => Actions.pop()}
+            onPress={this.props.navigation.goBack}
             style={styles.headBtn}>
             <Icon
               name="md-arrow-back"

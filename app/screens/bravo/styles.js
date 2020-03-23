@@ -45,21 +45,22 @@ export default StyleSheet.create({
     smallTitle: {
         color: '#2a8aed',
         // fontWeight: 'bold',
-        textTransform: 'uppercase',
+        // textTransform: 'uppercase',
         fontFamily: 'Montserrat-Medium',
 
     },
     bigTitle: {
         color: '#353A3E',
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: '500',
+        marginTop: 8,
         // maxWidth: 150,
         // alignSelf:'stretch',
         fontFamily: 'Montserrat-Medium',
     },
     description: {
         color: 'grey',
-        fontSize: 16,
+        fontSize: 12,
         // marginTop: 2,
     },
     from: {

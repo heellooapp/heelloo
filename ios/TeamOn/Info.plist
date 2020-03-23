@@ -40,13 +40,13 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>зураг</string>
+	<string>$(PRODUCT_NAME) would like to use your camera to upload your profile picture</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSMainNibFile</key>
 	<string>LaunchScreen</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>зураг</string>
+	<string>$(PRODUCT_NAME) would like to upload your profile picture</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>

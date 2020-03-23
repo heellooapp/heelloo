@@ -2,17 +2,13 @@ import React, { useEffect, useReducer, useContext, Component } from 'react'
 import { FlatList, SafeAreaView, View, ScrollView, Text, Image, KeyboardAvoidingView } from 'react-native'
 import { firebase } from '@react-native-firebase/app'
 import { firebaseService } from '../services'
-// import { UserContext } from '../../contexts'
-import { unionWith } from 'lodash'
 import { BackBtn } from '../../../common';
 import Input from '../Input'
 import Message from '../Message'
 import FastImage from 'react-native-fast-image'
-
 import { chatRoomStyles as styles } from '../styles'
 
 export default class Chat extends Component {
-  // static contextType = UserContext;
   constructor(props) {
     super(props);
 
@@ -29,21 +25,22 @@ export default class Chat extends Component {
   async componentDidMount() {
     const user = await firebase.auth().currentUser;
     this.setState({ user: user });
+    const { uid } = this.props.route.params;
 
     firebase.database().ref()
       .child('users')
-      .child(this.props.uid)
+      .child(uid)
       .once('value').then((snapshot) => {
         this.setState({ targetUser: snapshot.val() });
       });
 
-    this.users_array = [user.uid, this.props.uid];
+    this.users_array = [user.uid, uid];
 
-    if (user.uid > this.props.uid) {
-      this.conversationId = this.props.uid + user.uid;
+    if (user.uid > uid) {
+      this.conversationId = uid + user.uid;
     }
     else {
-      this.conversationId = user.uid + this.props.uid;
+      this.conversationId = user.uid + uid;
     }
 
     this.listen();

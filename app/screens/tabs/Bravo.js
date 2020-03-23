@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import { Spinner, FloatButton } from '../../common';
 import { contactStyles } from '../../styles';
 import BravoList from './BravoList';
@@ -34,12 +33,12 @@ class Bravo extends Component {
           openDrawer={this.props.openDrawer}
           isAdmin={this.state.isAdmin}
         />
-        <FloatButton
-          isAdmin={this.state.isAdmin}
-          onBravoPress={() => Actions.bravo()}
-          onContactPress={() => Actions.newContact()}
-          onStructurePress={() => Actions.newStructure()}
-        />
+         <FloatButton
+            isAdmin={this.state.isAdmin}
+            onBravoPress={() => this.props.navigation.navigate('AddBravo')}
+            onContactPress={() => this.props.navigation.navigate('NewContact')}
+            onStructurePress={() => this.props.navigation.navigate('NewStructure')}
+          />
       </View>
     );
   }

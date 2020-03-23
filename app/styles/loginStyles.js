@@ -15,7 +15,6 @@ const loginStyles = {
   logo: {
     alignItems: 'center',
     marginTop: 30,
-    marginBottom: 180,
   },
   logoStyle: {
     width: 140,

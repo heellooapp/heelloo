@@ -10,12 +10,15 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { headerStyles } from '../styles';
+import { NavigationContext } from '@react-navigation/native';
 
 
 class Search extends Component {
-  static contextTypes = {
-    drawer: PropTypes.object.isRequired,
-  };
+  // static contextTypes = {
+  //   drawer: PropTypes.object.isRequired,
+  // };
+  static contextType = NavigationContext;
+
   constructor(props) {
     super(props);
     this.state = {
@@ -35,7 +38,7 @@ class Search extends Component {
           autoFocus
           underlineColorAndroid="transparent"
           value={this.props.searchValue}
-          // onChangeText={this.props.onChangeText}
+          onChangeText={this.props.onChangeText}
           autoCapitalize="words"
         />
       </View>
@@ -67,11 +70,12 @@ class Search extends Component {
   }
 
   render() {
+
     return (
       <View style={headerStyles.viewStyle}>
         <TouchableOpacity
           style={headerStyles.menuContainer}
-          onPress={() => { this.context.drawer.open() }}
+          onPress={this.context.toggleDrawer}
         >
           <Icon
             name="ios-menu"

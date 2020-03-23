@@ -72,8 +72,10 @@ class EditContact extends Component {
       imagePath: '',
       selectedItems: [],
     };
-    this.userRef = this.getRef().child(`users/${this.props.uid}`);
-    this.userInfoRef = this.getRef().child(`/userInfo/${this.props.uid}`);
+    const { uid } = this.props.route.params;
+
+    this.userRef = this.getRef().child(`users/${uid}`);
+    this.userInfoRef = this.getRef().child(`/userInfo/${uid}`);
     this.structureRef = this.getRef().child(`structures`);
     this.saveProfileImage = this.saveProfileImage.bind(this);
     this.profileImgVisible = this.profileImgVisible.bind(this);
@@ -219,13 +221,15 @@ class EditContact extends Component {
   };
 
   closeComponent() {
-    Actions.pop({ refresh: { structure: this.state.structure } });
+    // Actions.pop({ refresh: { structure: this.state.structure } });
+    this.props.navigation.goBack();
   }
 
   profileImgVisible() {
-    this.setState({
-      isProfileImageVisible: true,
-    });
+    // this.setState({
+    //   isProfileImageVisible: true,
+    // });
+    this.openPicker();
   }
 
   focusInput(name) {
@@ -239,7 +243,7 @@ class EditContact extends Component {
         Uploader.uploadImage(
           this.state.imagePath,
           'image/jpeg',
-          `${this.props.uid}.jpg`,
+          `${this.props.route.params.uid}.jpg`,
         )
           .then(responseData => {
             this.userRef.update({ profileImg: responseData });
@@ -273,6 +277,7 @@ class EditContact extends Component {
           imagePath: response.uri,
           imageHeight: 200,
           imageWidth: 200,
+          isProfileImageVisible: true,
         });
       }
     });

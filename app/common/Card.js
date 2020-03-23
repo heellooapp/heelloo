@@ -13,7 +13,7 @@ const styles = {
   containerStyle: {
     marginLeft: 50,
     marginRight: 50,
-    marginBottom: 25
+    marginBottom: 25,
   }
 };
 

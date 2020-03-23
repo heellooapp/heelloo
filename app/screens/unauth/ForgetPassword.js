@@ -106,7 +106,7 @@ class ForgetPassword extends Component {
       <View style={viewStyle}>
         <TouchableOpacity
           style={{ padding: 4 }}
-          onPress={() => this.props.change('login') }>
+          onPress={() => this.props.change('login')}>
           <Icon
             name="md-arrow-back"
             size={25}
@@ -123,11 +123,11 @@ class ForgetPassword extends Component {
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        {this.header()}
+        {/* {this.header()} */}
 
         <KeyboardAvoidingView
-          behavior={'padding'}>
-          <View style={{ flex: 1 }}></View>
+          behavior={'padding'}
+          style={{ flex: 1, justifyContent: 'center' }}>
           <Card>
             {this.renderField({
               placeholder: 'Email-Address',

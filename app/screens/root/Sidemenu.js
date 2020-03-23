@@ -6,17 +6,17 @@ import {
   TextInput,
   Image,
   Text,
+  Animated,
 } from 'react-native';
-import { Actions } from 'react-native-router-flux';
 import Icon from 'react-native-vector-icons/Ionicons';
 import Modal from 'react-native-modal';
 import images from '../../images';
 import { Spinner, BubbleScreen, Button } from '../../common';
-import PropTypes from 'prop-types';
 import { sidemenuStyles } from '../../styles';
-// import Utils from '../../utils';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { firebase } from '@react-native-firebase/database';
+import { createDrawerNavigator, DrawerContentScrollView } from '@react-navigation/drawer';
+import { NavigationContext } from '@react-navigation/native';
 
 const styles = sidemenuStyles;
 
@@ -57,9 +57,10 @@ class ModalWrapper extends Component {
 }
 
 class Sidemenu extends Component {
-  static contextTypes = {
-    drawer: PropTypes.object.isRequired,
-  };
+  // static contextTypes = {
+  //   drawer: PropTypes.object.isRequired,
+  // };
+  static contextType = NavigationContext;
 
   constructor(props) {
     super(props);
@@ -115,16 +116,26 @@ class Sidemenu extends Component {
   }
 
   structureOnPress() {
-    this.context.drawer.close();
-    if (this.state.user)
-      Actions.structure({ isAdmin: this.state.user.isAdmin });
-    else
-      Actions.structure({ isAdmin: false });
+    // this.context.drawer.close();
+    if (this.state.user) {
+      this.props.navigation.closeDrawer();
+      this.props.navigation.navigate('Structure');
+      // Actions.structure({ isAdmin: this.state.user.isAdmin });
+    }
+    else {
+      this.props.navigation.navigate('Structure');
+
+    }
+    // Actions.structure({ isAdmin: false });
   }
 
   profileOnPress() {
-    this.context.drawer.close();
-    Actions.profile({ uid: this.uid });
+    // this.context.drawer.close();
+    // Actions.profile({ uid: this.uid });
+    this.props.navigation.navigate('Profile', {
+      uid: this.uid
+    });
+
   }
 
   showError() {
@@ -261,62 +272,66 @@ class Sidemenu extends Component {
 
   render() {
     if (this.state.loading) return <Spinner />;
+
     return (
-      <View style={styles.menu}>
-        <BubbleScreen />
-        <View style={styles.userPart}>
-          <TouchableOpacity
-            style={styles.arrowContainer}
-            onPress={this.context.drawer.close}>
-            <Icon
-              name="md-arrow-back"
-              size={25}
-              color="#000"
-              style={{ marginTop: 15, backgroundColor: 'transparent' }}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.profileOnPress}>
-            {this.renderProfileImage()}
-          </TouchableOpacity>
-          <Text style={styles.userName}>
-            {this.state.user && this.state.user.firstName} {this.state.user && this.state.user.lastname}
-          </Text>
-          <Text style={styles.title}>{this.state.user && this.state.user.position}</Text>
-        </View>
-        {!this.state.loading ? this.renderWrappers() : null}
-        <View style={styles.mainPart}>
-          <View style={styles.userInfo}>
+      <DrawerContentScrollView>
+        <View style={styles.menu}>
+          <BubbleScreen />
+          <View style={styles.userPart}>
+            <TouchableOpacity
+              style={styles.arrowContainer}
+              onPress={this.props.navigation.closeDrawer}
+            >
+              <Icon
+                name="md-arrow-back"
+                size={25}
+                color="#000"
+                style={{ marginTop: 15, backgroundColor: 'transparent' }}
+              />
+            </TouchableOpacity>
             <TouchableOpacity onPress={this.profileOnPress}>
-              <View style={styles.container}>
-                <Image source={images.me} style={styles.icon} />
-                <Text style={styles.menuText}>My Profile</Text>
-              </View>
+              {this.renderProfileImage()}
             </TouchableOpacity>
-            <TouchableOpacity onPress={this.openPassword}>
-              <View style={styles.container}>
-                <Icon
-                  name="ios-lock"
-                  size={20}
-                  style={{ margin: 5 }}
-                  color="#555"
-                />
-                <Text style={[styles.menuText, { marginLeft: 5 }]}>Password</Text>
-              </View>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.structureOnPress}>
-              <View style={styles.container}>
-                <Image source={images.structure} style={styles.icon} />
-                <Text style={styles.menuText}>Structure</Text>
-              </View>
+            <Text style={styles.userName}>
+              {this.state.user && this.state.user.firstName} {this.state.user && this.state.user.lastname}
+            </Text>
+            <Text style={styles.title}>{this.state.user && this.state.user.position}</Text>
+          </View>
+          {!this.state.loading ? this.renderWrappers() : null}
+          <View style={styles.mainPart}>
+            <View style={styles.userInfo}>
+              <TouchableOpacity onPress={this.profileOnPress}>
+                <View style={styles.container}>
+                  <Image source={images.me} style={styles.icon} />
+                  <Text style={styles.menuText}>My Profile</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.openPassword}>
+                <View style={styles.container}>
+                  <Icon
+                    name="ios-lock"
+                    size={20}
+                    style={{ margin: 5 }}
+                    color="#555"
+                  />
+                  <Text style={[styles.menuText, { marginLeft: 5 }]}>Password</Text>
+                </View>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.structureOnPress}>
+                <View style={styles.container}>
+                  <Image source={images.structure} style={styles.icon} />
+                  <Text style={styles.menuText}>Structure</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.btnContainer}>
+            <TouchableOpacity style={styles.btnSignOut} onPress={this.signOut}>
+              <Text style={[styles.btntextStyle]}>Sign Out</Text>
             </TouchableOpacity>
           </View>
         </View>
-        <View style={styles.btnContainer}>
-          <TouchableOpacity style={styles.btnSignOut} onPress={this.signOut}>
-            <Text style={[styles.btntextStyle]}>Sign Out</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      </DrawerContentScrollView>
     );
   }
 }
