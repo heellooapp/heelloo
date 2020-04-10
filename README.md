@@ -21,9 +21,9 @@ The project is maintained by Heelloo, along with an amazing group of independent
 
 <img src="https://heelloo-app.s3.amazonaws.com/Group+206.png" width="200" align="left" /> &nbsp;
 
-<img src="https://heelloo-app.s3.amazonaws.com/Group+209.png" width="200" align="left" >
+<img src="https://heelloo-app.s3.amazonaws.com/Group+209.png" width="200" align="left" > &nbsp;
 
-<img src="https://heelloo-app.s3.amazonaws.com/Group+212.png" width="200" align="left" >
+<img src="https://heelloo-app.s3.amazonaws.com/Group+212.png" width="200" align="left" > &nbsp;
 
 <img src="https://heelloo-app.s3.amazonaws.com/Group+214.png" width="200" align="left"> &nbsp;
 
