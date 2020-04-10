@@ -12,7 +12,7 @@ The project is maintained by Heelloo, along with an amazing group of independent
 
 * **Realtime database:** Store and sync app data with cloud database in milliseconds and data is synced across all clients realtime.
 
-<div style="display: inline-block">
+<div>
   <img src="https://heelloo-app.s3.amazonaws.com/Group+206.png" width="220" />
 
   <img src="https://heelloo-app.s3.amazonaws.com/Group+209.png" width="220" >
@@ -21,6 +21,7 @@ The project is maintained by Heelloo, along with an amazing group of independent
 
   <img src="https://heelloo-app.s3.amazonaws.com/Group+214.png" width="220"> 
 </div>
+
 <div>
   <img src="https://heelloo-app.s3.amazonaws.com/Group+217.png" width="220"> 
 
